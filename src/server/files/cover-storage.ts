@@ -15,9 +15,11 @@ function blobToken(): string | undefined {
   return key ? process.env[key] : undefined;
 }
 
-/** With a Vercel Blob token configured (production), covers live in Blob storage; without one (local development
- *  and the tests) they stay on local disk. Serverless hosts have no writable disk, so production needs the token. */
-const useBlob = () => Boolean(blobToken());
+/** With Vercel Blob configured (production), covers live in Blob storage; without it (local development and the
+ *  tests) they stay on local disk. Configured means either a read-write token, or just `BLOB_STORE_ID`, which
+ *  Vercel's own store connection sets — the SDK then authenticates through the deployment's OIDC token and needs
+ *  no secret at all. Serverless hosts have no writable disk, so production needs one of the two. */
+const useBlob = () => Boolean(blobToken() || process.env.BLOB_STORE_ID);
 
 function isAllowedMime(type: string): type is (typeof COVER_MIME_TYPES)[number] {
   return (COVER_MIME_TYPES as readonly string[]).includes(type);
