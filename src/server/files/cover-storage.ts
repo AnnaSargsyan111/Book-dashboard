@@ -7,9 +7,17 @@ import { LIMITS } from "@/shared/validation/limits";
 
 const UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads", "covers");
 
+/** Vercel names a store's token `BLOB_READ_WRITE_TOKEN`, or `<PREFIX>_READ_WRITE_TOKEN` when the store was
+ *  connected with a prefix — accept either, so the exact name chosen in the dashboard doesn't matter. */
+function blobToken(): string | undefined {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN;
+  const key = Object.keys(process.env).find((k) => k.endsWith("_READ_WRITE_TOKEN") && process.env[k]);
+  return key ? process.env[key] : undefined;
+}
+
 /** With a Vercel Blob token configured (production), covers live in Blob storage; without one (local development
  *  and the tests) they stay on local disk. Serverless hosts have no writable disk, so production needs the token. */
-const useBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+const useBlob = () => Boolean(blobToken());
 
 function isAllowedMime(type: string): type is (typeof COVER_MIME_TYPES)[number] {
   return (COVER_MIME_TYPES as readonly string[]).includes(type);
@@ -30,9 +38,10 @@ async function removeExistingDiskCover(dir: string, bookId: string) {
 }
 
 async function removeExistingBlobCovers(userId: string, bookId: string, except?: string) {
-  const { blobs } = await list({ prefix: blobPrefix(userId, bookId) });
+  const token = blobToken();
+  const { blobs } = await list({ prefix: blobPrefix(userId, bookId), token });
   const stale = blobs.map((b) => b.url).filter((url) => url !== except);
-  if (stale.length > 0) await del(stale);
+  if (stale.length > 0) await del(stale, { token });
 }
 
 /** Deletes whatever uploaded cover exists for a book (a no-op if it never had one, or its cover was an external
@@ -61,7 +70,7 @@ export async function saveCoverUpload(userId: string, bookId: string, file: File
 
   if (useBlob()) {
     // A fresh random suffix gives every upload its own URL, so browsers never show the previous cover from cache.
-    const blob = await put(`${blobPrefix(userId, bookId)}${extension}`, file, { access: "public", contentType: file.type });
+    const blob = await put(`${blobPrefix(userId, bookId)}${extension}`, file, { access: "public", contentType: file.type, token: blobToken() });
     await removeExistingBlobCovers(userId, bookId, blob.url);
     return blob.url;
   }
