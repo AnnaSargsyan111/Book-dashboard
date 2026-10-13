@@ -1,5 +1,4 @@
-// MystBook data model. SQLite for local development; the schema is portable to PostgreSQL
-// (change the datasource provider, adapter and DATABASE_URL, then create a fresh migration baseline).
+// MystBook data model. PostgreSQL (Neon in production); the connection itself is made in src/server/db/client.ts.
 
 generator client {
   provider = "prisma-client"
@@ -7,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model User {
@@ -34,8 +33,8 @@ model User {
   thoughts            Thought[]
 }
 
-/// One entry in a user's library. SQLite has no native enum, so `status` is a plain, code-validated string
-/// (see src/shared/validation/book.ts) — the same approach already used for UserProfile.genres.
+/// One entry in a user's library. `status` is a plain, code-validated string (see src/shared/validation/book.ts)
+/// rather than a database enum — the same approach already used for UserProfile.genres.
 model Book {
   id        String   @id @default(cuid())
   userId    String

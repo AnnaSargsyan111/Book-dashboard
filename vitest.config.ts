@@ -10,7 +10,7 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     globalSetup: ["tests/setup/global.ts"],
     setupFiles: ["tests/setup/env.ts"],
-    // Tests share one SQLite file, so files run one after another.
+    // Tests share one database schema, so files run one after another.
     fileParallelism: false,
     testTimeout: 20_000,
   },

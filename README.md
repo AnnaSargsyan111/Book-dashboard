@@ -12,10 +12,13 @@ personalized recommendation, not a browsable list. Thoughts is next.
 
 ## Run it
 
+The database is PostgreSQL (Neon in production). For local development, create a free Neon project (or run any
+local Postgres) and put its connection string in `.env`.
+
 ```bash
 npm install
-cp .env.example .env        # already present after setup; edit if needed
-npm run db:migrate          # creates prisma/dev.db and generates the Prisma client
+cp .env.example .env        # then set DATABASE_URL to your PostgreSQL connection string
+npm run db:deploy           # applies the migrations to that database
 npm run dev -- --port 3100  # http://localhost:3100
 ```
 
@@ -23,7 +26,7 @@ npm run dev -- --port 3100  # http://localhost:3100
 |---|---|
 | `npm run dev` | Development server |
 | `npm run build` / `npm start` | Production build and server |
-| `npm test` | Vitest: validation, hashing, and the full API (uses its own throw-away `prisma/test.db`) |
+| `npm test` | Vitest: validation, hashing, and the full API. Needs `TEST_DATABASE_URL` (any scratch PostgreSQL database); it only ever uses, and wipes, a schema named `test` inside it |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run db:migrate` | Create/apply a migration in development |
 | `npm run db:deploy` | Apply existing migrations (CI / production) |
@@ -31,6 +34,21 @@ npm run dev -- --port 3100  # http://localhost:3100
 
 In development, emails (password reset) are printed to the server console. Set `RESEND_API_KEY` and `EMAIL_FROM` to
 deliver them for real.
+
+## Deploy (Vercel + Neon)
+
+1. **Neon**: create a project and copy two connection strings — the *pooled* one (host contains `-pooler`) and the
+   *direct* one (no `-pooler`).
+2. **Create the tables once** from your machine, with the direct string:
+   `DIRECT_URL="<direct string>" DATABASE_URL="<direct string>" npm run db:deploy`
+   (repeat after any future schema change; `prisma/migrations` is the history).
+3. **Vercel**: import the GitHub repo, then add Blob storage to the project (Storage → Blob), which provides
+   `BLOB_READ_WRITE_TOKEN` for cover uploads.
+4. **Environment variables** (Vercel → Settings → Environment Variables):
+   `DATABASE_URL` = the pooled string, `APP_URL` = the site's public https address (also used as the CSRF origin
+   allow-list), `RESEND_API_KEY` + `EMAIL_FROM` for password-reset emails (without them that one flow fails in
+   production), optionally `GOOGLE_BOOKS_API_KEY`.
+5. Deploy. The build runs `prisma generate && next build`.
 
 ## Architecture
 
@@ -66,7 +84,7 @@ Adding a domain later (books, notes) means adding `server/modules/<domain>`, `ap
 
 | Concern | Decision |
 |---|---|
-| Database | SQLite via Prisma 7 for local development. The schema is portable to PostgreSQL: change the datasource provider, swap the adapter in `src/server/db/client.ts`, set `DATABASE_URL`, create a fresh migration baseline. |
+| Database | PostgreSQL via Prisma 7 (`@prisma/adapter-pg`; Neon in production). The connection is made only in `src/server/db/client.ts`. |
 | Passwords | Argon2id (`@node-rs/argon2`, OWASP minimum cost), NFKC-normalized. Never stored or logged in plain text. |
 | Sessions | Random 256-bit token in an `HttpOnly`, `SameSite=Lax` cookie (`__Host-` + `Secure` in production). Only the SHA-256 **hash** is stored, so a database leak yields no usable sessions. Every request checks the database, so sign-out and password reset revoke immediately. 7-day sliding expiry. |
 | Validation | One Zod schema per form, in `src/shared`, used by the browser *and* the API. Schemas emit **translation keys**, never text. The API re-validates everything and rejects unknown fields. |
@@ -117,7 +135,7 @@ Zod rule  ->  key ("validation.latinOnly")  ->  active language  ->  "Use Latin 
 | `POST /books/:id/cover-lookup` (signed in, owner) | – | `200 {book}` with `coverUrl` set to a Google Books cover, if one was found. "Find Cover". `404 COVER_NOT_FOUND` (no match, or Google Books itself errored/rate-limited). |
 
 Rules: **Title, Author and Status are the only required fields.** Status is one of `want_to_read` / `currently_reading`
-/ `read` / `did_not_finish` (a plain string — SQLite has no native enum). **Rating** (1–5, 0.5 steps) is required
+/ `read` / `did_not_finish` (a plain string, not a database enum). **Rating** (1–5, 0.5 steps) is required
 when Status is `read` and rejected otherwise — the client only ever sends one in that case, but the server enforces
 it too, since the star widget itself stays visible-but-inactive for the other three statuses rather than sending
 stale state. Genre is free tags (the 22-genre catalog shown as quick picks, or any custom "Other" text — both are
@@ -424,9 +442,8 @@ under `prefers-reduced-motion`.
   same: best-effort developer translations, not reviewed by a native speaker.
 - Editing the onboarding profile now happens on the About Me page (`POST /api/v1/profile`); there is deliberately
   still no "update onboarding" endpoint — onboarding itself is a one-time gate, never resubmitted.
-- Uploaded covers live on local disk (`public/uploads/`, gitignored), not cloud object storage — fine for local
-  development, but would need a real bucket (S3, R2, etc.) before this is deployed anywhere with more than one
-  instance or an ephemeral filesystem.
+- Uploaded covers live on local disk (`public/uploads/`, gitignored) in development, and in Vercel Blob when
+  `BLOB_READ_WRITE_TOKEN` is set (production). Serverless hosts have no writable disk, so production needs the token.
 - "Auto-fill" depends on Google Books' public API. Keyless, it shares a small quota with every other anonymous
   caller worldwide — a daily bucket that can and does run dry, independent of this app's own usage. Even with a
   key, Google can still return `backendFailed` for a brand-new project until it links a billing account (no

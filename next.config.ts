@@ -12,7 +12,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   // Native modules must stay outside the bundle.
-  serverExternalPackages: ["better-sqlite3", "@node-rs/argon2"],
+  serverExternalPackages: ["@node-rs/argon2"],
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
