@@ -37,18 +37,16 @@ deliver them for real.
 
 ## Deploy (Vercel + Neon)
 
-1. **Neon**: create a project and copy two connection strings — the *pooled* one (host contains `-pooler`) and the
-   *direct* one (no `-pooler`).
-2. **Create the tables once** from your machine, with the direct string:
-   `DIRECT_URL="<direct string>" DATABASE_URL="<direct string>" npm run db:deploy`
-   (repeat after any future schema change; `prisma/migrations` is the history).
-3. **Vercel**: import the GitHub repo, then add Blob storage to the project (Storage → Blob), which provides
-   `BLOB_READ_WRITE_TOKEN` for cover uploads.
-4. **Environment variables** (Vercel → Settings → Environment Variables):
-   `DATABASE_URL` = the pooled string, `APP_URL` = the site's public https address (also used as the CSRF origin
-   allow-list), `RESEND_API_KEY` + `EMAIL_FROM` for password-reset emails (without them that one flow fails in
-   production), optionally `GOOGLE_BOOKS_API_KEY`.
-5. Deploy. The build runs `prisma generate && next build`.
+1. **Vercel**: import the GitHub repo and set `APP_URL` (the site's public https address, also used as the CSRF
+   origin allow-list). The first deploy may fail until the database exists — that is expected.
+2. **Database**: in the Vercel project, Storage → Create Database → Neon. The integration adds `DATABASE_URL`
+   (pooled) and `DATABASE_URL_UNPOOLED` to the project. The `vercel-build` script runs
+   `prisma migrate deploy` on every deploy, using the unpooled URL, so the tables are created (and future schema
+   changes applied) automatically; `prisma/migrations` is the history.
+3. **Covers**: Storage → Create → Blob, which adds `BLOB_READ_WRITE_TOKEN`.
+4. Optional environment variables: `RESEND_API_KEY` + `EMAIL_FROM` for password-reset emails (without them that one
+   flow fails in production), `GOOGLE_BOOKS_API_KEY`.
+5. Redeploy.
 
 ## Architecture
 
