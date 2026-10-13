@@ -1,0 +1,38 @@
+/** Single source of truth for field limits, shared by the browser, the API and the UI copy. */
+export const LIMITS = {
+  nameMax: 50,
+  emailMax: 254,
+  passwordMin: 8,
+  passwordMax: 32,
+  tokenMin: 20,
+  tokenMax: 200,
+  genresMax: 5,
+  authorsMax: 20,
+  authorMax: 80,
+  aboutMax: 1500,
+  bookTitleMax: 200,
+  bookAuthorMax: 150,
+  bookGenresMax: 10,
+  bookGenreMax: 40,
+  charactersMax: 30,
+  characterMax: 60,
+  quotesMax: 50,
+  quoteTextMax: 5000,
+  plotMax: 8000,
+  commentaryMax: 4000,
+  bookCoverMaxBytes: 5 * 1024 * 1024,
+  moodsMax: 2,
+  mysteryGenresMax: 3,
+  addressNameMax: 100,
+  addressLineMax: 200,
+  addressCityMax: 100,
+  addressPostalMax: 20,
+  addressPhoneMax: 30,
+  feedbackTagsMax: 6,
+  /** "Show Me Now" lets the user cycle through this many distinct candidates before wrapping back to the first
+   *  one instead of pulling a new one (Section: change book up to 5 times, then repeat). */
+  mysteryRerollMax: 5,
+  thoughtTitleMax: 200,
+  /** Generous — the writing area is meant to feel comfortable for longer text, not like a small form field. */
+  thoughtTextMax: 10000,
+} as const;

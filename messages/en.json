@@ -1,0 +1,664 @@
+{
+  "meta": {
+    "appName": "MystBook",
+    "description": "A private notebook for the books you read closely: notes, characters and passages, kept together.",
+    "register": "Create your account",
+    "login": "Log in",
+    "forgotPassword": "Forgot your password",
+    "resetPassword": "Choose a new password",
+    "onboarding": "Tell us about yourself",
+    "aboutMe": "About Me",
+    "books": "Books",
+    "addBook": "Add book",
+    "mysteryBook": "Mystery Book",
+    "thoughts": "Thoughts",
+    "newThought": "New Thought",
+    "settings": "Settings"
+  },
+  "common": {
+    "skipToContent": "Skip to the form",
+    "retry": "Try again",
+    "signOut": "Log out",
+    "close": "Close",
+    "cancel": "Cancel"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "aboutMe": "About Me",
+    "books": "Books",
+    "mysteryBook": "Mystery Book",
+    "thoughts": "Thoughts",
+    "settings": "Settings",
+    "account": "Account menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "tableOfContents": "Contents",
+    "quotes": {
+      "aboutMe": { "text": "A room without books is like a body without a soul.", "author": "Marcus Tullius Cicero" },
+      "books": { "text": "I have always imagined that Paradise will be a kind of library.", "author": "Jorge Luis Borges" },
+      "mysteryBook": { "text": "There is nothing more deceptive than an obvious fact.", "author": "Arthur Conan Doyle" },
+      "thoughts": { "text": "I write entirely to find out what I'm thinking.", "author": "Joan Didion" },
+      "settings": { "text": "Once you learn to read, you will be forever free.", "author": "Frederick Douglass" }
+    }
+  },
+  "language": {
+    "label": "Language",
+    "switchTo": "Switch language to {language}"
+  },
+  "shell": {
+    "poem": {
+      "text": "You will not tire.\nYou will walk on,\nclimbing ever higher into the mountains.\n\nAll it takes is spirit.\nYou were never meant to need wings.",
+      "mark": "You were never meant to need wings.",
+      "author": "Paruyr Sevak, To My Son, 1955"
+    },
+    "note": "Your world of books.",
+    "pile": {
+      "bacon": {
+        "pre": "Some books are to be tasted, others to be swallowed, and some few to be ",
+        "mark": "chewed and digested",
+        "post": ".",
+        "author": "Francis Bacon, Of Studies (1625)"
+      },
+      "dickinson": {
+        "pre": "There is no ",
+        "mark": "Frigate like a Book",
+        "post": " to take us Lands away.",
+        "author": "Emily Dickinson, c. 1873"
+      },
+      "milton": {
+        "pre": "A good book is the ",
+        "mark": "precious life-blood",
+        "post": " of a master spirit.",
+        "author": "John Milton, Areopagitica (1644)"
+      },
+      "thoreau": {
+        "pre": "Books are the ",
+        "mark": "treasured wealth of the world",
+        "post": " and the fit inheritance of generations and nations.",
+        "author": "Henry David Thoreau, Walden (1854)"
+      }
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "latinOnly": "Use Latin letters",
+    "nameTooLong": "Use {nameMax} characters or fewer",
+    "passwordRules": "Your password doesn’t meet all the requirements",
+    "maxGenres": "You can select up to {genresMax} genres",
+    "authorTooLong": "Each name can be up to {authorMax} characters",
+    "tooManyAuthors": "You can add up to {authorsMax} authors",
+    "aboutTooLong": "Use {aboutMax} characters or fewer",
+    "passwordMismatch": "Passwords don’t match.",
+    "bookTitleTooLong": "Use {bookTitleMax} characters or fewer",
+    "bookAuthorTooLong": "Use {bookAuthorMax} characters or fewer",
+    "thoughtTitleTooLong": "Use {thoughtTitleMax} characters or fewer",
+    "thoughtTextTooLong": "Use {thoughtTextMax} characters or fewer",
+    "tooManyGenres": "You can add up to {bookGenresMax} genres",
+    "genreTagTooLong": "Each genre can be up to {bookGenreMax} characters",
+    "tooManyCharacters": "You can add up to {charactersMax} characters",
+    "characterTooLong": "Each name can be up to {characterMax} characters",
+    "tooManyQuotes": "You can add up to {quotesMax} quotes",
+    "quoteTooLong": "Use {quoteTextMax} characters or fewer",
+    "plotTooLong": "Use {plotMax} characters or fewer",
+    "commentaryTooLong": "Use {commentaryMax} characters or fewer",
+    "ratingRequired": "Rating is required when Status is Read",
+    "moodRequired": "Choose at least one mood.",
+    "tooManyMoods": "Choose up to {moodsMax} moods.",
+    "mysteryGenreRequired": "Choose at least one genre.",
+    "tooManyMysteryGenres": "Choose up to {mysteryGenresMax} genres.",
+    "revealModeRequired": "Choose how much you want to know.",
+    "addressFieldTooLong": "That's too long.",
+    "paymentMethodRequired": "Choose a payment method.",
+    "nonReturnableAckRequired": "You need to acknowledge this before placing the order.",
+    "feedbackRatingRequired": "Choose a rating.",
+    "tooManyFeedbackTags": "Choose up to {feedbackTagsMax} tags.",
+    "cardNumberInvalid": "Enter a valid 16-digit card number",
+    "cardExpiryInvalid": "Enter a valid expiry date (MM/YY)",
+    "cardExpired": "This card has expired",
+    "cvvInvalid": "Enter a valid 3-digit CVV",
+    "phoneInvalid": "Enter a valid 8-digit phone number"
+  },
+  "passwordRules": {
+    "title": "Your password needs",
+    "length": "{passwordMin}+ characters",
+    "uppercase": "Uppercase",
+    "lowercase": "Lowercase",
+    "number": "Number",
+    "special": "Symbol",
+    "met": "met",
+    "unmet": "not met"
+  },
+  "errors": {
+    "network": "We couldn’t reach the server. Check your connection and try again.",
+    "server": "Something went wrong on our side. Please try again in a moment.",
+    "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
+    "invalidRequest": "We couldn’t process that request. Check the form and try again.",
+    "forbidden": "That request wasn’t allowed. Reload the page and try again.",
+    "unauthenticated": "Please log in to continue.",
+    "notFound": "We couldn’t find that."
+  },
+  "auth": {
+    "fields": {
+      "firstName": { "label": "First Name", "placeholder": "Jane" },
+      "lastName": { "label": "Last Name", "placeholder": "Austen" },
+      "email": { "label": "Email", "placeholder": "you@example.com" },
+      "password": { "label": "Password" },
+      "newPassword": { "label": "New Password" },
+      "confirmPassword": { "label": "Confirm Password" }
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password"
+    },
+    "invalidCredentials": "The email or password is incorrect.",
+    "emailTaken": "We couldn’t create an account with these details. If you already have one, log in or reset your password.",
+    "tokenInvalid": "This reset link is invalid or has expired.",
+    "register": {
+      "title": "Start your reading <mark>notebook</mark>",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Log in"
+    },
+    "login": {
+      "title": "Welcome <mark>back</mark>",
+      "submit": "Log In",
+      "forgot": "Forgot password?",
+      "noAccount": "New to MystBook?",
+      "createAccount": "Create an account"
+    },
+    "forgot": {
+      "title": "Reset your <mark>password</mark>",
+      "subtitle": "Enter your email and we’ll send you a link to choose a new one.",
+      "submit": "Send reset link",
+      "submitting": "Sending…",
+      "sentTitle": "Check your inbox",
+      "sentBody": "If an account exists for that address, we’ve sent a link to reset your password. It works for 60 minutes.",
+      "back": "Back to log in"
+    },
+    "reset": {
+      "title": "Choose a <mark>new password</mark>",
+      "subtitle": "Pick something you haven’t used before.",
+      "submit": "Reset password",
+      "submitting": "Saving…",
+      "doneTitle": "Password updated",
+      "doneBody": "You’ve been logged out everywhere. Log in with your new password.",
+      "toLogin": "Log in",
+      "missingTitle": "This link is incomplete",
+      "missingBody": "Open the link from your email again, or request a new one.",
+      "requestNew": "Request a new link"
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Almost there",
+    "title": "Tell us about <mark>yourself</mark>",
+    "subtitle": "A few answers help us suggest better books for you.",
+    "alreadyCompleted": "You’ve already finished this step.",
+    "optional": "Optional",
+    "fields": {
+      "genre": {
+        "label": "Genre",
+        "placeholder": "Select up to {genresMax} genres",
+        "selected": "{count} of {genresMax} selected",
+        "listLabel": "Genres",
+        "remove": "Remove {name}"
+      },
+      "authors": {
+        "label": "Favorite Authors",
+        "placeholder": "Type a name and press Enter",
+        "hint": "Any language. Press Enter after each name.",
+        "remove": "Remove {name}"
+      },
+      "about": {
+        "label": "About Me",
+        "placeholder": "What do you love to read, and what do you hope a good book gives you?",
+        "counter": "{count} / {max}"
+      }
+    },
+    "continue": "Continue",
+    "submitting": "Saving…",
+    "success": "Saved",
+    "opening": "Opening your library…"
+  },
+  "home": {
+    "eyebrow": "Welcome back, {name}",
+    "title": "My reading life, in <mark>five chapters</mark>.",
+    "intro": "Notes, characters and passages, kept together in one quiet place. Here's where it all lives."
+  },
+  "books": {
+    "eyebrow": "Your library",
+    "addFirst": "+ Add Your First Book",
+    "empty": {
+      "title": "This is the beginning of your <mark>world of books</mark>.",
+      "body": "Add your first title, and the story continues from here."
+    },
+    "welcomeModal": {
+      "eyebrow": "Your library begins",
+      "title": "Welcome to your <mark>world of books</mark>",
+      "cta": "+ Add Your First Book"
+    },
+    "libraryTitle": "My library",
+    "heroSubtitle": "The stories that live with you.",
+    "addAnother": "+Add book",
+    "filters": {
+      "searchLabel": "Search books",
+      "searchPlaceholder": "Search by title or author",
+      "filtersLabel": "Filters",
+      "statusLabel": "Status",
+      "allStatuses": "All statuses",
+      "genreLabel": "Genre",
+      "ratingLabel": "Rating",
+      "allRatings": "All ratings",
+      "ratingAndUp": "{count}+ stars",
+      "noResults": "No books match these filters.",
+      "clear": "Clear filters"
+    },
+    "card": {
+      "dragLabel": "Drag to reorder {title}"
+    },
+    "add": {
+      "title": "Add book",
+      "fields": {
+        "title": { "label": "Title", "placeholder": "The book's title" },
+        "author": { "label": "Author", "placeholder": "Who wrote it" },
+        "status": {
+          "label": "Status",
+          "placeholder": "Select status",
+          "wantToRead": "Want to Read",
+          "currentlyReading": "Currently Reading",
+          "read": "Read",
+          "didNotFinish": "Did Not Finish"
+        },
+        "rating": { "label": "Rating" },
+        "genre": {
+          "label": "Genre",
+          "hint": "Pick from the list, or type your own below.",
+          "selectPlaceholder": "Select genre",
+          "selected": "{count} of {genresMax} selected",
+          "listLabel": "Genres",
+          "placeholder": "Type your own and press Enter",
+          "remove": "Remove {name}"
+        },
+        "plot": { "label": "Plot / My Notes", "placeholder": "What happens, and what you thought of it." },
+        "characters": { "label": "Characters", "placeholder": "Type a name and press Enter", "remove": "Remove {name}" },
+        "quotes": { "label": "Quotes", "quote": "Quote {number}", "page": "Page", "add": "Add Quote", "remove": "Remove this quote" },
+        "commentary": { "label": "Commentary", "placeholder": "Any final thoughts." }
+      },
+      "ai": {
+        "button": "Auto-fill",
+        "hint": "Looks up the title (and author, if typed) on Google Books to fill in Author, Genre and Plot. It never overwrites anything you've already filled in.",
+        "loading": "Looking it up…"
+      },
+      "save": "Save Book",
+      "cancel": "Cancel",
+      "toast": "Book added to your library",
+      "aiNoMatch": "Couldn’t find this book — no worries, just fill it in yourself."
+    },
+    "deleteDialog": {
+      "iconLabel": "Delete {title}",
+      "buttonLabel": "Delete Book",
+      "title": "Delete this book?",
+      "body": "“{title}” will be permanently removed from your library. This can’t be undone.",
+      "confirm": "Delete",
+      "toast": "Book deleted"
+    },
+    "detail": {
+      "back": "Back to your library",
+      "save": "Save Changes",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "toast": "Changes saved",
+      "cover": {
+        "hint": "Add a cover photo, or let MystBook find one for you.",
+        "addPhoto": "Add Photo",
+        "uploading": "Uploading…",
+        "added": "Cover photo updated",
+        "findCover": "Find Cover",
+        "finding": "Searching…",
+        "found": "Cover found",
+        "noMatch": "Couldn’t find a cover for this one — try Add Photo instead.",
+        "tooLarge": "That image is too large (5 MB max).",
+        "invalidType": "Please choose a JPEG, PNG or WEBP image."
+      }
+    }
+  },
+  "aboutMe": {
+    "title": "About Me",
+    "subtitle": "Your reading journey, your preferences, your story.",
+    "save": "Save Changes",
+    "toast": "Changes saved",
+    "editSection": "Edit {section}",
+    "sections": {
+      "genre": { "title": "Genre", "description": "Select up to {genresMax} genres that interest you." },
+      "authors": { "title": "Favorite Authors", "description": "Add your favorite authors. You can add as many as you like." },
+      "about": { "title": "About Me", "description": "Tell us a little about yourself. What do you enjoy reading? What inspires you?" }
+    }
+  },
+  "mysteryBook": {
+    "entry": {
+      "title": "Mystery Book",
+      "subtitle": "Let us pick your next read based on your mood and taste.",
+      "cta": "Find My Mystery"
+    },
+    "landing": {
+      "subtitle": "A book chosen for your mood, your taste, and the moment you're in."
+    },
+    "recent": {
+      "title": "Recently Recommended",
+      "emptyTitle": "You don't have any recommended books yet.",
+      "addCta": "+ Add",
+      "added": "Added to My Books",
+      "viewInBooks": "View in My Books",
+      "deleteDialog": {
+        "iconLabel": "Remove {title}",
+        "title": "Remove this recommendation?",
+        "body": "“{title}” will be removed from Recently Recommended. This can’t be undone.",
+        "confirm": "Remove",
+        "toast": "Removed from Recently Recommended"
+      }
+    },
+    "moods": {
+      "magical": "Magical",
+      "cozy": "Cozy",
+      "escapist": "Escapist",
+      "emotional": "Emotional",
+      "intense": "Gripping",
+      "lightFun": "Lighthearted",
+      "thoughtProvoking": "Thought-provoking",
+      "mysterious": "Mysterious"
+    },
+    "moodHints": {
+      "magical": "I want wonder, imagination, and something extraordinary.",
+      "cozy": "I want something warm, comforting, and easy to sink into.",
+      "escapist": "I want to forget everyday life and get lost in another world.",
+      "emotional": "I want a story that makes me feel deeply and emotionally.",
+      "intense": "I want something that pulls me in and keeps me turning the pages.",
+      "lightFun": "I want something fun, uplifting, and easy to enjoy.",
+      "thoughtProvoking": "I want something that challenges my ideas or makes me see things differently.",
+      "mysterious": "I want secrets, suspense, unexpected discoveries, and twists."
+    },
+    "moodStep": {
+      "title": "What are you in the mood for?",
+      "subtitle": "Pick up to 2 moods.",
+      "cta": "Continue",
+      "validation": "Choose at least one mood."
+    },
+    "genres": {
+      "fantasy": "Fantasy",
+      "romance": "Romance",
+      "mysteryThriller": "Mystery & Thriller",
+      "scienceFiction": "Science Fiction",
+      "literaryFiction": "Literary Fiction",
+      "historicalFiction": "Historical Fiction",
+      "horror": "Horror",
+      "adventure": "Adventure",
+      "biography": "Biography",
+      "selfDevelopment": "Self-Development",
+      "youngAdult": "Young Adult",
+      "nonFiction": "Non-fiction"
+    },
+    "genreStep": {
+      "title": "What kind of books do you enjoy?",
+      "subtitle": "Pick up to 3.",
+      "cta": "Continue",
+      "skip": "Skip",
+      "validation": "Choose at least one genre."
+    },
+    "experiences": {
+      "escapeMe": "Escape Me",
+      "makeMeFeel": "Make Me Feel",
+      "keepMeHooked": "Keep Me Hooked",
+      "makeMeThink": "Make Me Think",
+      "makeMeSmile": "Make Me Smile",
+      "surpriseMe": "Surprise Me"
+    },
+    "experienceDescriptions": {
+      "escapeMe": "Take me somewhere else.",
+      "makeMeFeel": "Give me an emotional experience.",
+      "keepMeHooked": "Something I won’t want to put down.",
+      "makeMeThink": "Challenge my perspective.",
+      "makeMeSmile": "Something light and enjoyable.",
+      "surpriseMe": "Take me somewhere unexpected."
+    },
+    "experienceStep": {
+      "title": "What do you want from your next read?",
+      "subtitle": "Choose what you want to feel or experience.",
+      "cta": "Continue",
+      "skip": "Skip"
+    },
+    "revealModes": {
+      "keepMystery": { "label": "Keep It a Mystery", "description": "Don’t show me the book. I want to discover it when it reaches me." },
+      "showNow": { "label": "Show Me Now", "description": "Show me what you picked for me." }
+    },
+    "revealStep": {
+      "title": "How much do you want to know?",
+      "cta": "Continue",
+      "updateCta": "Continue",
+      "validation": "Choose how much you want to know."
+    },
+    "loading": "Finding your mystery…",
+    "resultKeepMystery": {
+      "heading": "We found your match.",
+      "subheading": "We picked a book based on your mood and reading taste.",
+      "matchLabel": "Your Match",
+      "reasoningLabel": "Why this book?",
+      "cta": "Send Me the Mystery"
+    },
+    "resultShowNow": {
+      "teaserHeading": "Your mystery is ready…",
+      "genreLabel": "Genre",
+      "moodMatchLabel": "Mood match",
+      "lengthLabel": "Approx. length",
+      "pages": "~{count} pages",
+      "revealCta": "Reveal the Title",
+      "reasoningLabel": "Why we picked it",
+      "cta": "Get This Book",
+      "changeCta": "Try Another Book",
+      "changing": "Finding another…",
+      "triedCount": "{count} of {max} tried"
+    },
+    "noMatch": {
+      "heading": "We couldn’t find the right mystery this time.",
+      "subheading": "Try changing your mood or genre to give us more options.",
+      "changePreferences": "Change Preferences",
+      "tryAgain": "Try Again"
+    },
+    "addressStep": {
+      "title": "Where should it go?",
+      "subtitle": "Required before we can place an order.",
+      "summaryTitle": "Delivery address",
+      "cta": "Continue",
+      "edit": "Edit",
+      "fields": {
+        "fullName": "Full name",
+        "addressLine1": "Address",
+        "addressLine2": "Apartment, suite, etc.",
+        "city": "City",
+        "region": "State / Region",
+        "postalCode": "Postal code",
+        "country": "Country",
+        "phone": "Phone"
+      }
+    },
+    "paymentStep": {
+      "title": "Order Summary",
+      "methodLabel": "Payment method",
+      "methods": { "card": "Card" },
+      "cardBrands": "Visa · Mastercard · ArCa",
+      "fields": {
+        "cardNumber": "Card number",
+        "cardholderName": "Cardholder name",
+        "expiryDate": "Expiry date",
+        "cvv": "CVV/CVC"
+      },
+      "price": "Price",
+      "deliveryFee": "Delivery fee",
+      "total": "Total",
+      "estimatedDelivery": "Estimated delivery",
+      "estimatedDeliveryValue": "3–5 business days",
+      "deliverTo": "Deliver to",
+      "nonReturnableAck": "I understand the Mystery Book is non-returnable.",
+      "cta": "Place Order"
+    },
+    "placingOrder": "Placing your order…",
+    "outOfStock": {
+      "heading": "This mystery just disappeared.",
+      "subheading": "The book we picked is no longer available. Let us find you another one.",
+      "cta": "Find Another Mystery"
+    },
+    "confirmed": {
+      "headingKeepMystery": "Your Mystery is on its way 🎁",
+      "headingShowNow": "Your book is on its way 📚",
+      "statusPreparing": "Preparing",
+      "statusShipped": "Shipped",
+      "statusDelivered": "Delivered",
+      "reviewCta": "Leave review (demo)",
+      "reviewTooltip": "You can leave a review once the book has been added to the Books page",
+      "startOver": "Start over"
+    },
+    "reviewStep": {
+      "title": "How did we do?",
+      "tagsLabel": "What did you like about it?",
+      "submit": "Submit",
+      "submittedHeading": "Thanks for the feedback",
+      "submittedBody": "This helps us pick a better match for your next Mystery Book.",
+      "submittedCta": "Find another Mystery"
+    },
+    "feedbackRatings": {
+      "loved": "Loved it",
+      "okay": "It was okay",
+      "not_for_me": "Not for me"
+    },
+    "feedbackTags": {
+      "genre": "The genre",
+      "story": "The story",
+      "writing": "The writing",
+      "characters": "The characters",
+      "mood": "The mood",
+      "author": "The author"
+    },
+    "noneAvailable": "We couldn’t find a match this time — try different moods.",
+    "back": "Back"
+  },
+  "thoughts": {
+    "title": "Thoughts",
+    "subtitle": "Write down what you don't want to lose.",
+    "newCta": "+ New Thought",
+    "optional": "Optional",
+    "intro": {
+      "eyebrow": "A personal journal",
+      "body": "A quiet place to capture an idea, a question, or a line worth remembering. Link a thought to the book that inspired it, mark the ones that matter, and look back through Recent or Favorites whenever you want to retrace your thinking.",
+      "features": {
+        "write": { "title": "Write freely", "body": "No prompts, no structure — just a title, if you want one, and whatever's on your mind." },
+        "link": { "title": "Link it to a book", "body": "Connect a thought to the book that inspired it, right from the thought itself." },
+        "find": { "title": "Find it again", "body": "Favorite the ones that matter, and filter by Recent, Favorites or With Books to look back." }
+      },
+      "closingQuote": "We write to taste life twice, in the moment and in retrospect.",
+      "closingAuthor": "Anaïs Nin",
+      "rightEyebrow": "Every thought has a place here."
+    },
+    "empty": {
+      "title": "Your thoughts deserve <mark>a place</mark>.",
+      "body": "Write down an idea, a question, a realization — anything you don't want to lose.",
+      "cta": "Write your first thought"
+    },
+    "filters": {
+      "label": "Filter thoughts",
+      "all": "All",
+      "recent": "Recent",
+      "favorites": "Favorites",
+      "withBook": "With Books"
+    },
+    "pagination": {
+      "label": "Thought pages",
+      "prev": "Previous page",
+      "next": "Next page",
+      "page": "Page {n}"
+    },
+    "card": {
+      "inspiredBy": "Inspired by",
+      "favorite": "Add to favorites",
+      "unfavorite": "Remove from favorites",
+      "updated": "Updated {date}"
+    },
+    "fields": {
+      "title": { "label": "Title", "placeholder": "Give it a name" },
+      "text": { "label": "Thought", "placeholder": "What's on your mind?" },
+      "book": { "label": "Inspired by a book", "placeholder": "Choose a book", "none": "No book", "addCta": "+ Add a book", "inspiredBy": "Inspired by" }
+    },
+    "new": {
+      "title": "New Thought",
+      "save": "Save Thought",
+      "cancel": "Cancel",
+      "toast": "Thought saved"
+    },
+    "detail": {
+      "back": "Back to Thoughts",
+      "save": "Save Changes",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "toast": "Changes saved"
+    },
+    "deleteDialog": {
+      "iconLabel": "Delete this thought",
+      "buttonLabel": "Delete Thought",
+      "title": "Delete this thought?",
+      "body": "This thought will be permanently removed. This can't be undone.",
+      "confirm": "Delete",
+      "toast": "Thought deleted"
+    }
+  },
+  "settings": {
+    "eyebrow": "Settings",
+    "title": "Settings",
+    "subtitle": "The details you gave when you created your account.",
+    "account": {
+      "eyebrow": "Account details",
+      "title": "Profile",
+      "emailHint": "Email address cannot be changed.",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "toast": "Your changes have been saved."
+    },
+    "security": {
+      "eyebrow": "Password & session",
+      "title": "Security",
+      "passwordBody": "Change the password you use to log in. This won’t sign you out of this device.",
+      "changePassword": "Change Password",
+      "modalTitle": "Choose a new password",
+      "saving": "Saving…",
+      "save": "Save",
+      "passwordToast": "Password changed. Your other sessions have been signed out.",
+      "signOutBody": "Signing out ends your session on this device. You’ll need to log in again to see your data."
+    }
+  },
+  "genres": {
+    "fiction": "Fiction",
+    "literaryFiction": "Literary Fiction",
+    "classics": "Classics",
+    "mystery": "Mystery",
+    "thriller": "Thriller",
+    "crime": "Crime",
+    "fantasy": "Fantasy",
+    "scienceFiction": "Science Fiction",
+    "romance": "Romance",
+    "historicalFiction": "Historical Fiction",
+    "horror": "Horror",
+    "adventure": "Adventure",
+    "youngAdult": "Young Adult",
+    "poetry": "Poetry",
+    "nonFiction": "Non-fiction",
+    "biography": "Biography & Memoir",
+    "history": "History",
+    "philosophy": "Philosophy",
+    "psychology": "Psychology",
+    "selfDevelopment": "Self-development",
+    "shortStories": "Short Stories",
+    "graphicNovel": "Graphic Novel"
+  },
+  "email": {
+    "resetSubject": "Reset your MystBook password",
+    "resetBody": "Hi {name},\n\nSomeone asked to reset the password for your MystBook account. Use the link below within 60 minutes. If this wasn’t you, you can ignore this email.\n\n{url}\n"
+  }
+}

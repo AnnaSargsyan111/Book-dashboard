@@ -1,0 +1,233 @@
+// MystBook data model. SQLite for local development; the schema is portable to PostgreSQL
+// (change the datasource provider, adapter and DATABASE_URL, then create a fresh migration baseline).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id                  String   @id @default(cuid())
+  firstName           String
+  lastName            String
+  /// Always stored trimmed + lower-cased. The unique index is the final guard against duplicates.
+  email               String   @unique
+  /// Argon2id PHC string. The plain password is never stored.
+  passwordHash        String
+  onboardingCompleted Boolean  @default(false)
+  /// True once the one-time "Welcome to your world of books" modal has been shown and dismissed. Persisted so it
+  /// never reappears, even across devices or a cleared browser.
+  welcomeModalSeen    Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
+  profile             UserProfile?
+  books               Book[]
+  mysteryPicks        MysteryPick[]
+  mysteryViews        MysteryRecommendationView[]
+  thoughts            Thought[]
+}
+
+/// One entry in a user's library. SQLite has no native enum, so `status` is a plain, code-validated string
+/// (see src/shared/validation/book.ts) — the same approach already used for UserProfile.genres.
+model Book {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  author    String
+  /// One of: want_to_read | currently_reading | read | did_not_finish
+  status    String
+  /// 1–5 in 0.5 steps. Only ever set when status = "read"; null otherwise (the star widget is inactive then).
+  rating    Float?
+  /// Free-form tags: picks from the shared 22-genre list and custom "Other" entries are stored the same way, as
+  /// plain strings (a custom tag is private to the book/user — there is no shared custom-tag registry).
+  genres    Json
+  /// "Plot / My Notes": free-form, manual entry.
+  plot      String?
+  /// Flat list of character names.
+  characters Json
+  /// {text: string, page?: number}[] — quotes, each with an optional page number.
+  quotes    Json
+  commentary String?
+  /// A local path (uploaded from the reader's device) or an external https URL (found via the Google Books
+  /// lookup). Null until a cover is set — the UI shows a placeholder.
+  coverUrl  String?
+  /// Set when this book was added via Mystery Book → Recently Recommended → "+ Add", linking back to the shown
+  /// recommendation that produced it (unique: a given recommendation can only ever become one library entry —
+  /// the "already added" check, not a duplicate detector). Null for every book added the ordinary way. `SetNull`
+  /// rather than cascading a delete either direction: deleting the book frees the recommendation to be added
+  /// again; the recommendation row itself never gets deleted by anything the app does today, but if it ever did,
+  /// the book should simply stop being linked, not disappear.
+  sourceMysteryViewId String?                    @unique
+  sourceMysteryView   MysteryRecommendationView? @relation(fields: [sourceMysteryViewId], references: [id], onDelete: SetNull)
+  /// Manual card position within the owner's library grid — lower sorts first. A freshly added book gets a
+  /// value one lower than the current lowest (so it leads, same as the old newest-first default did); from then
+  /// on the only writer is the "move left/right" swap (see book.repository.ts's `swapBookOrder`), which only
+  /// ever touches the two cards being swapped, never renumbers the whole library.
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  thoughts Thought[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, sortOrder])
+}
+
+/// A quick personal capture — an idea, quote or reflection, optionally linked to one of the user's own books.
+/// Unlike Book, there is no separate edit mode: every field is editable in place, the same "full replace" pattern
+/// as Book Detail (see src/shared/validation/thought.ts).
+model Thought {
+  id        String   @id @default(cuid())
+  userId    String
+  /// Optional — most thoughts are captured without one (see Thoughts page spec: "Do not force the user to
+  /// provide a title").
+  title     String?
+  text      String
+  favorite  Boolean  @default(false)
+  /// The book this thought was inspired by, if any. Set null (never cascaded away) if that book is later
+  /// deleted — the thought itself is still worth keeping.
+  bookId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book? @relation(fields: [bookId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([userId, favorite])
+  @@index([bookId])
+}
+
+/// Answers from the mandatory "Tell us about yourself" step. One row per user, created when onboarding completes.
+/// These feed the Mystery Book recommendation engine as User Profile signals.
+model UserProfile {
+  userId          String   @id
+  /// Genre KEYS (see src/shared/genres.ts), at most 5. Keys, not display names, so translations can change freely.
+  genres          Json
+  /// Free-text author names in any script, insertion order, at most 20.
+  favoriteAuthors Json
+  aboutMe         String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// Server-side session. Only the SHA-256 hash of the cookie token is stored, so a DB leak yields no usable sessions.
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Single-use password reset token (hash only, 60 min lifetime).
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// One generated Mystery Book pick. Recorded the moment the recommendation engine runs (not only on final
+/// confirmation) so `bookSlug` is excluded from that user's future candidate pools either way — see
+/// src/server/mystery/recommend.ts. `bookSlug` references the static catalog in src/server/mystery/catalog.ts,
+/// not a database table: the catalog has no curation UI yet (see README "Known limits").
+model MysteryPick {
+  id         String   @id @default(cuid())
+  userId     String
+  bookSlug   String
+  /// "keep_mystery" | "show_now" — see src/shared/validation/mystery.ts
+  revealMode String
+  /// Mood keys selected in Step 1 (1–2).
+  moods      Json
+  /// Mystery-genre keys selected in Step 2, or null when the cold-start check skipped that step.
+  genres     Json?
+  /// A single Step 3 experience key, or null (that step is optional).
+  experience String?
+  /// Delivery address — collected in a step after the result screen's CTA, required before an order is placed.
+  /// Null until that step is completed (the pick itself is recorded earlier, at recommend-time).
+  fullName     String?
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  region       String?
+  postalCode   String?
+  country      String?
+  phone        String?
+  /// "card" | "cash_on_delivery" — set once the (MVP, no real gateway) Payment step completes.
+  paymentMethod String?
+  /// When the order was placed. Null until then; distinct from `createdAt`, which is recommend-time.
+  orderedAt     DateTime?
+  /// "loved" | "okay" | "not_for_me" — the optional Post-Delivery Feedback rating, set from the confirmation
+  /// screen (there is no real fulfillment yet to gate this on, so it's reachable right after ordering).
+  feedbackRating String?
+  /// Feedback tag keys the user picked (genre/story/writing/characters/mood/author), or null if skipped.
+  feedbackTags   Json?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Mystery Book → "Recently Recommended": every "Show Me Now" catalog title actually shown to the user — both
+/// the one they ultimately commit to (`/mystery/recommend/commit`) and any others they looked at along the way
+/// via "Try Another Book" (`/mystery/recommend/preview`) — recorded the moment each is fetched. A book that
+/// reappears in the same reroll cycle (cycling back around after `LIMITS.mysteryRerollMax`) is never recorded
+/// twice: the wrap-around reuses an already-fetched candidate rather than calling the API again, and the unique
+/// constraint below is a second guard regardless. Deliberately separate from `MysteryPick`: a book shown here
+/// and passed over must stay eligible for a future recommendation, since `MysteryPick` (not this table) is what
+/// `listPickedSlugs` reads to exclude a title from future candidate pools — recording a view here never touches
+/// that exclusion list, so Section 11's "the book you passed on stays eligible for a future session" keeps
+/// holding exactly as it did before this table existed.
+model MysteryRecommendationView {
+  id       String @id @default(cuid())
+  userId   String
+  bookSlug String
+  /// Mood keys selected in Step 1, and the optional Step 3 experience key — kept here (not re-derived) so the
+  /// "why this pick" reasoning shown in Recently Recommended can be rebuilt in the viewer's current language.
+  moods      Json
+  experience String?
+  createdAt  DateTime @default(now())
+
+  user        User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// The library entry this recommendation became, once "+ Add" is used — see `Book.sourceMysteryViewId`.
+  libraryBook Book?
+
+  @@unique([userId, bookSlug])
+  @@index([userId])
+}
+
+/// Sliding-window abuse control (register / login / forgot-password). Database-backed so it survives restarts
+/// and works with several server instances.
+model RateLimitEvent {
+  id         Int      @id @default(autoincrement())
+  scope      String
+  key        String
+  occurredAt DateTime @default(now())
+
+  @@index([scope, key, occurredAt])
+}

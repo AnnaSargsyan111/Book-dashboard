@@ -1,0 +1,1499 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------------------------------------
+   MystBook design tokens.
+   Light = "Paper" (cool sage-grey stock, ink-blue type). Dark = "Ink" (deep petrol, pale type).
+   The single accent is the HIGHLIGHTER: it marks what matters (selected text, met requirements,
+   the focus bar), the way a reader marks a passage.
+   ------------------------------------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  --paper: #eef0eb;
+  --surface: #fbfbf8;
+  --ink: #15232b;
+  --ink-2: #3a4b54;
+  --muted: #566871;
+  --rule: #d4dad3;
+  --rule-strong: #a9b4ac;
+  --accent: #2c4a7a;
+  --marker: #f3de6e;
+  --marker-ink: #15232b;
+  --danger: #a92f1c;
+  --danger-bg: #f8e4df;
+  --ok: #216a48;
+
+  /* Library-cloth panel and the manuscript page on it (the page stays paper-coloured in both themes). */
+  --cloth: #0f2b2a;
+  --cloth-2: #1a4442;
+  --cloth-ink: #e6ede6;
+  --sheet: #f5f6f0;
+  --sheet-ink: #15232b;
+  --pencil: #2c4a7a;
+
+  --f-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --f-ui: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Warm page-atmosphere palette (see .page-scene below) — a distinct, warmer family from --paper's cool
+     sage-grey on purpose: this is the "light" each room gets, not the structural chrome. */
+  --scene-ivory: #f6f0e2;
+  --scene-parchment: #ecdfc4;
+  --scene-walnut: #6b4a33;
+  --scene-taupe: #a08e73;
+  --scene-espresso: #241812;
+  --scene-espresso-2: #40281a;
+  --scene-candle: #f2b25c;
+}
+
+/* Armenian text gets the Armenian faces FIRST (the Latin fonts' generated fallback faces claim every character and
+   would otherwise catch it). Family names are written out on purpose: next/font's variables also list a generated
+   "... Fallback" face, which would steal the Latin letters that appear inside Armenian text. Those still fall through
+   to Newsreader / Instrument Sans. */
+:lang(hy) {
+  --f-display: "Noto Serif Armenian", var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --f-ui: "Noto Sans Armenian", var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --paper: #0e1a20;
+    --surface: #15252c;
+    --ink: #e9ebe4;
+    --ink-2: #c5cec9;
+    --muted: #94a5ab;
+    --rule: #263a42;
+    --rule-strong: #4a616a;
+    --accent: #9fbdeb;
+    --marker: #d9c45c;
+    --marker-ink: #0e1a20;
+    --danger: #f39a89;
+    --danger-bg: #3b201c;
+    --ok: #86d1a9;
+
+    --cloth: #08191b;
+    --cloth-2: #0f2a2c;
+
+    --scene-ivory: #1c1712;
+    --scene-parchment: #241d15;
+    --scene-walnut: #c9a06f;
+    --scene-taupe: #8c7c62;
+    --scene-espresso: #0b0705;
+    --scene-espresso-2: #1e130c;
+    --scene-candle: #f0b45c;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-marker: var(--marker);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-ok: var(--ok);
+  --color-cloth: var(--cloth);
+  --color-cloth-2: var(--cloth-2);
+  --color-cloth-ink: var(--cloth-ink);
+  --font-display: var(--f-display);
+  --font-sans: var(--f-ui);
+}
+
+/* ---------------------------------------------------------------------------------------------- base */
+html {
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-ui);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--marker);
+  color: var(--marker-ink);
+}
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 0.375rem;
+}
+
+h1,
+h2 {
+  font-family: var(--f-display);
+  font-weight: 500;
+}
+
+/* Armenian needs air above and below its letters, and never negative tracking. */
+:lang(hy) h1,
+:lang(hy) h2,
+:lang(hy) .font-display {
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+/* Small all-caps labels read as shouting in Armenian, which has no tradition of spaced capitals. */
+:lang(hy) .uppercase {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+/* ---------------------------------------------------------------------------------------- highlighter */
+.marker {
+  /* <mark> ships with a solid yellow background; only the marker band below should show. */
+  background-color: transparent;
+  color: inherit;
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  background-image: linear-gradient(to bottom, transparent 58%, var(--marker) 58%, var(--marker) 92%, transparent 92%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Sweeps across once, like a marker being drawn. */
+.marker-sweep {
+  background-size: 0% 100%;
+  animation: sweep 900ms var(--ease-out) var(--sweep-delay, 350ms) forwards;
+}
+
+/* Highlight that draws itself in when a requirement becomes met (driven by data-met on the row). */
+.marker-live {
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  color: inherit;
+  background-image: linear-gradient(to bottom, transparent 58%, var(--marker) 58%, var(--marker) 92%, transparent 92%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 420ms var(--ease-out);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+[data-met="true"] .marker-live {
+  background-size: 100% 100%;
+  color: var(--marker-ink);
+}
+
+/* ------------------------------------------------------------------------------------------- controls */
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  background: transparent;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.control:hover {
+  border-color: var(--rule-strong);
+}
+
+.control:focus-within {
+  border-color: var(--ink);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.control[data-invalid="true"] {
+  border-color: var(--danger);
+  background: color-mix(in oklab, var(--danger-bg) 35%, transparent);
+}
+
+/* The highlighter bar that draws in under the focused field. */
+.control::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: var(--marker);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 320ms var(--ease-out);
+}
+
+.control:focus-within::after {
+  transform: scaleX(1);
+}
+
+.control[data-invalid="true"]::after {
+  background: var(--danger);
+}
+
+.control input {
+  width: 100%;
+  min-width: 0;
+  height: 3.125rem;
+  padding: 0 1rem;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem; /* 16px keeps iOS from zooming on focus */
+  border: 0;
+  outline: 0;
+}
+
+.control input::placeholder,
+.control textarea::placeholder {
+  color: color-mix(in oklab, var(--muted) 75%, transparent);
+}
+
+.control textarea {
+  width: 100%;
+  min-height: 9.5rem;
+  padding: 0.875rem 1rem;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.55;
+  border: 0;
+  outline: 0;
+  resize: vertical;
+}
+
+/* Read-only values (for example the name carried over from registration): present, but clearly not editable. */
+.control[data-readonly="true"] {
+  background: transparent;
+  border-style: dashed;
+}
+
+.control[data-readonly="true"]::after {
+  display: none;
+}
+
+.control[data-readonly="true"] input {
+  color: var(--ink-2);
+  cursor: default;
+}
+
+.control button[role="combobox"] {
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Status (Add Book): a plain native <select>, styled like every other field. */
+.control select {
+  width: 100%;
+  height: 3.125rem;
+  padding: 0 2.75rem 0 1rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------------------- the auth page ruling */
+.ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 35px,
+    color-mix(in oklab, var(--rule) 42%, transparent) 35px,
+    color-mix(in oklab, var(--rule) 42%, transparent) 36px
+  );
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+}
+
+.cloth {
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 4px),
+    radial-gradient(120% 90% at 15% 0%, var(--cloth-2), var(--cloth) 62%);
+}
+
+/* --------------------------------------------------------------- the manuscript page (auth panel) ---
+   A sheet of paper with a margin rule. A quill (WritingSheet) writes on it word by word. */
+.sheet {
+  background:
+    linear-gradient(to right, transparent 0, transparent calc(100% - 8.5rem), rgb(44 74 122 / 0.18) calc(100% - 8.5rem), rgb(44 74 122 / 0.18) calc(100% - 8.44rem), transparent calc(100% - 8.44rem)),
+    var(--sheet);
+  color: var(--sheet-ink);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.5) inset,
+    0 30px 60px -20px rgb(0 0 0 / 0.55),
+    0 12px 24px -12px rgb(0 0 0 / 0.4);
+}
+
+/* --------------------------------------------------------------------------------- page atmosphere ---
+   One warm, book-themed backdrop per primary section (About Me / Books / Mystery Book / Thoughts / Settings) —
+   same materials, spacing and motion language throughout, a different mood per room. Purely decorative
+   (aria-hidden), fixed behind the header and content. Mystery Book is the one room that goes dark, so its
+   content already sits on `bg-surface` panels (StatusPanel etc.); the other four stay light enough that text
+   never needs an opaque card between it and the scene.
+
+   Every section now also carries a real photograph (hero band + sidebar ground, see below), so the illustrated
+   corner motif each room used to show here (a shelf, a candle-book, a pen, an arch) has been retired — it would
+   only re-draw in flat vector lines what the photo already says, and the two together read as two competing
+   decorative systems rather than one. The soft tonal wash stays: it's an ambient backdrop, not a competing
+   illustration, and it keeps the page's light content area feeling like one continuous room. */
+.page-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  animation: scene-in 900ms var(--ease-out) both;
+}
+
+/* The sidebar now permanently occupies this width on large screens — without this, a fixed, z-index:0 scene
+   stacks above the (non-positioned) sidebar regardless of DOM order and paints over its dark background. */
+@media (min-width: 64rem) {
+  .page-scene {
+    left: 16.5rem;
+  }
+}
+
+.page-scene-wash {
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes scene-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* About Me — a personal reading corner: soft window light from the upper left. */
+[data-scene="aboutMe"] .page-scene-wash {
+  background:
+    radial-gradient(52% 46% at 12% 0%, color-mix(in oklab, var(--scene-candle) 26%, transparent), transparent 72%),
+    linear-gradient(165deg, var(--scene-ivory), var(--scene-parchment) 88%);
+}
+
+/* Books — the collection itself: warm wood tones rising from the base. Books is the core section, so it can
+   carry a slightly richer composition than the others. */
+[data-scene="books"] .page-scene-wash {
+  background:
+    radial-gradient(50% 40% at 85% 0%, color-mix(in oklab, var(--scene-candle) 20%, transparent), transparent 74%),
+    linear-gradient(to top, color-mix(in oklab, var(--scene-walnut) 18%, var(--scene-parchment)), var(--scene-ivory) 62%);
+}
+
+/* Mystery Book — discovery by candlelight: a deep espresso ground, an off-centre glow, a slower reveal. Darker
+   and more atmospheric than the others, but restrained — elegant, not horror-themed. */
+[data-scene="mysteryBook"] {
+  animation-duration: 1400ms;
+}
+[data-scene="mysteryBook"] .page-scene-wash {
+  background:
+    radial-gradient(36% 40% at 72% 40%, color-mix(in oklab, var(--scene-candle) 60%, transparent), transparent 72%),
+    radial-gradient(120% 90% at 15% 100%, var(--scene-espresso-2), var(--scene-espresso) 68%);
+}
+
+/* Thoughts — the writing desk: the same ruled lines as the auth page, a soft lamp glow, calmer than Mystery
+   Book. */
+[data-scene="thoughts"] .page-scene-wash {
+  background:
+    radial-gradient(42% 36% at 90% 4%, color-mix(in oklab, var(--scene-candle) 16%, transparent), transparent 78%),
+    linear-gradient(180deg, var(--scene-ivory), var(--scene-parchment) 94%);
+}
+[data-scene="thoughts"] .page-scene-rules {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 42px,
+    color-mix(in oklab, var(--scene-walnut) 22%, transparent) 42px,
+    color-mix(in oklab, var(--scene-walnut) 22%, transparent) 43px
+  );
+  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 70%, transparent);
+  opacity: 0.4;
+}
+
+/* Settings — the calmest room: almost flat, nothing that competes with the form. */
+[data-scene="settings"] .page-scene-wash {
+  background: linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment));
+}
+
+/* Home — the app's own hub, not one of the five rooms: a quiet wash close to Settings', plus one soft overhead
+   glow (an "arrival" light) since this is the very first thing a user sees each time they return. */
+[data-scene="home"] .page-scene-wash {
+  background:
+    radial-gradient(46% 38% at 50% 0%, color-mix(in oklab, var(--scene-candle) 14%, transparent), transparent 76%),
+    linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment) 92%);
+}
+
+/* ------------------------------------------------------------- Sign Up: the whole form on the first screen ---
+   Spacing only (no sizes, type, colours or content change): a shorter header, less padding under the form and a
+   little less air between the heading and the fields. On shorter screens the air tightens a step further. */
+@media (min-width: 64rem) {
+  .register-header {
+    padding-block: 0.75rem;
+  }
+  .register-main {
+    padding-bottom: 1rem;
+  }
+  /* the Sign Up title has no subtitle any more, so it can keep a generous gap above the first fields */
+  .register-heading {
+    margin-bottom: 2.5rem;
+  }
+  .register-form {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 820px) {
+  .register-header {
+    padding-block: 0.5rem;
+  }
+  .register-main {
+    padding-bottom: 0.5rem;
+  }
+  .register-form {
+    gap: 0.75rem;
+  }
+}
+
+/* -------------------------------------------------- Onboarding: the whole form on the first screen ---
+   Same idea as Sign Up, spacing only: shorter header, less padding under the form, tighter gaps. The form is longer
+   than Sign Up (a text area and a chip field), so the tighter step also trims the space around the exit link. */
+@media (min-width: 64rem) {
+  .onboarding-header {
+    padding-block: 0.75rem;
+  }
+  .onboarding-main {
+    padding-bottom: 1rem;
+  }
+  .onboarding-eyebrow {
+    margin-bottom: 0.5rem;
+  }
+  .onboarding-heading {
+    margin-bottom: 1.5rem;
+  }
+  .onboarding-form {
+    gap: 1rem;
+  }
+  .onboarding-exit {
+    margin-top: 1rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 860px) {
+  .onboarding-header {
+    padding-block: 0.5rem;
+  }
+  .onboarding-main {
+    padding-bottom: 0.5rem;
+  }
+  .onboarding-eyebrow {
+    margin-bottom: 0.375rem;
+  }
+  .onboarding-heading {
+    margin-bottom: 1.125rem;
+  }
+  .onboarding-form {
+    gap: 0.75rem;
+  }
+  .onboarding-exit {
+    margin-top: 0.5rem;
+  }
+}
+
+/* ------------------------------------------------- Sign Up and onboarding, in Armenian: still one screen ---
+   Armenian runs longer (headings and subtitles take more lines), so on short desktop windows the same two screens
+   tighten one step further, spacing only, and only when the language is Armenian. */
+@media (min-width: 64rem) and (max-height: 800px) {
+  :lang(hy) .register-header,
+  :lang(hy) .onboarding-header {
+    padding-block: 0.25rem;
+  }
+  :lang(hy) .register-main,
+  :lang(hy) .onboarding-main {
+    padding-bottom: 0;
+  }
+  :lang(hy) .onboarding-heading {
+    margin-bottom: 0.75rem;
+  }
+  :lang(hy) .onboarding-heading .heading-subtitle {
+    margin-top: 0.5rem;
+  }
+  :lang(hy) .register-form,
+  :lang(hy) .onboarding-form {
+    gap: 0.5rem;
+  }
+  :lang(hy) .register-password {
+    gap: 0.5rem;
+  }
+  :lang(hy) .register-form button[type="submit"] {
+    margin-top: 0;
+  }
+  :lang(hy) .onboarding-eyebrow {
+    margin-bottom: 0.25rem;
+  }
+  :lang(hy) .onboarding-exit {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Very short windows (under 730px tall), either language. The language switcher stops taking up a row of its own
+   and sits in the top-right corner (the form column is centred, so that corner is empty), which gives the form the
+   row back. */
+@media (min-width: 64rem) and (max-height: 730px) {
+  .register-header,
+  .onboarding-header,
+  :lang(hy) .register-header,
+  :lang(hy) .onboarding-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* above the form area (which comes later in the page and would otherwise cover the switcher and eat its clicks) */
+    z-index: 20;
+    padding-block: 0.5rem;
+  }
+  .register-main,
+  .onboarding-main,
+  :lang(hy) .register-main,
+  :lang(hy) .onboarding-main {
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+  }
+  .onboarding-heading,
+  :lang(hy) .onboarding-heading {
+    margin-bottom: 0.5rem;
+  }
+  .register-form,
+  .onboarding-form,
+  :lang(hy) .register-form,
+  :lang(hy) .onboarding-form {
+    gap: 0.375rem;
+  }
+  .onboarding-exit,
+  :lang(hy) .onboarding-exit {
+    margin-top: 0;
+  }
+}
+
+/* Armenian letters are wider: a touch smaller keeps the poem's lines from breaking more than they need to. */
+:lang(hy) .poem {
+  font-size: 1.12rem;
+}
+
+@media (min-width: 80rem) {
+  :lang(hy) .poem {
+    font-size: 1.26rem;
+  }
+}
+
+/* A word being "written": revealed left to right over --dur, like a stroke of ink following the nib. */
+.ink-word {
+  clip-path: inset(-0.4em 100% -0.4em -0.1em);
+  transition: clip-path var(--dur, 300ms) linear;
+}
+
+.ink-word[data-written="true"] {
+  clip-path: inset(-0.4em -0.3em -0.4em -0.1em);
+}
+
+/* The highlighter waits until the phrase is written, then sweeps (marker-sweep). */
+.marker-wait {
+  background-size: 0% 100%;
+}
+
+/* -------------------------------------------------------- log in scene: letters rising from an open book --- */
+.letters {
+  container-type: size; /* lets the letters travel in units of the scene's own size (cqw / cqh) */
+}
+
+.sentence-letter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: #f1e2b9;
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.28);
+  /* Base state = assembled and readable, so reduced motion (animation removed below) still shows the sentence. */
+  transform: translate(var(--tx), var(--ty)) rotate(0deg) scale(1);
+  opacity: 1;
+  animation: sentence-cycle 12s ease-in-out var(--delay) infinite;
+  will-change: transform, opacity;
+}
+
+/* ------------------------------------------------- onboarding scene: books stacking one by one, on a loop ---
+   One round = 10s: the books drop in one after another (~3s), the yellow line draws, the quote is highlighted, the
+   scene holds, then fades. The fade's animationend restarts the round with the next quote (see StackScene). */
+.pile-cycle {
+  animation: pile-cycle 10s linear forwards;
+}
+
+.pile-book {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: book-in 650ms var(--ease-out) calc(300ms + var(--i, 0) * 420ms) both;
+}
+
+.pile-line {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: draw 1200ms var(--ease-out) 3s forwards;
+}
+
+/* Highlighter on a dark surface: the marker sweeps across the phrase, then the ink flips to dark inside it. */
+.marker-dark {
+  padding: 0 0.16em;
+  margin: 0 -0.16em;
+  color: var(--cloth-ink);
+  background: linear-gradient(var(--marker), var(--marker)) left 62% / 0% 86% no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation:
+    sweep-dark 800ms var(--ease-out) var(--sweep-delay, 1.4s) forwards,
+    ink-flip 200ms linear calc(var(--sweep-delay, 1.4s) + 380ms) forwards;
+}
+
+/* ---- the quill ---- */
+.quill-wrap {
+  transition: opacity 700ms ease;
+  filter: drop-shadow(0 4px 3px rgb(21 35 43 / 0.28));
+}
+
+.quill {
+  transform-box: view-box;
+  transform-origin: 4px 68px; /* the nib: the quill tilts around the point that touches the page */
+}
+
+/* Writing: the hand's small, quick tremor. Resting: a slow drift, like a feather in still air. */
+.quill[data-writing="true"] {
+  animation: quill-write 170ms ease-in-out infinite alternate;
+}
+
+.quill[data-writing="false"] {
+  animation: quill-rest 5s ease-in-out infinite alternate;
+}
+
+/* ----------------------------------------------------------------------------------------- animations */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sweep {
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+/* One cycle (12s): letters fade in near the book (0–15%), hold there loosely scattered (15–29%), rise and gather
+   into the sentence (29–41%), hold fully formed for ~5s — long enough to read (41–83%), then scatter back down
+   and fade before the next cycle (83–100%). */
+@keyframes sentence-cycle {
+  0% {
+    opacity: 0;
+    transform: translate(var(--sx), var(--sy)) rotate(var(--srot)) scale(var(--sscale));
+  }
+  15% {
+    opacity: 0.55;
+    transform: translate(var(--sx), var(--sy)) rotate(var(--srot)) scale(var(--sscale));
+  }
+  29% {
+    opacity: 0.55;
+    transform: translate(var(--sx), var(--sy)) rotate(var(--srot)) scale(var(--sscale));
+  }
+  41% {
+    opacity: 1;
+    transform: translate(var(--tx), var(--ty)) rotate(0deg) scale(1);
+  }
+  83% {
+    opacity: 1;
+    transform: translate(var(--tx), var(--ty)) rotate(0deg) scale(1);
+  }
+  95% {
+    opacity: 0.55;
+    transform: translate(var(--sx), var(--sy)) rotate(var(--srot)) scale(var(--sscale));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--sx), var(--sy)) rotate(var(--srot)) scale(var(--sscale));
+  }
+}
+
+@keyframes book-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-90px);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pile-cycle {
+  0%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sweep-dark {
+  to {
+    background-size: 100% 86%;
+  }
+}
+
+@keyframes ink-flip {
+  to {
+    color: var(--marker-ink);
+  }
+}
+
+@keyframes quill-write {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(1.1deg);
+  }
+}
+
+@keyframes quill-rest {
+  from {
+    transform: rotate(-0.8deg) translateY(0);
+  }
+  to {
+    transform: rotate(0.6deg) translateY(-2px);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Placing-order loading state: a slow, gentle sway — "soft loading motion," not a spinner. */
+@keyframes book-sway {
+  0%,
+  100% {
+    transform: rotate(-2deg) translateY(0);
+  }
+  50% {
+    transform: rotate(2deg) translateY(-5px);
+  }
+}
+
+.animate-book-sway {
+  animation: book-sway 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-book-sway {
+    animation: none;
+  }
+}
+
+.animate-rise {
+  animation: rise 520ms var(--ease-out) both;
+}
+
+.animate-fade {
+  animation: fade 400ms ease-out both;
+}
+
+.skeleton {
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, var(--rule) 25%, color-mix(in oklab, var(--rule) 45%, var(--surface)) 50%, var(--rule) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* ------------------------------------------------------------- onboarding -> library entrance transition ---
+   A closed cover swings open on the library-cloth backdrop (the same one behind the auth screens), then the whole
+   overlay fades so the Books page underneath — already rendered — can take over. Plays once. */
+.entrance-overlay {
+  animation: fade 350ms ease-in 1150ms both reverse;
+}
+
+.entrance-scene {
+  position: relative;
+  width: 11rem;
+  height: 15rem;
+  perspective: 1400px;
+}
+
+.entrance-base,
+.entrance-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+}
+
+.entrance-base {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0 1.4rem;
+  background: var(--sheet);
+  box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.55);
+}
+
+.entrance-base-line {
+  height: 0.2rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--sheet-ink) 22%, transparent);
+}
+.entrance-base-line:nth-child(2) {
+  width: 70%;
+}
+
+.entrance-cover {
+  display: grid;
+  place-items: center;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  background: radial-gradient(120% 140% at 20% 0%, var(--cloth-2), var(--cloth) 70%);
+  box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.6);
+  animation: entrance-open 850ms var(--ease-out) 250ms both;
+}
+.entrance-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--marker) 55%, transparent);
+  border-radius: 0.3rem;
+  opacity: 0.55;
+}
+
+@keyframes entrance-open {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-146deg);
+  }
+}
+
+/* --------------------------------------------------------------------------- Books: the Welcome Modal ---
+   An entrance moment, not an alert box: a library-cloth spine (with a marker-yellow ribbon) beside the message. */
+.welcome-backdrop {
+  animation: fade 260ms ease-out both;
+}
+
+.welcome-panel {
+  animation: welcome-in 420ms var(--ease-out) both;
+}
+
+.welcome-ribbon {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0.5rem;
+  height: 3.75rem;
+  transform: translateX(-50%);
+  background: var(--marker);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+
+@keyframes welcome-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The header's account avatar: a small monogram "seal" (an ex-libris nameplate, not a photo placeholder). */
+.seal {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.4);
+}
+
+/* Mobile: a plain three-line glyph (no icon font) for the menu toggle. */
+.menu-glyph {
+  display: flex;
+  width: 18px;
+  flex-direction: column;
+  gap: 4px;
+}
+.menu-glyph span {
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+}
+.menu-glyph span:nth-child(2) {
+  width: 70%;
+}
+
+/* Mobile's full-screen menu, styled like a book's table of contents: icon-led entries in the display face. */
+.toc {
+  display: flex;
+  flex-direction: column;
+}
+.toc-row {
+  border-bottom: 1px solid var(--rule);
+  animation: toc-row-in 380ms var(--ease-out) both;
+  animation-delay: calc(var(--i) * 45ms + 60ms);
+}
+.toc-row:first-child {
+  border-top: 1px solid var(--rule);
+}
+.toc-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.15rem 0.1rem;
+  font-family: var(--f-display);
+  font-size: clamp(1.5rem, 1.2rem + 2vw, 2rem);
+  color: var(--ink-2);
+  transition: color 180ms ease;
+}
+.toc-link:hover,
+.toc-link:focus-visible {
+  color: var(--ink);
+}
+.toc-link[data-active] {
+  color: var(--ink);
+}
+
+/* Dark variant: the mobile menu now opens on the same library-cloth material as the sidebar, not a light sheet. */
+.toc-dark .toc-row {
+  border-bottom-color: rgb(255 255 255 / 0.1);
+}
+.toc-dark .toc-row:first-child {
+  border-top-color: rgb(255 255 255 / 0.1);
+}
+.toc-dark .toc-link {
+  color: color-mix(in oklab, var(--cloth-ink) 62%, transparent);
+}
+.toc-dark .toc-link:hover,
+.toc-dark .toc-link:focus-visible,
+.toc-dark .toc-link[data-active] {
+  color: var(--cloth-ink);
+}
+.toc-dark .toc-link[data-active] svg {
+  color: var(--marker);
+}
+
+/* --------------------------------------------------------------------------------- the app shell: sidebar ---
+   The whole product's spine, fixed for the life of the session, that every signed-in page sits beside: warm
+   ivory paper (the same `--scene-ivory`/`--scene-parchment` the open-book pages and scene washes already use),
+   not the old dark "cloth" fill (`.cloth`/`--cloth-*` stay in use elsewhere — the mobile table-of-contents
+   takeover and the pre-login auth panel both still want that dark, dramatic material; this is the one case that
+   moved away from it). Each section still carries its own real photograph (`.sidebar-photo-frame`), just as a
+   small framed card below the logo now rather than filling the whole column — a keepsake on the desk, not a
+   backdrop the nav sits on top of, which is also why nothing here needs the old dark scrim for legibility. */
+.sidebar {
+  position: relative;
+  width: 16.5rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment) 94%);
+  border-right: 1px solid var(--rule);
+}
+
+.sidebar-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  color: var(--muted);
+  transition: color 180ms ease, background-color 180ms ease;
+}
+.sidebar-link:hover {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--scene-walnut) 8%, transparent);
+}
+.sidebar-link[data-active] {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--scene-walnut) 16%, var(--scene-ivory));
+}
+.sidebar-link[data-active] .sidebar-link-icon {
+  color: color-mix(in oklab, var(--scene-espresso) 65%, var(--scene-walnut));
+}
+.sidebar-link-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: color 180ms ease;
+}
+.sidebar-link:hover .sidebar-link-icon {
+  color: var(--ink-2);
+}
+
+/* The sidebar's own photo, now a small framed card (a rounded window with a hairline border and a soft contact
+   shadow, like a photograph set on a desk) rather than a full-bleed backdrop — each section's own real photo,
+   cropped to this card's own, much shorter aspect ratio. */
+.sidebar-photo-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--rule-strong);
+  box-shadow: 0 14px 30px -18px rgb(0 0 0 / 0.3);
+}
+
+/* The quote at the sidebar's foot, now its own small note card sitting on the paper rather than text laid over
+ * a photo — present but quiet, a real attributed line rather than a call to action. */
+.sidebar-note {
+  position: relative;
+  padding: 0.25rem 0.25rem 0.5rem;
+}
+
+.sidebar-quote::before {
+  content: "“";
+  font-family: var(--f-display);
+}
+
+/* The typing cursor: a thin bar that blinks while the quote is still being written, removed once it's done
+   (the closing quote mark takes its place in the markup instead — see `Sidebar.tsx`). */
+.sidebar-caret {
+  display: inline-block;
+  width: 1px;
+  height: 0.95em;
+  margin-left: 1px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: sidebar-caret-blink 900ms steps(1, jump-none) infinite;
+}
+@keyframes sidebar-caret-blink {
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------------------------ Books: the hero ---
+   The one hero in the app still built as a full-bleed band (every other section traded theirs for an inset
+   open-book page) — but no longer a photograph, and no longer its own dark room, either: `.shelf-hero` is now a
+   frosted-glass band in its own right, the same recipe `.shelf-glass` below uses, just lighter — it lets
+   `[data-scene="books"] .page-scene-wash` (the page's own warm wood-tone wash, already sitting fixed behind
+   everything) show through, softly blurred, so the hero reads as one continuous surface with the page rather than
+   a separate, darker room. `BookshelfScene` (`src/ui/scenes/BookshelfScene.tsx`) draws the actual shelf of books
+   in the app's own tokens on top of that glass, its spines translucent too (`.shelf-books`) — the same frosted
+   quality the title panel has, carried across the whole row rather than stopping at the panel's edge.
+   `.shelf-glass` is that title panel: its own, slightly stronger blur, so it still reads as the topmost layer.
+   `.shelf-grain` is the same hairline crosshatch every other scene in the shell carries. */
+.shelf-hero {
+  background: color-mix(in oklab, var(--scene-ivory) 42%, transparent);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+}
+
+.shelf-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(45deg, rgb(0 0 0 / 0.02) 0 1px, transparent 1px 4px), repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.02) 0 1px, transparent 1px 4px);
+}
+
+.shelf-books {
+  opacity: 0.62;
+}
+
+.shelf-glass {
+  background: color-mix(in oklab, var(--scene-ivory) 55%, transparent);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--scene-ivory) 60%, transparent);
+  box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.22), 0 1px 0 rgb(255 255 255 / 0.6) inset;
+}
+
+/* ------------------------------------------------------------------------------ Mystery Book: the hero ---
+   The first real photograph in the app (Section 1–2): a cozy library interior. Kept as its own named overlay
+   (identical formula to `.photo-hero-overlay` above, from before that was generalized) rather than refactored
+   onto the shared class, so this already-shipped, working hero stays byte-for-byte as it was. */
+.mystery-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 4px),
+    radial-gradient(46% 60% at 10% 100%, color-mix(in oklab, var(--scene-candle) 24%, transparent), transparent 70%),
+    linear-gradient(100deg, color-mix(in oklab, var(--scene-espresso) 94%, #000) 0%, color-mix(in oklab, var(--scene-espresso) 60%, transparent) 48%, transparent 78%),
+    linear-gradient(0deg, color-mix(in oklab, var(--scene-espresso) 90%, #000) 0%, transparent 55%);
+}
+
+/* ------------------------------------------------------------------------- editorial profile sections ---
+   No floating cards: a title row (icon, serif heading, one-line description, edit affordance) sits above each
+   control, with a thin rule marking where one section ends and the next begins. */
+.profile-section {
+  border-top: 1px solid var(--rule);
+}
+.profile-section:last-of-type {
+  border-bottom: 1px solid var(--rule);
+}
+.profile-section-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.profile-edit-btn {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--muted);
+  border-radius: 999px;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+.profile-edit-btn:hover {
+  color: var(--ink);
+  background: var(--rule);
+}
+
+/* --------------------------------------------------------------------------------- the hub page: contents ---
+   MystBookLanding's "table of contents": a two-page-spread-inspired grid, not a card grid — each of the five
+   sections is a rule-bound row (same no-floating-cards language as `.profile-section` above), and on wide screens
+   the five rows fall naturally into two columns like chapters landing across two facing pages. `.landing-spine`
+   is the one literal nod to a physical book: a soft center shadow, the same gutter shading a real open book's
+   photo shows, never a page-turn animation. */
+.landing-spine {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 2.5rem;
+  margin-left: -1.25rem;
+  background: linear-gradient(to right, transparent, rgb(0 0 0 / 0.07) 46%, rgb(0 0 0 / 0.1) 50%, rgb(0 0 0 / 0.07) 54%, transparent);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .landing-spine {
+    background: linear-gradient(to right, transparent, rgb(0 0 0 / 0.3) 46%, rgb(0 0 0 / 0.4) 50%, rgb(0 0 0 / 0.3) 54%, transparent);
+  }
+}
+
+/* Each chapter row rises in, staggered left-to-right-then-down by its own index (`--i`, set inline) — gated by
+   `ScrollReveal`'s `data-revealed` (see `.reveal-item` below, and that component's own doc comment) rather than
+   firing at mount, so the list unfolds as it's actually scrolled to. */
+.chapter-row {
+  opacity: 0;
+  transform: translateY(14px);
+  transition-property: opacity, transform;
+  transition-duration: 700ms;
+  transition-timing-function: var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 240ms);
+}
+
+[data-revealed="true"] .chapter-row {
+  opacity: 1;
+  transform: none;
+}
+
+/* General-purpose version of the same technique, for any `ScrollReveal` group whose children aren't chapter
+   rows — the hub page's own hero line (eyebrow, title, intro), each with its own `--i`. */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition-property: opacity, transform;
+  transition-duration: 700ms;
+  transition-timing-function: var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 260ms);
+}
+
+[data-revealed="true"] .reveal-item {
+  opacity: 1;
+  transform: none;
+}
+
+/* The chapter's roman numeral: a plain muted mark at rest, highlighted like text under a drawn marker stroke on
+   hover/focus — the same recipe `.marker-live` uses (Section progress), just retriggered by interaction instead
+   of a data-met flag. Reusing the one signature device (the highlighter) here, rather than a generic hover-lift
+   card, is the point: it says "this is read," the way marking a passage does. */
+.chapter-num {
+  background-image: linear-gradient(to bottom, transparent 58%, var(--marker) 58%, var(--marker) 92%, transparent 92%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 320ms var(--ease-out), color 320ms var(--ease-out);
+}
+
+.chapter-card:hover .chapter-num,
+.chapter-card:focus-visible .chapter-num {
+  background-size: 100% 100%;
+  color: var(--marker-ink);
+}
+
+.chapter-card:hover .chapter-arrow,
+.chapter-card:focus-visible .chapter-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@keyframes toc-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------------- Thoughts: the open book ---
+   An inset two-page spread sitting in the normal padded content column — Mystery Book's own "centered card"
+   pattern, not a bled hero, since there's no photograph here: the paper itself is the subject. `.book-spine` is
+   `.landing-spine`'s exact technique (a soft center-gutter shadow); `.book-grain` is the same hairline crosshatch
+   every photo hero already carries, just inked instead of lit (dark, not white) since this sits on light paper
+   rather than a dark photo. */
+.book-frame {
+  position: relative;
+  background: linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment) 92%);
+  border-radius: 1.75rem;
+  box-shadow: 0 40px 80px -36px rgb(0 0 0 / 0.35), 0 1px 0 rgb(255 255 255 / 0.5) inset;
+}
+
+.book-grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(45deg, rgb(0 0 0 / 0.012) 0 1px, transparent 1px 4px), repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.012) 0 1px, transparent 1px 4px);
+}
+
+.book-spine {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 3rem;
+  margin-left: -1.5rem;
+  background: linear-gradient(to right, transparent, rgb(0 0 0 / 0.1) 46%, rgb(0 0 0 / 0.14) 50%, rgb(0 0 0 / 0.1) 54%, transparent);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .book-spine {
+    background: linear-gradient(to right, transparent, rgb(0 0 0 / 0.35) 46%, rgb(0 0 0 / 0.45) 50%, rgb(0 0 0 / 0.35) 54%, transparent);
+  }
+}
+
+/* --------------------------------------------------------------------------------- the hub page: the book ---
+   The hub's own chapter list sits in the same warm parchment `.book-frame`/`.book-grain` every open-book page
+   uses, plus one thing none of them needed: a visible edge. `.landing-book-edge` layers two solid, slightly
+   offset shadows under the frame — the page block peeking out from behind a closed book's front cover — so "a
+   book" reads before anyone notices the list inside is really a table of contents. `.landing-beam` is a warm
+   shaft of light (the same `--scene-candle` glow every photo hero carries, just free-standing here rather than
+   scrimming a photo) for `Nightingale` (`src/ui/scenes/Nightingale.tsx`) to sit in — together, the one
+   illustrated flourish on the page, filling the empty cell a fifth chapter always leaves in a two-column grid. */
+.landing-book-edge {
+  border: 1px solid var(--rule-strong);
+  box-shadow:
+    5px 5px 0 0 var(--scene-parchment),
+    5px 5px 0 1px var(--rule-strong),
+    9px 9px 0 0 color-mix(in oklab, var(--scene-walnut) 20%, var(--scene-parchment)),
+    9px 9px 0 1px color-mix(in oklab, var(--rule-strong) 65%, transparent),
+    0 40px 80px -36px rgb(0 0 0 / 0.35),
+    0 1px 0 rgb(255 255 255 / 0.5) inset;
+}
+
+@media (prefers-color-scheme: dark) {
+  .landing-book-edge {
+    box-shadow:
+      5px 5px 0 0 var(--scene-parchment),
+      5px 5px 0 1px var(--rule-strong),
+      9px 9px 0 0 color-mix(in oklab, var(--scene-espresso-2) 55%, var(--scene-parchment)),
+      9px 9px 0 1px color-mix(in oklab, var(--rule-strong) 65%, transparent),
+      0 40px 80px -36px rgb(0 0 0 / 0.6),
+      0 1px 0 rgb(255 255 255 / 0.5) inset;
+  }
+}
+
+.landing-beam {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, transparent 36%, color-mix(in oklab, var(--scene-candle) 24%, transparent) 58%, transparent 80%),
+    radial-gradient(42% 50% at 80% 20%, color-mix(in oklab, var(--scene-candle) 30%, transparent), transparent 74%);
+}
+
+/* --------------------------------------------------------------------------------- the hub page: the intro ---
+   The one-time entrance before the hub page's own book (`BookIntro`, `src/ui/BookIntro.tsx`): a closed book —
+   the same `.cloth` cover material and real welcome text the open book's own cover carries — held for a beat,
+   then opened with an actual 3D page-turn (`rotateY` on the cover's own left edge, the spine), not a simulated
+   page-curl. `.book-intro-pages` is the plain parchment surface the cover reveals mid-turn; once the turn
+   finishes, `.book-intro-backdrop` itself fades into the real page underneath, which was never hidden — only
+   covered — the whole time. */
+.book-intro-backdrop {
+  background:
+    radial-gradient(60% 50% at 50% 42%, color-mix(in oklab, var(--scene-candle) 10%, transparent), transparent 70%),
+    radial-gradient(120% 90% at 50% 100%, var(--scene-espresso-2), var(--scene-espresso) 70%);
+  transition: opacity 650ms ease;
+}
+
+.book-intro-backdrop[data-revealing="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.book-intro-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(28% 34% at 50% 48%, color-mix(in oklab, var(--scene-candle) 22%, transparent), transparent 72%);
+  opacity: 0.4;
+  transition: opacity 900ms ease;
+}
+
+.book-intro-glow[data-open="true"] {
+  opacity: 0.85;
+}
+
+.book-intro-stage {
+  perspective: 2200px;
+}
+
+.book-intro-pages {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.625rem;
+  background: linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment) 94%);
+  box-shadow:
+    4px 4px 0 0 var(--scene-parchment),
+    4px 4px 0 1px var(--rule-strong),
+    7px 7px 0 0 color-mix(in oklab, var(--scene-walnut) 20%, var(--scene-parchment)),
+    7px 7px 0 1px color-mix(in oklab, var(--rule-strong) 65%, transparent),
+    0 40px 90px -30px rgb(0 0 0 / 0.6);
+}
+
+.book-intro-cover {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  border-radius: 0.625rem;
+  border: 1px solid color-mix(in oklab, var(--cloth-ink) 18%, transparent);
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / 0.65), 0 1px 0 rgb(255 255 255 / 0.08) inset;
+  transition: transform 1150ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.book-intro-cover[data-open="true"] {
+  transform: rotateY(-112deg);
+}
+
+/* Language switch: the content dims for a beat while the new language renders. */
+[data-lang-pending="true"] [data-lang-content] {
+  opacity: 0.45;
+  transition: opacity 120ms ease;
+}
+
+[data-lang-content] {
+  transition: opacity 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marker-sweep {
+    background-size: 100% 100%;
+  }
+  /* The page is shown finished and still: everything written, the quill at rest, nothing moving. */
+  .ink-word {
+    clip-path: none;
+  }
+  .marker-wait {
+    background-size: 100% 100%;
+  }
+  .quill {
+    animation: none !important;
+  }
+  /* Onboarding scene: the finished stack and the first quote, still. */
+  .pile-cycle,
+  .pile-book {
+    animation: none !important;
+  }
+  .pile-line {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+  .marker-dark {
+    animation: none !important;
+    background-size: 100% 86%;
+    color: var(--marker-ink);
+  }
+  /* Log in scene: the sentence is shown finished and still — the same "meaningful content stays, only the
+     motion goes" rule the writing sheet follows. */
+  .sentence-letter {
+    animation: none !important;
+  }
+  /* Page atmosphere: shown finished, no fade-in. */
+  .page-scene {
+    animation: none !important;
+  }
+}
