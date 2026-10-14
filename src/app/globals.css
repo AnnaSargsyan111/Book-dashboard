@@ -311,14 +311,18 @@ h2 {
 
 /* ------------------------------------------------------------------------------- the auth page ruling */
 .ruled {
+  /* one ruling line every two grid steps (2 × --p, see `.auth-grid`): exactly one field height, so a field fits
+     between two lines instead of having a line run through it */
+  --step: 48px;
   background-image: repeating-linear-gradient(
     to bottom,
-    transparent 0,
-    transparent 35px,
-    color-mix(in oklab, var(--rule) 42%, transparent) 35px,
-    color-mix(in oklab, var(--rule) 42%, transparent) 36px
+    color-mix(in oklab, var(--rule) 55%, transparent) 0,
+    color-mix(in oklab, var(--rule) 55%, transparent) 1px,
+    transparent 1px,
+    transparent var(--step)
   );
-  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  background-position-y: var(--ruled-offset, 0px);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
 }
 
 .cloth {
@@ -444,153 +448,129 @@ h2 {
     linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment) 92%);
 }
 
-/* ------------------------------------------------------------- Sign Up: the whole form on the first screen ---
-   Spacing only (no sizes, type, colours or content change): a shorter header, less padding under the form and a
-   little less air between the heading and the fields. On shorter screens the air tightens a step further. */
+/* ------------------------------------------------------------------ the ruled sheet: auth screens (desktop) ---
+   The page is ruled paper, one line every --p. Everything in the form is a whole number of those steps tall, so
+   the form sits ON the ruling instead of fighting it: labels are one step, fields are two (their top and bottom
+   borders land exactly on a ruling line), buttons are two, body lines are one, and the gap between blocks is one.
+   AuthColumn shifts the ruling (--ruled-offset) so a line falls on the top of the first element, wherever the
+   vertical centring puts it. Because the sizes are in steps, no screen needs its own "squeeze to avoid
+   scrolling" rules, in either language. Below the desktop breakpoint nothing here applies. */
 @media (min-width: 64rem) {
-  .register-header {
-    padding-block: 0.75rem;
+  .auth-grid {
+    --p: 24px;
   }
-  .register-main {
-    padding-bottom: 1rem;
-  }
-  /* the Sign Up title has no subtitle any more, so it can keep a generous gap above the first fields */
-  .register-heading {
-    margin-bottom: 2.5rem;
-  }
-  .register-form {
-    gap: 1rem;
-  }
-}
 
-@media (min-width: 64rem) and (max-height: 820px) {
-  .register-header {
+  .auth-grid form {
+    gap: var(--p);
+  }
+
+  /* heading: two-step line height, one step of air below */
+  .auth-grid .auth-heading {
+    margin-bottom: var(--p);
+  }
+  .auth-grid .auth-heading h1 {
+    font-size: clamp(1.75rem, 1.2rem + 1.2vw, 2.375rem);
+    line-height: calc(var(--p) * 2);
+    letter-spacing: -0.015em;
+  }
+  .auth-grid .heading-subtitle {
+    margin-top: 0;
+    font-size: 1rem;
+    line-height: var(--p);
+  }
+  .auth-grid .onboarding-eyebrow,
+  .auth-grid .onboarding-exit {
+    margin: 0;
+    line-height: var(--p);
+  }
+  .auth-grid .onboarding-exit {
+    margin-top: var(--p);
+  }
+
+  /* labels: one step */
+  .auth-grid label:not(.sr-only) {
+    display: flex;
+    align-items: center;
+    height: var(--p);
+    margin: 0;
+    line-height: var(--p);
+  }
+
+  /* fields: two steps, drawn from one ruling line to the next (the -1px keeps the next block on the grid) */
+  .auth-grid .control {
+    box-sizing: border-box;
+    height: calc(var(--p) * 2 + 1px);
+    margin-bottom: -1px;
+    border-radius: 0.625rem;
+  }
+  .auth-grid .control:has(textarea) {
+    height: calc(var(--p) * 4 + 1px);
+    /* two ruling gaps tall: paper-coloured so the line between them doesn't cut through the writing area */
+    background-color: var(--paper);
+  }
+  .auth-grid .control input,
+  .auth-grid .control select,
+  .auth-grid .control button[role="combobox"],
+  .auth-grid .control textarea {
+    height: 100%;
+    min-height: 0;
+  }
+  .auth-grid .control textarea {
     padding-block: 0.5rem;
+    line-height: var(--p);
+    resize: none;
   }
-  .register-main {
-    padding-bottom: 0.5rem;
-  }
-  .register-form {
-    gap: 0.75rem;
-  }
-}
 
-/* -------------------------------------------------- Onboarding: the whole form on the first screen ---
-   Same idea as Sign Up, spacing only: shorter header, less padding under the form, tighter gaps. The form is longer
-   than Sign Up (a text area and a chip field), so the tighter step also trims the space around the exit link. */
-@media (min-width: 64rem) {
-  .onboarding-header {
-    padding-block: 0.75rem;
+  /* text under fields: whole steps */
+  .auth-grid p[role="alert"],
+  .auth-grid .control ~ p {
+    padding-top: 0;
+    line-height: var(--p);
   }
-  .onboarding-main {
-    padding-bottom: 1rem;
+  .auth-grid .control + div {
+    min-height: var(--p);
   }
-  .onboarding-eyebrow {
-    margin-bottom: 0.5rem;
+  .auth-grid .control + div > span {
+    padding-top: 0;
+    line-height: var(--p);
   }
-  .onboarding-heading {
-    margin-bottom: 1.5rem;
+  .auth-grid form > div > p.text-right {
+    margin-top: 0;
+    line-height: var(--p);
   }
-  .onboarding-form {
-    gap: 1rem;
+  .auth-grid form > p {
+    line-height: var(--p);
   }
-  .onboarding-exit {
-    margin-top: 1rem;
+  /* a field's hint line takes the place of the gap below it, so the next field stays on the ruling */
+  .auth-grid form > div:has(.control + p:not([role="alert"])) {
+    margin-bottom: calc(var(--p) * -1);
   }
-}
+  .auth-grid .register-password {
+    gap: 0;
+  }
+  .auth-grid [role="group"] ul {
+    row-gap: 0;
+  }
+  .auth-grid [role="group"] li {
+    min-height: var(--p);
+  }
 
-@media (min-width: 64rem) and (max-height: 860px) {
-  .onboarding-header {
-    padding-block: 0.5rem;
-  }
-  .onboarding-main {
-    padding-bottom: 0.5rem;
-  }
-  .onboarding-eyebrow {
-    margin-bottom: 0.375rem;
-  }
-  .onboarding-heading {
-    margin-bottom: 1.125rem;
-  }
-  .onboarding-form {
-    gap: 0.75rem;
-  }
-  .onboarding-exit {
-    margin-top: 0.5rem;
-  }
-}
-
-/* ------------------------------------------------- Sign Up and onboarding, in Armenian: still one screen ---
-   Armenian runs longer (headings and subtitles take more lines), so on short desktop windows the same two screens
-   tighten one step further, spacing only, and only when the language is Armenian. */
-@media (min-width: 64rem) and (max-height: 800px) {
-  :lang(hy) .register-header,
-  :lang(hy) .onboarding-header {
-    padding-block: 0.25rem;
-  }
-  :lang(hy) .register-main,
-  :lang(hy) .onboarding-main {
-    padding-bottom: 0;
-  }
-  :lang(hy) .onboarding-heading {
-    margin-bottom: 0.75rem;
-  }
-  :lang(hy) .onboarding-heading .heading-subtitle {
-    margin-top: 0.5rem;
-  }
-  :lang(hy) .register-form,
-  :lang(hy) .onboarding-form {
-    gap: 0.5rem;
-  }
-  :lang(hy) .register-password {
-    gap: 0.5rem;
-  }
-  :lang(hy) .register-form button[type="submit"] {
+  /* primary button: two steps */
+  .auth-grid button[type="submit"] {
+    height: calc(var(--p) * 2);
     margin-top: 0;
   }
-  :lang(hy) .onboarding-eyebrow {
-    margin-bottom: 0.25rem;
-  }
-  :lang(hy) .onboarding-exit {
-    margin-top: 0.25rem;
+
+  /* Armenian runs longer: a touch smaller keeps headings from taking an extra line */
+  :lang(hy) .auth-grid .auth-heading h1 {
+    font-size: clamp(1.5rem, 1.05rem + 1vw, 2rem);
   }
 }
 
-/* Very short windows (under 730px tall), either language. The language switcher stops taking up a row of its own
-   and sits in the top-right corner (the form column is centred, so that corner is empty), which gives the form the
-   row back. */
-@media (min-width: 64rem) and (max-height: 730px) {
-  .register-header,
-  .onboarding-header,
-  :lang(hy) .register-header,
-  :lang(hy) .onboarding-header {
-    position: absolute;
-    top: 0;
-    right: 0;
-    /* above the form area (which comes later in the page and would otherwise cover the switcher and eat its clicks) */
-    z-index: 20;
+/* Short windows: the form is the same size, so it is the air around it that gives */
+@media (min-width: 64rem) and (max-height: 700px) {
+  .auth-grid > main {
     padding-block: 0.5rem;
-  }
-  .register-main,
-  .onboarding-main,
-  :lang(hy) .register-main,
-  :lang(hy) .onboarding-main {
-    padding-top: 0.5rem;
-    padding-bottom: 0.25rem;
-  }
-  .onboarding-heading,
-  :lang(hy) .onboarding-heading {
-    margin-bottom: 0.5rem;
-  }
-  .register-form,
-  .onboarding-form,
-  :lang(hy) .register-form,
-  :lang(hy) .onboarding-form {
-    gap: 0.375rem;
-  }
-  .onboarding-exit,
-  :lang(hy) .onboarding-exit {
-    margin-top: 0;
   }
 }
 
