@@ -1,4 +1,5 @@
 import type { MoodKey, MysteryGenreKey } from "@/shared/validation/mystery";
+import { IMPORTED_CATALOG } from "./catalog-imported";
 
 /**
  * The Mystery Book catalog: a small, hand-curated set of real titles with the structured metadata (Section 13.7
@@ -31,7 +32,7 @@ export interface CatalogBook {
   coverUrl: string | null;
 }
 
-export const CATALOG: CatalogBook[] = [
+const HAND_CURATED_CATALOG: CatalogBook[] = [
   {
     slug: "night-circus",
     title: "The Night Circus",
@@ -769,3 +770,13 @@ export const CATALOG: CatalogBook[] = [
     coverUrl: "https://covers.openlibrary.org/b/id/7079753-L.jpg",
   },
 ];
+
+const sameBook = (b: CatalogBook) => `${b.title.trim().toLowerCase()}|${b.author.trim().toLowerCase()}`;
+const handCuratedKeys = new Set(HAND_CURATED_CATALOG.map(sameBook));
+
+/**
+ * Everything the app can look a slug up in. The hand-curated titles above come first and are the only ones in stock;
+ * the Open Library import (`catalog-imported.ts`, every entry `available: false` until someone who can supply it
+ * switches it on) follows, minus any title that is already in the hand-curated list.
+ */
+export const CATALOG: CatalogBook[] = [...HAND_CURATED_CATALOG, ...IMPORTED_CATALOG.filter((b) => !handCuratedKeys.has(sameBook(b)))];

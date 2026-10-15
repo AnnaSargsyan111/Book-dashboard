@@ -118,9 +118,22 @@ describe("pickBook (Sections 9–11, filtering + ranking)", () => {
   });
 
   it("a partial exhaustion still finds whatever remains eligible", () => {
-    const someSlugs = new Set(CATALOG.slice(0, CATALOG.length - 1).map((b) => b.slug));
+    const inStock = CATALOG.filter((b) => b.available);
+    const someSlugs = new Set(inStock.slice(0, inStock.length - 1).map((b) => b.slug));
     const result = pickBook({ moods: ["intense"], revealMode: "keep_mystery" }, { profile: emptyProfile, books: [], previousSlugs: someSlugs });
-    expect(result?.slug).toBe(CATALOG[CATALOG.length - 1]!.slug);
+    expect(result?.slug).toBe(inStock[inStock.length - 1]!.slug);
+  });
+
+  it("keeps the Open Library import (all out of stock) out of every recommendation until it is switched on", () => {
+    const imported = CATALOG.filter((b) => b.slug.startsWith("ol-"));
+    expect(imported.length).toBeGreaterThan(250);
+    expect(imported.every((b) => !b.available)).toBe(true);
+    expect(new Set(CATALOG.map((b) => b.slug)).size).toBe(CATALOG.length);
+
+    // Even with every hand-curated title used up, nothing imported is offered — the honest answer is "no match".
+    const handCurated = new Set(CATALOG.filter((b) => b.available).map((b) => b.slug));
+    const result = pickBook({ moods: ["intense"], revealMode: "keep_mystery" }, { profile: emptyProfile, books: [], previousSlugs: handCurated });
+    expect(result).toBeNull();
   });
 
   it("never returns a book flagged unavailable", () => {
