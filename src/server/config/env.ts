@@ -7,6 +7,8 @@ const envSchema = z.object({
   TRUSTED_ORIGINS: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional(),
+  /** Where "a new Mystery Book order was placed" emails go. Unset = no such email (ordering is unaffected). */
+  ORDER_NOTIFICATION_EMAIL: z.string().optional(),
   /** Powers "Auto-fill" (Google Books). Without it, it still works against Google's shared keyless quota — a free
    *  personal key just gets its own private quota instead. "Find Cover" uses Open Library instead, which needs
    *  no key at all. */

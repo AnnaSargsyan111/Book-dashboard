@@ -11,6 +11,7 @@ import { POST as submitFeedback } from "@/app/api/v1/mystery/pick/[id]/feedback/
 import { DELETE as removeView } from "@/app/api/v1/mystery/recommendation-view/[id]/route";
 import { POST as reviewView } from "@/app/api/v1/mystery/recommendation-view/[id]/feedback/route";
 import { POST as addViewToLibrary } from "@/app/api/v1/mystery/recommendation-view/[id]/add-to-library/route";
+import { devOutbox } from "@/server/mail/mailer";
 import { CATALOG } from "@/server/mystery/catalog";
 import { getDb } from "@/server/db/client";
 
@@ -443,5 +444,45 @@ describe("DELETE /api/v1/mystery/recommendation-view/[id]", () => {
     const books = await getDb().book.findMany();
     expect(books).toHaveLength(1);
     expect(books[0]!.sourceMysteryViewId).toBeNull();
+  });
+});
+
+describe("order notification email", () => {
+  async function orderedWith(revealMode: "keep_mystery" | "show_now") {
+    const { cookie } = await signedUpAndOnboarded();
+    const { pickId } = await json(await recommend(req("/api/v1/mystery/recommend", { moods: ["cozy"], revealMode }, { cookie })));
+    await saveAddress(req(`/api/v1/mystery/pick/${pickId}/address`, address, { cookie }), withId(pickId));
+    devOutbox.length = 0;
+    const res = await placeOrder(req(`/api/v1/mystery/pick/${pickId}/order`, order, { cookie }), withId(pickId));
+    expect(res.status).toBe(200);
+    const pick = await getDb().mysteryPick.findUniqueOrThrow({ where: { id: pickId } });
+    return { mail: devOutbox.at(-1), title: CATALOG.find((b) => b.slug === pick.bookSlug)!.title };
+  }
+
+  it("emails the owner when a Show me now order is placed", async () => {
+    const { mail, title } = await orderedWith("show_now");
+    expect(mail?.to).toBe("owner@example.com");
+    expect(mail?.subject).toBe("Book order (Show me now)");
+    expect(mail?.text).toContain("Dear Anna,");
+    expect(mail?.text).toContain("Name Surname: Anna Sargsyan");
+    expect(mail?.text).toContain("Order location: 1 Mesrop Mashtots Ave, Yerevan, 0001, Armenia");
+    expect(mail?.text).toContain("Price: 9,400 ֏");
+    expect(mail?.text).toContain(`Selected book: ${title} (Show me now)`);
+    expect(mail?.text.trimEnd().endsWith("Your beloved MystBook")).toBe(true);
+  });
+
+  it("names the real book, marked as Keep it a mystery, when that mode was chosen", async () => {
+    const { mail, title } = await orderedWith("keep_mystery");
+    expect(mail?.subject).toBe("Book order (Keep it a mystery)");
+    expect(mail?.text).toContain(`Selected book: ${title} (Keep it a mystery)`);
+  });
+
+  it("sends nothing for an order that is rejected", async () => {
+    const { cookie } = await signedUpAndOnboarded();
+    const { pickId } = await json(await recommend(req("/api/v1/mystery/recommend", { moods: ["cozy"], revealMode: "show_now" }, { cookie })));
+    devOutbox.length = 0;
+    const res = await placeOrder(req(`/api/v1/mystery/pick/${pickId}/order`, order, { cookie }), withId(pickId));
+    expect(res.status).toBe(400);
+    expect(devOutbox).toHaveLength(0);
   });
 });
