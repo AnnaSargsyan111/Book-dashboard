@@ -14,6 +14,7 @@ import { PasswordField } from "@/ui/PasswordField";
 import { PasswordRequirements } from "@/ui/PasswordRequirements";
 import { useToast } from "@/ui/toast/ToastProvider";
 import { settingsApi } from "./api";
+import { lockBodyScroll } from "@/lib/scroll-lock";
 
 /**
  * New Password (with the live checklist) + Confirm Password, no Current Password field (see `changePassword()` on
@@ -43,14 +44,13 @@ export function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   const mismatch = newPassword.length > 0 && confirmPassword.length > 0 && newPassword !== confirmPassword;
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockBodyScroll();
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape" && !busy) onClose();
     }
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       window.removeEventListener("keydown", onKey);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

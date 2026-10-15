@@ -8,6 +8,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { X } from "lucide-react";
 import { LanguageSwitcher } from "../LanguageSwitcher";
 import { NAV_ITEMS } from "./nav-items";
+import { lockBodyScroll } from "@/lib/scroll-lock";
 
 /**
  * Mobile's stand-in for the desktop sidebar: not a shrunk copy of it, but a full-screen menu on the same dark
@@ -27,14 +28,13 @@ export function MobileNav() {
 
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockBodyScroll();
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
     }
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);

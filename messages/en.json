@@ -217,8 +217,7 @@
     },
     "continue": "Continue",
     "submitting": "Saving…",
-    "success": "Saved",
-    "opening": "Opening your library…"
+    "success": "Saved"
   },
   "home": {
     "eyebrow": "Welcome back, {name}",

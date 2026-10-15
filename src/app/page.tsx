@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { MystBookLanding } from "@/features/home/MystBookLanding";
+import { BOOK_INTRO_COOKIE } from "@/lib/book-intro";
 import { getCurrentUser } from "@/server/modules/auth/current-user";
 import { ROUTES } from "@/shared/routes";
 import { AppFrame } from "@/ui/AppFrame";
@@ -17,6 +19,8 @@ export default async function Home() {
   const user = await getCurrentUser();
   if (!user) redirect(ROUTES.register);
   if (!user.onboardingCompleted) redirect(ROUTES.onboarding);
+
+  const introPending = (await cookies()).has(BOOK_INTRO_COOKIE);
 
   const [tHome, tNav, tAboutMe, tBooks, tMysteryBook, tThoughts, tSettings] = await Promise.all([
     getTranslations("home"),
@@ -43,6 +47,7 @@ export default async function Home() {
           settings: { title: tSettings("title"), subtitle: tSettings("subtitle") },
         }}
         welcomeModalSeen={user.welcomeModalSeen}
+        introPending={introPending}
       />
     </AppFrame>
   );

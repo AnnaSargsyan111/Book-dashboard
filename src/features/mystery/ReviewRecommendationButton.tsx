@@ -12,6 +12,7 @@ import { Button } from "@/ui/Button";
 import { FormAlert } from "@/ui/FormAlert";
 import { mysteryApi } from "./api";
 import { Chip } from "./Chip";
+import { lockBodyScroll } from "@/lib/scroll-lock";
 
 const FEEDBACK_RATING_EMOJI: Record<FeedbackRating, string> = { loved: "❤️", okay: "👍", not_for_me: "👎" };
 
@@ -62,15 +63,14 @@ export function ReviewRecommendationButton({
 
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockBodyScroll();
     panelRef.current?.focus();
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape" && !busy) setOpen(false);
     }
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       window.removeEventListener("keydown", onKey);
     };
   }, [open, busy]);

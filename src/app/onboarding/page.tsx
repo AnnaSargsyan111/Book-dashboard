@@ -28,7 +28,7 @@ export default async function OnboardingPage() {
       <div className="animate-rise">
         <p className="onboarding-eyebrow mb-3 text-xs font-medium uppercase tracking-[0.14em] text-muted">{t("eyebrow")}</p>
         <Heading title={t.rich("title", richMark)} subtitle={t("subtitle")} className="onboarding-heading" />
-        <OnboardingForm />
+        <OnboardingForm firstName={user.firstName} />
         <p className="onboarding-exit mt-7 text-center">
           <SignOutButton quiet />
         </p>

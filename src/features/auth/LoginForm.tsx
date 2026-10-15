@@ -26,7 +26,7 @@ export function LoginForm({ next }: { next?: string | null }) {
     clearOnError: ["password"],
     onSubmit: async (data) => {
       const { user } = await authApi.login(data);
-      rearmBookIntro();
+      rearmBookIntro(user.firstName);
       router.replace(safeNext(next) ?? homePathFor(user));
     },
   });

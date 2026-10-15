@@ -51,6 +51,7 @@ export function MystBookLanding({
   contentsLabel,
   copy,
   welcomeModalSeen,
+  introPending,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -58,10 +59,12 @@ export function MystBookLanding({
   contentsLabel: string;
   copy: Record<ChapterKey, { title: string; subtitle: string }>;
   welcomeModalSeen: boolean;
+  /** The reader has just logged in / signed up / finished onboarding: draw the closed book from the first paint. */
+  introPending: boolean;
 }) {
   return (
     <>
-      <BookIntro eyebrow={eyebrow} title={title} intro={intro} />
+      <BookIntro eyebrow={eyebrow} title={title} intro={intro} initiallyVisible={introPending} />
 
       <div className="relative -mt-12 max-w-4xl sm:-mt-20 lg:ml-[4.5rem] lg:mt-0 lg:max-w-[min(56rem,calc(100%-13.5rem))]">
         <div className="book-frame landing-book-edge relative px-6 py-10 sm:px-10 sm:py-14">

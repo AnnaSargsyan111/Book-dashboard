@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Button, type ButtonState } from "./Button";
+import { lockBodyScroll } from "@/lib/scroll-lock";
 
 /**
  * A small, focused confirmation modal for one irreversible action (deleting a book, a thought, a mystery
@@ -40,14 +41,13 @@ export function ConfirmDialog({
   onClose: () => void;
 }) {
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockBodyScroll();
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape" && !busy) onClose();
     }
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       window.removeEventListener("keydown", onKey);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

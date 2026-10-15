@@ -27,7 +27,7 @@ export function RegisterForm() {
     clearOnError: ["password"],
     onSubmit: async (data) => {
       const { user } = await authApi.register(data);
-      rearmBookIntro();
+      rearmBookIntro(user.firstName);
       router.replace(homePathFor(user));
     },
   });

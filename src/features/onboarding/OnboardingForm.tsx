@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { isApiRequestError } from "@/lib/api/client";
 import { useSchemaForm } from "@/lib/forms/useSchemaForm";
 import { useTranslateKey } from "@/lib/forms/useTranslateKey";
@@ -18,13 +18,12 @@ import { MultiSelect } from "@/ui/MultiSelect";
 import { TextArea } from "@/ui/TextArea";
 import { onboardingApi } from "./api";
 import { rearmBookIntro } from "@/lib/book-intro";
-import { BookOpeningTransition } from "./BookOpeningTransition";
 
 /**
  * "Tell us about yourself". Genre and Favorite Authors are optional; only an empty About Me blocks Continue.
  * The server validates everything again. (Name and surname are not asked here: they come from registration.)
  */
-export function OnboardingForm() {
+export function OnboardingForm({ firstName }: { firstName: string }) {
   const t = useTranslations("onboarding");
   const tf = useTranslations("onboarding.fields");
   const tg = useTranslations("genres");
@@ -35,16 +34,6 @@ export function OnboardingForm() {
   // Refusals from the two list fields (a 6th genre, an over-long author) are shown inline until the list changes.
   const [genreLimit, setGenreLimit] = useState(false);
   const [authorReject, setAuthorReject] = useState<"tooLong" | "tooMany" | null>(null);
-
-  // The book-opening transition is a real animation, not a timer, so onSubmit awaits its onDone through this ref.
-  const [entering, setEntering] = useState(false);
-  const doneRef = useRef<(() => void) | undefined>(undefined);
-  function playEntrance(): Promise<void> {
-    return new Promise((resolve) => {
-      doneRef.current = resolve;
-      setEntering(true);
-    });
-  }
 
   const form = useSchemaForm({
     schema: onboardingSchema,
@@ -61,8 +50,7 @@ export function OnboardingForm() {
         throw error;
       }
       // The hub's closed-book entrance must play for a new reader even if this browser has seen it before.
-      rearmBookIntro();
-      await playEntrance();
+      rearmBookIntro(firstName);
       router.replace(ROUTES.home);
     },
   });
@@ -147,16 +135,6 @@ export function OnboardingForm() {
       <Button type="submit" block state={state} successLabel={t("success")}>
         {t("continue")}
       </Button>
-
-      {entering && (
-        <BookOpeningTransition
-          onDone={() => {
-            const done = doneRef.current;
-            doneRef.current = undefined;
-            done?.();
-          }}
-        />
-      )}
     </form>
   );
 }

@@ -2,7 +2,9 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { BOOK_INTRO_SEEN_KEY as SEEN_KEY, setBookIntroActive, willBookIntroPlay } from "@/lib/book-intro";
+import { BOOK_INTRO_SEEN_KEY as SEEN_KEY, clearBookIntroCookie, setBookIntroActive, willBookIntroPlay } from "@/lib/book-intro";
+import { BookIntroCover } from "./BookIntroCover";
+import { lockBodyScroll } from "@/lib/scroll-lock";
 
 const HOLD_MS = 4000;
 const OPEN_MS = 1150;
@@ -20,17 +22,27 @@ type Phase = "closed" | "opening" | "revealing";
  * if this component's effects never run, the page beneath was never covered up in the first place. A click
  * during the hold skips straight to opening, for anyone who'd rather not wait.
  */
-export function BookIntro({ eyebrow, title, intro }: { eyebrow: string; title: ReactNode; intro: string }) {
-  const [visible, setVisible] = useState(false);
+export function BookIntro({ eyebrow, title, intro, initiallyVisible = false }: { eyebrow: string; title: ReactNode; intro: string; initiallyVisible?: boolean }) {
+  // `initiallyVisible` comes from the server reading the "intro pending" cookie: the closed book is part of the
+  // very first HTML, so the page beneath is never seen for even a frame before the cover goes on.
+  const [visible, setVisible] = useState(initiallyVisible);
   const [phase, setPhase] = useState<Phase>("closed");
 
   // Decided synchronously on mount (not via a hook that resolves a tick later) so the hub's own reveals, which
   // start observing in this same commit, already know to wait for the cover.
   useEffect(() => {
-    if (!willBookIntroPlay()) return;
+    if (!willBookIntroPlay()) {
+      // Reduced motion (the one case the server can't see): take back a cover that was drawn in advance.
+      if (initiallyVisible) {
+        setVisible(false);
+        clearBookIntroCookie();
+      }
+      return;
+    }
     setBookIntroActive(true);
     setVisible(true);
     return () => setBookIntroActive(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -39,10 +51,9 @@ export function BookIntro({ eyebrow, title, intro }: { eyebrow: string; title: R
 
   useEffect(() => {
     if (!visible) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockBodyScroll();
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
     };
   }, [visible]);
 
@@ -60,6 +71,7 @@ export function BookIntro({ eyebrow, title, intro }: { eyebrow: string; title: R
 
   useEffect(() => {
     if (phase !== "revealing") return;
+    clearBookIntroCookie();
     try {
       localStorage.setItem(SEEN_KEY, "true");
     } catch {
@@ -80,15 +92,7 @@ export function BookIntro({ eyebrow, title, intro }: { eyebrow: string; title: R
       data-revealing={phase === "revealing" || undefined}
       onClick={() => phase === "closed" && setPhase("opening")}
     >
-      <div className="book-intro-glow" data-open={open || undefined} />
-      <div className="book-intro-stage relative aspect-[3/4] w-[min(22rem,86vw)]">
-        <div className="book-intro-pages" />
-        <div className="book-intro-cover cloth relative flex flex-col items-center justify-center px-7 py-10 text-center sm:px-10" data-open={open || undefined}>
-          <p className="text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-cloth-ink/60">{eyebrow}</p>
-          <h1 className="mt-3 max-w-[16ch] text-balance font-display text-[clamp(1.5rem,1.1rem+1.6vw,2.25rem)] leading-[1.12] tracking-[-0.01em] text-cloth-ink">{title}</h1>
-          <p className="mt-4 max-w-[26ch] text-[0.9375rem] leading-relaxed text-cloth-ink/70">{intro}</p>
-        </div>
-      </div>
+      <BookIntroCover eyebrow={eyebrow} title={title} intro={intro} open={open} />
     </div>
   );
 }

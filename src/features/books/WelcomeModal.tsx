@@ -10,6 +10,7 @@ import { Button } from "@/ui/Button";
 import { LogoMark } from "@/ui/Logo";
 import { richMark } from "@/ui/rich";
 import { booksApi } from "./api";
+import { lockBodyScroll } from "@/lib/scroll-lock";
 
 const CLOSE_MS = 240;
 
@@ -43,8 +44,7 @@ export function WelcomeModal() {
 
   useEffect(() => {
     if (!open || !ready) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockBodyScroll();
     panelRef.current?.focus();
 
     function onKey(e: KeyboardEvent) {
@@ -52,7 +52,7 @@ export function WelcomeModal() {
     }
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       window.removeEventListener("keydown", onKey);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
