@@ -27,6 +27,8 @@ export const GET = route({ auth: true }, async (ctx) => {
         reasoning: buildReasoning(ctx.locale, { moods: view.moods, experience: view.experience ?? undefined, revealMode: "show_now" }),
         createdAt: view.createdAt.toISOString(),
         libraryBookId: view.libraryBookId,
+        feedbackRating: view.feedbackRating,
+        feedbackTags: view.feedbackTags,
       },
     ];
   });

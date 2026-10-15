@@ -3,19 +3,28 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { addBookFromViewPath, bookDetailPath } from "@/shared/routes";
-import type { MysteryRecentRecommendation } from "@/shared/validation/mystery";
+import type { FeedbackRating, FeedbackTagKey, MysteryRecentRecommendation } from "@/shared/validation/mystery";
 import { CoverImage } from "@/ui/CoverImage";
 import { DeleteRecommendationButton } from "./DeleteRecommendationButton";
+import { ReviewRecommendationButton } from "./ReviewRecommendationButton";
 
 /**
  * One past "Show Me Now" recommendation (Section 7–9): cover-forward, the same jacket-overlay treatment
  * `BookCard` already uses for the library grid, with the "why this pick" reasoning underneath (too long to fit
  * on the cover itself) and a single action — "+ Add" opens Book Detail pre-filled (never creates the library
  * entry directly), or, once it's been added, a quiet "Added to My Books" label plus a link to the real entry
- * instead. The corner trash icon is `BookCard`'s own `DeleteBookButton` (overlay variant), same spot and look,
+ * instead — which is also when a review icon appears beside the trash icon (it opens the review modal). The corner trash icon is `BookCard`'s own `DeleteBookButton` (overlay variant), same spot and look,
  * for `onRemoved` — this card's own existence, not the library book "+ Add" may have already made.
  */
-export function RecommendationCard({ rec, onRemoved }: { rec: MysteryRecentRecommendation; onRemoved: () => void }) {
+export function RecommendationCard({
+  rec,
+  onRemoved,
+  onReviewed,
+}: {
+  rec: MysteryRecentRecommendation;
+  onRemoved: () => void;
+  onReviewed: (rating: FeedbackRating, tags: FeedbackTagKey[]) => void;
+}) {
   const t = useTranslations("mysteryBook.recent");
   const tg = useTranslations("mysteryBook.genres");
 
@@ -36,8 +45,11 @@ export function RecommendationCard({ rec, onRemoved }: { rec: MysteryRecentRecom
         />
       </div>
 
-      <div className="absolute right-2 top-2 sm:right-2.5 sm:top-2.5">
-        <DeleteRecommendationButton viewId={rec.viewId} title={rec.title} onRemoved={onRemoved} />
+      <div className="absolute right-2 top-2 flex items-center gap-1.5 sm:right-2.5 sm:top-2.5">
+        {rec.libraryBookId ? (
+          <ReviewRecommendationButton viewId={rec.viewId} title={rec.title} rating={rec.feedbackRating} tags={rec.feedbackTags} onReviewed={onReviewed} />
+        ) : null}
+        <DeleteRecommendationButton viewId={rec.viewId} title={rec.title} inLibrary={rec.libraryBookId !== null} onRemoved={onRemoved} />
       </div>
 
       <p className="mt-3 line-clamp-2 text-[0.8125rem] italic leading-relaxed text-cloth-ink/65">{rec.reasoning}</p>

@@ -8,6 +8,9 @@ import { POST as commit } from "@/app/api/v1/mystery/recommend/commit/route";
 import { POST as saveAddress } from "@/app/api/v1/mystery/pick/[id]/address/route";
 import { POST as placeOrder } from "@/app/api/v1/mystery/pick/[id]/order/route";
 import { POST as submitFeedback } from "@/app/api/v1/mystery/pick/[id]/feedback/route";
+import { DELETE as removeView } from "@/app/api/v1/mystery/recommendation-view/[id]/route";
+import { POST as reviewView } from "@/app/api/v1/mystery/recommendation-view/[id]/feedback/route";
+import { POST as addViewToLibrary } from "@/app/api/v1/mystery/recommendation-view/[id]/add-to-library/route";
 import { CATALOG } from "@/server/mystery/catalog";
 import { getDb } from "@/server/db/client";
 
@@ -356,5 +359,89 @@ describe("POST /api/v1/mystery/pick/[id]/feedback", () => {
 
     const res = await submitFeedback(req(`/api/v1/mystery/pick/${pickId}/feedback`, { rating: "loved" }, { cookie: cookieB }), withId(pickId));
     expect(res.status).toBe(404);
+  });
+});
+
+describe("POST /api/v1/mystery/recommendation-view/[id]/feedback", () => {
+  const bookBody = { title: "Dune", author: "Frank Herbert", status: "read", rating: 4, genres: [], plot: "", characters: [], quotes: [], commentary: "" };
+
+  async function viewFor(cookie: string) {
+    await preview(req("/api/v1/mystery/recommend/preview", { moods: ["cozy"] }, { cookie }));
+    return getDb().mysteryRecommendationView.findFirstOrThrow();
+  }
+
+  it("requires a signed-in user", async () => {
+    expect((await reviewView(req("/api/v1/mystery/recommendation-view/x/feedback", { rating: "loved" }), withId("x"))).status).toBe(401);
+  });
+
+  it("saves a rating and tags on a recommendation that was added to the library", async () => {
+    const { cookie } = await signedUpAndOnboarded();
+    const view = await viewFor(cookie);
+    await addViewToLibrary(req(`/api/v1/mystery/recommendation-view/${view.id}/add-to-library`, bookBody, { cookie }), withId(view.id));
+
+    const res = await reviewView(req(`/api/v1/mystery/recommendation-view/${view.id}/feedback`, { rating: "loved", tags: ["genre", "mood"] }, { cookie }), withId(view.id));
+    expect(res.status).toBe(200);
+    const row = await getDb().mysteryRecommendationView.findUniqueOrThrow({ where: { id: view.id } });
+    expect(row.feedbackRating).toBe("loved");
+    expect(row.feedbackTags).toEqual(["genre", "mood"]);
+
+    // A review is left once: a second one is refused and the first stays.
+    const again = await reviewView(req(`/api/v1/mystery/recommendation-view/${view.id}/feedback`, { rating: "okay" }, { cookie }), withId(view.id));
+    expect(again.status).toBe(409);
+    expect((await json(again)).error.code).toBe("ALREADY_REVIEWED");
+    const kept = await getDb().mysteryRecommendationView.findUniqueOrThrow({ where: { id: view.id } });
+    expect(kept.feedbackRating).toBe("loved");
+    expect(kept.feedbackTags).toEqual(["genre", "mood"]);
+  });
+
+  it("404s while the recommendation has not been added to the library", async () => {
+    const { cookie } = await signedUpAndOnboarded();
+    const view = await viewFor(cookie);
+    const res = await reviewView(req(`/api/v1/mystery/recommendation-view/${view.id}/feedback`, { rating: "loved" }, { cookie }), withId(view.id));
+    expect(res.status).toBe(404);
+  });
+
+  it("requires a rating", async () => {
+    const { cookie } = await signedUpAndOnboarded();
+    const view = await viewFor(cookie);
+    await addViewToLibrary(req(`/api/v1/mystery/recommendation-view/${view.id}/add-to-library`, bookBody, { cookie }), withId(view.id));
+    const res = await reviewView(req(`/api/v1/mystery/recommendation-view/${view.id}/feedback`, {}, { cookie }), withId(view.id));
+    expect(res.status).toBe(400);
+  });
+
+  it("404s for someone else's recommendation", async () => {
+    const { cookie: cookieA } = await signedUpAndOnboarded();
+    const view = await viewFor(cookieA);
+    await addViewToLibrary(req(`/api/v1/mystery/recommendation-view/${view.id}/add-to-library`, bookBody, { cookie: cookieA }), withId(view.id));
+
+    const otherRes = await register(req("/api/v1/auth/register", { ...account, email: "other4@example.com" }));
+    const cookieB = cookieOf(otherRes);
+    await onboard(req("/api/v1/onboarding", { genres: [], favoriteAuthors: [], aboutMe: "x" }, { cookie: cookieB }));
+
+    const res = await reviewView(req(`/api/v1/mystery/recommendation-view/${view.id}/feedback`, { rating: "loved" }, { cookie: cookieB }), withId(view.id));
+    expect(res.status).toBe(404);
+  });
+});
+
+describe("DELETE /api/v1/mystery/recommendation-view/[id]", () => {
+  it("removes the card but keeps the library book it became", async () => {
+    const { cookie } = await signedUpAndOnboarded();
+    await preview(req("/api/v1/mystery/recommend/preview", { moods: ["cozy"] }, { cookie }));
+    const view = await getDb().mysteryRecommendationView.findFirstOrThrow();
+    await addViewToLibrary(
+      req(`/api/v1/mystery/recommendation-view/${view.id}/add-to-library`, { title: "Dune", author: "Frank Herbert", status: "read", rating: 4, genres: [], plot: "", characters: [], quotes: [], commentary: "" }, { cookie }),
+      withId(view.id),
+    );
+
+    const res = await removeView(
+      new NextRequest(`${ORIGIN}/api/v1/mystery/recommendation-view/${view.id}`, { method: "DELETE", headers: { host: "localhost:3000", origin: ORIGIN, "x-forwarded-for": "10.0.0.20", cookie } }),
+      withId(view.id),
+    );
+    expect(res.status).toBe(204);
+
+    expect(await getDb().mysteryRecommendationView.count()).toBe(0);
+    const books = await getDb().book.findMany();
+    expect(books).toHaveLength(1);
+    expect(books[0]!.sourceMysteryViewId).toBeNull();
   });
 });

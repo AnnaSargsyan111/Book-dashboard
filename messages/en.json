@@ -349,10 +349,13 @@
       "addCta": "+ Add",
       "added": "Added to My Books",
       "viewInBooks": "View in My Books",
+      "reviewIconLabel": "Review {title}",
+      "alreadyReviewed": "You have already reviewed this book.",
       "deleteDialog": {
         "iconLabel": "Remove {title}",
         "title": "Remove this recommendation?",
         "body": "“{title}” will be removed from Recently Recommended. This can’t be undone.",
+        "bodyInLibrary": "“{title}” will be removed from Recently Recommended. It stays in your library (My Books). This can’t be undone.",
         "confirm": "Remove",
         "toast": "Removed from Recently Recommended"
       }

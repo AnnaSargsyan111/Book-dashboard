@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Compass, CreditCard } from "lucide-react";
+import { ArrowLeft, CreditCard } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { ApiRequestError, isApiRequestError } from "@/lib/api/client";
@@ -10,16 +10,12 @@ import { LIMITS } from "@/shared/validation/limits";
 import {
   DELIVERY_FEE_AMD,
   EXPERIENCE_KEYS,
-  FEEDBACK_RATINGS,
-  FEEDBACK_TAG_KEYS,
   MOOD_KEYS,
   MYSTERY_BOOK_PRICE_AMD,
   MYSTERY_GENRE_KEYS,
   mysteryAddressSchema,
   mysteryCardSchema,
   type ExperienceKey,
-  type FeedbackRating,
-  type FeedbackTagKey,
   type MoodKey,
   type MysteryAddressInput,
   type MysteryGenreKey,
@@ -34,6 +30,7 @@ import { FormAlert } from "@/ui/FormAlert";
 import { TextField } from "@/ui/TextField";
 import { SealedBook } from "@/ui/scenes/SealedBook";
 import { mysteryApi } from "./api";
+import { Chip } from "./Chip";
 
 const MOOD_EMOJI: Record<MoodKey, string> = {
   magical: "✨",
@@ -47,8 +44,6 @@ const MOOD_EMOJI: Record<MoodKey, string> = {
 };
 
 const REVEAL_EMOJI: Record<RevealMode, string> = { keep_mystery: "🎁", show_now: "👀" };
-
-const FEEDBACK_RATING_EMOJI: Record<FeedbackRating, string> = { loved: "❤️", okay: "👍", not_for_me: "👎" };
 
 const EMPTY_ADDRESS: MysteryAddressInput = { fullName: "", addressLine1: "", addressLine2: "", city: "", region: "", postalCode: "", country: "", phone: "" };
 
@@ -72,8 +67,7 @@ type Stage =
   | "payment"
   | "placing-order"
   | "out-of-stock"
-  | "confirmed"
-  | "review";
+  | "confirmed";
 type AddressField = keyof MysteryAddressInput;
 
 /** Whatever step the user last reached (plus the data that step needs to render), kept in `sessionStorage` so
@@ -95,9 +89,6 @@ type PersistedFlowState = {
   address: MysteryAddressInput;
   addressEditing: boolean;
   nonReturnableAck: boolean;
-  feedbackRating: FeedbackRating | null;
-  feedbackTags: FeedbackTagKey[];
-  feedbackSubmitted: boolean;
 };
 
 const FLOW_STORAGE_KEY = "mysteryBookFlowState";
@@ -115,35 +106,6 @@ function loadPersistedFlow(): PersistedFlowState | null {
 /** MVP pricing display only — see the shared constants' own doc comment for why the price is flat. */
 function formatAmd(amount: number): string {
   return `${amount.toLocaleString("en-US")} ֏`;
-}
-
-/** A selectable chip: toggled multi-select (mood, genre) shares this look throughout the flow. `title` is an
- *  optional hint — used by the mood chips to explain each mood — rendered as a custom tooltip (not the native
- *  `title` attribute, whose browser-default hover delay made it easy to miss). */
-function Chip({ active, disabled, onClick, title, children }: { active: boolean; disabled?: boolean; onClick: () => void; title?: string; children: ReactNode }) {
-  return (
-    <span className="group/chip relative inline-flex">
-      <button
-        type="button"
-        aria-pressed={active}
-        disabled={disabled}
-        onClick={onClick}
-        className={`rounded-full border px-4 py-2.5 text-[0.9375rem] transition-colors ${
-          active ? "border-ink bg-ink text-paper" : disabled ? "cursor-not-allowed border-rule text-muted opacity-50" : "border-rule-strong text-ink-2 hover:border-ink"
-        }`}
-      >
-        {children}
-      </button>
-      {title ? (
-        <span
-          role="tooltip"
-          className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-[16rem] -translate-x-1/2 rounded-lg bg-ink px-3 py-1.5 text-center text-xs font-medium leading-snug text-paper opacity-0 shadow-lg transition-opacity duration-150 group-hover/chip:opacity-100 group-focus-within/chip:opacity-100"
-        >
-          {title}
-        </span>
-      ) : null}
-    </span>
-  );
 }
 
 /** A single-choice card: reveal mode and Step 3's experience share this, styled as a real `radiogroup`. */
@@ -256,11 +218,6 @@ export function MysteryBookFlow({
   const [cardCvv, setCardCvv] = useState("");
   const [cardTouched, setCardTouched] = useState<Partial<Record<"cardNumber" | "cardName" | "cardExpiry" | "cardCvv", boolean>>>({});
 
-  const [feedbackRating, setFeedbackRating] = useState<FeedbackRating | null>(null);
-  const [feedbackTags, setFeedbackTags] = useState<FeedbackTagKey[]>([]);
-  const [feedbackBusy, setFeedbackBusy] = useState(false);
-  const [feedbackError, setFeedbackError] = useState<string | null>(null);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
   // Hydrating from `sessionStorage` has to wait until after the first client render (never during the render
   // that has to match the server's HTML) — reading it any earlier causes a hydration mismatch, since the server
@@ -270,7 +227,8 @@ export function MysteryBookFlow({
   useEffect(() => {
     const persisted = loadPersistedFlow();
     if (persisted) {
-      setStage(persisted.stage);
+      // A session saved while the (now removed) in-flow review step was open resumes on the confirmation instead.
+      setStage((persisted.stage as string) === "review" ? "confirmed" : persisted.stage);
       setMoods(persisted.moods);
       setGenres(persisted.genres);
       setExperience(persisted.experience);
@@ -282,9 +240,6 @@ export function MysteryBookFlow({
       setAddress(persisted.address);
       setAddressEditing(persisted.addressEditing);
       setNonReturnableAck(persisted.nonReturnableAck);
-      setFeedbackRating(persisted.feedbackRating);
-      setFeedbackTags(persisted.feedbackTags);
-      setFeedbackSubmitted(persisted.feedbackSubmitted);
     }
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -305,9 +260,6 @@ export function MysteryBookFlow({
       address,
       addressEditing,
       nonReturnableAck,
-      feedbackRating,
-      feedbackTags,
-      feedbackSubmitted,
     };
     try {
       sessionStorage.setItem(FLOW_STORAGE_KEY, JSON.stringify(snapshot));
@@ -327,9 +279,6 @@ export function MysteryBookFlow({
     address,
     addressEditing,
     nonReturnableAck,
-    feedbackRating,
-    feedbackTags,
-    feedbackSubmitted,
     hydrated,
   ]);
 
@@ -487,7 +436,6 @@ export function MysteryBookFlow({
     else if (stage === "result") setStage("reveal");
     else if (stage === "address") setStage("result");
     else if (stage === "payment") setStage("address");
-    else if (stage === "review") setStage("confirmed");
   }
 
   function setAddressField(name: AddressField, value: string) {
@@ -568,25 +516,6 @@ export function MysteryBookFlow({
     }
   }
 
-  function toggleFeedbackTag(key: FeedbackTagKey) {
-    setFeedbackTags((prev) => (prev.includes(key) ? prev.filter((tag) => tag !== key) : prev.length < LIMITS.feedbackTagsMax ? [...prev, key] : prev));
-  }
-
-  async function handleSubmitFeedback() {
-    if (feedbackBusy || !result || !feedbackRating) return;
-    setFeedbackBusy(true);
-    setFeedbackError(null);
-    try {
-      await mysteryApi.submitFeedback(result.pickId, { rating: feedbackRating, tags: feedbackTags.length > 0 ? feedbackTags : undefined });
-      setFeedbackSubmitted(true);
-    } catch (e) {
-      if (isApiRequestError(e)) setFeedbackError(tk(e.messageKey) ?? null);
-      else throw e;
-    } finally {
-      setFeedbackBusy(false);
-    }
-  }
-
   /** "Find another Mystery" (the feedback-submitted screen's own CTA) — a full reset back to Mystery Book's very
    *  first screen, not just a Back one stage up: every answer, pick and in-progress form field from this session
    *  is cleared so the next visit starts clean, the same as a first-time visitor would see it. */
@@ -618,11 +547,6 @@ export function MysteryBookFlow({
     setCardExpiry("");
     setCardCvv("");
     setCardTouched({});
-    setFeedbackRating(null);
-    setFeedbackTags([]);
-    setFeedbackBusy(false);
-    setFeedbackError(null);
-    setFeedbackSubmitted(false);
   }
 
   const hasResult = result !== null || previewCandidates.length > 0;
@@ -636,8 +560,7 @@ export function MysteryBookFlow({
     stage !== "placing-order" &&
     stage !== "confirmed" &&
     stage !== "no-match" &&
-    stage !== "out-of-stock" &&
-    !(stage === "review" && feedbackSubmitted);
+    stage !== "out-of-stock";
   const topRow = showBack ? (
     <button
       type="button"
@@ -1181,79 +1104,9 @@ export function MysteryBookFlow({
             <span className="text-muted">{t("confirmed.statusDelivered")}</span>
           </div>
 
-          <span className="group/review relative mt-5 inline-flex">
-            <Button onClick={() => setStage("review")}>{t("confirmed.reviewCta")}</Button>
-            <span
-              role="tooltip"
-              className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-[18rem] -translate-x-1/2 rounded-lg bg-ink px-3 py-1.5 text-center text-xs font-medium leading-snug text-paper opacity-0 shadow-lg transition-opacity duration-150 group-hover/review:opacity-100 group-focus-within/review:opacity-100"
-            >
-              {t("confirmed.reviewTooltip")}
-            </span>
-          </span>
-
-          <div className="mt-5">
-            <button type="button" onClick={handleStartOver} className="text-sm text-muted underline-offset-4 hover:text-ink hover:underline">
-              {t("confirmed.startOver")}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {stage === "review" && result && (
-        <div className="animate-rise mx-auto max-w-[28rem] text-center">
-          {feedbackSubmitted ? (
-            <div role="status">
-              <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-marker/15 text-marker">
-                <Compass className="size-7" aria-hidden="true" />
-              </div>
-              <h2 className="mt-5 font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-tight">{t("reviewStep.submittedHeading")}</h2>
-              <p className="mt-3 text-[1.0625rem] leading-relaxed text-muted">{t("reviewStep.submittedBody")}</p>
-              <Button className="mt-5" onClick={handleStartOver}>
-                {t("reviewStep.submittedCta")}
-              </Button>
-            </div>
-          ) : (
-            <>
-              <h1 className="max-w-[22ch] text-balance font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-[1.15] tracking-[-0.01em]">{t("reviewStep.title")}</h1>
-
-              <div role="radiogroup" aria-label={t("reviewStep.title")} className="mt-6 grid grid-cols-3 gap-3">
-                {FEEDBACK_RATINGS.map((key) => (
-                  <button
-                    key={key}
-                    type="button"
-                    role="radio"
-                    aria-checked={feedbackRating === key}
-                    onClick={() => setFeedbackRating((prev) => (prev === key ? null : key))}
-                    className={`flex flex-col items-center gap-1.5 rounded-2xl border p-5 transition-colors ${
-                      feedbackRating === key ? "border-ink bg-ink text-paper" : "border-rule-strong text-ink-2 hover:border-ink"
-                    }`}
-                  >
-                    <span className="text-2xl">{FEEDBACK_RATING_EMOJI[key]}</span>
-                    <span className="font-display text-base leading-snug">{t(`feedbackRatings.${key}`)}</span>
-                  </button>
-                ))}
-              </div>
-
-              {feedbackRating ? (
-                <div className="animate-rise mt-5">
-                  <p className="text-sm font-medium text-ink-2">{t("reviewStep.tagsLabel")}</p>
-                  <div className="mt-3 flex flex-wrap justify-center gap-2.5">
-                    {FEEDBACK_TAG_KEYS.map((key) => (
-                      <Chip key={key} active={feedbackTags.includes(key)} onClick={() => toggleFeedbackTag(key)}>
-                        {t(`feedbackTags.${key}`)}
-                      </Chip>
-                    ))}
-                  </div>
-
-                  {feedbackError ? <FormAlert>{feedbackError}</FormAlert> : null}
-
-                  <Button className="mt-5" onClick={() => void handleSubmitFeedback()} state={feedbackBusy ? "loading" : "idle"}>
-                    {t("reviewStep.submit")}
-                  </Button>
-                </div>
-              ) : null}
-            </>
-          )}
+          <Button className="mt-5" onClick={handleStartOver}>
+            {t("confirmed.startOver")}
+          </Button>
         </div>
       )}
       </div>

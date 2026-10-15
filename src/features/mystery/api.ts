@@ -22,5 +22,6 @@ export const mysteryApi = {
   submitFeedback: (pickId: string, input: MysteryFeedbackInput) => apiRequest<{ ok: true }>("POST", mysteryPickApi.feedback(pickId), input),
   recent: () => apiRequest<{ recommendations: MysteryRecentRecommendation[] }>("GET", API.mysteryRecent),
   addToLibrary: (viewId: string, input: BookInput) => apiRequest<{ book: BookDTO }>("POST", mysteryViewApi.addToLibrary(viewId), input),
+  reviewRecommendation: (viewId: string, input: MysteryFeedbackInput) => apiRequest<{ ok: true }>("POST", mysteryViewApi.feedback(viewId), input),
   removeRecommendation: (viewId: string) => apiRequest<void>("DELETE", mysteryViewApi.detail(viewId)),
 };

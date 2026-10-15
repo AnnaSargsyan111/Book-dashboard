@@ -45,6 +45,7 @@ export const mysteryPickApi = {
 export const mysteryViewApi = {
   addToLibrary: (viewId: string) => `/api/v1/mystery/recommendation-view/${viewId}/add-to-library`,
   detail: (viewId: string) => `/api/v1/mystery/recommendation-view/${viewId}`,
+  feedback: (viewId: string) => `/api/v1/mystery/recommendation-view/${viewId}/feedback`,
 };
 
 /** Where a book's own detail page lives (fields editable in place — no separate edit mode). */

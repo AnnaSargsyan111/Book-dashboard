@@ -1,5 +1,5 @@
 import { getDb } from "@/server/db/client";
-import type { ExperienceKey, MoodKey, MysteryAddressInput, MysteryFeedbackInput, MysteryRecommendInput, PaymentMethod, SavedAddress } from "@/shared/validation/mystery";
+import type { ExperienceKey, FeedbackRating, FeedbackTagKey, MoodKey, MysteryAddressInput, MysteryFeedbackInput, MysteryRecommendInput, PaymentMethod, SavedAddress } from "@/shared/validation/mystery";
 
 /** One row backing Mystery Book → "Recently Recommended" — see `MysteryRecommendationView`'s own schema comment
  *  for why this is a separate table from `MysteryPick`. */
@@ -11,6 +11,9 @@ export interface RecommendationViewRow {
   createdAt: Date;
   /** The library book this recommendation became via "+ Add", if any. */
   libraryBookId: string | null;
+  /** The reader's review, once left from the card (see `saveViewFeedback`). */
+  feedbackRating: FeedbackRating | null;
+  feedbackTags: FeedbackTagKey[];
 }
 
 /** Records that a "Show Me Now" candidate was actually shown to the user — called from both
@@ -33,7 +36,7 @@ export async function listRecommendationViews(userId: string, limit = 24): Promi
     where: { userId },
     orderBy: { createdAt: "desc" },
     take: limit,
-    select: { id: true, bookSlug: true, moods: true, experience: true, createdAt: true, libraryBook: { select: { id: true } } },
+    select: { id: true, bookSlug: true, moods: true, experience: true, feedbackRating: true, feedbackTags: true, createdAt: true, libraryBook: { select: { id: true } } },
   });
   return rows.map((r) => ({
     id: r.id,
@@ -42,6 +45,8 @@ export async function listRecommendationViews(userId: string, limit = 24): Promi
     experience: r.experience as ExperienceKey | null,
     createdAt: r.createdAt,
     libraryBookId: r.libraryBook?.id ?? null,
+    feedbackRating: (r.feedbackRating as FeedbackRating | null) ?? null,
+    feedbackTags: (r.feedbackTags as FeedbackTagKey[] | null) ?? [],
   }));
 }
 
@@ -126,6 +131,21 @@ export async function findPick(userId: string, pickId: string) {
  *  already re-checked the book's availability (Out-of-Stock, Section 13.26) and that an address is on file. */
 export async function markOrdered(pickId: string, paymentMethod: PaymentMethod): Promise<void> {
   await getDb().mysteryPick.update({ where: { id: pickId }, data: { paymentMethod, orderedAt: new Date() } });
+}
+
+/** A review left from a Recently Recommended card. Only a recommendation that has become a library book can be
+ *  reviewed (that is when the card offers the review icon), only by its owner, and only once: the review is
+ *  claimed atomically (`feedbackRating` still null), so two quick submits can't overwrite each other.
+ *  "not_found" covers a missing view, someone else's, and one not yet added alike. */
+export async function saveViewFeedback(userId: string, viewId: string, input: MysteryFeedbackInput): Promise<"saved" | "not_found" | "already_reviewed"> {
+  const owned = { id: viewId, userId, libraryBook: { isNot: null } };
+  const { count } = await getDb().mysteryRecommendationView.updateMany({
+    where: { ...owned, feedbackRating: null },
+    data: { feedbackRating: input.rating, feedbackTags: input.tags ?? [] },
+  });
+  if (count > 0) return "saved";
+  const exists = await getDb().mysteryRecommendationView.findFirst({ where: owned, select: { id: true } });
+  return exists ? "already_reviewed" : "not_found";
 }
 
 /** Post-Delivery Feedback — the learning-loop input (not yet fed back into scoring, see README). Ownership-scoped

@@ -51,7 +51,14 @@ export function RecentlyRecommended() {
       ) : (
         <div className="mt-6 grid grid-cols-3 gap-x-4 gap-y-7 sm:grid-cols-4 lg:grid-cols-5">
           {recommendations.map((rec) => (
-            <RecommendationCard key={rec.viewId} rec={rec} onRemoved={() => setRecommendations((prev) => (prev ?? []).filter((r) => r.viewId !== rec.viewId))} />
+            <RecommendationCard
+              key={rec.viewId}
+              rec={rec}
+              onRemoved={() => setRecommendations((prev) => (prev ?? []).filter((r) => r.viewId !== rec.viewId))}
+              onReviewed={(feedbackRating, feedbackTags) =>
+                setRecommendations((prev) => (prev ?? []).map((r) => (r.viewId === rec.viewId ? { ...r, feedbackRating, feedbackTags } : r)))
+              }
+            />
           ))}
         </div>
       )}

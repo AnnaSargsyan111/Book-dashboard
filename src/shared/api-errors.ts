@@ -29,6 +29,8 @@ export const API_ERROR_KEYS = {
   /** A pick's book went from available to unavailable between the recommendation and placing the order — the
    *  UI intercepts this code specifically to show the Out-of-Stock screen rather than a generic error. */
   BOOK_OUT_OF_STOCK: "mysteryBook.outOfStock.subheading",
+  /** A Recently Recommended book was already reviewed; a review is left once and then locked. */
+  ALREADY_REVIEWED: "mysteryBook.recent.alreadyReviewed",
   /** Client-only: the request never reached the server. */
   NETWORK: "errors.network",
 } as const;

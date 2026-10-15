@@ -210,6 +210,11 @@ model MysteryRecommendationView {
   /// "why this pick" reasoning shown in Recently Recommended can be rebuilt in the viewer's current language.
   moods      Json
   experience String?
+  /// The reader's review of this book ("loved" | "okay" | "not_for_me"), left from its Recently Recommended card once
+  /// it has been added to the library — and the optional "what did you like" tag keys (see `MysteryPick`'s own
+  /// `feedbackTags`). Null until reviewed; a later review replaces the earlier one.
+  feedbackRating String?
+  feedbackTags   Json?
   createdAt  DateTime @default(now())
 
   user        User  @relation(fields: [userId], references: [id], onDelete: Cascade)

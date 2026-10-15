@@ -12,11 +12,12 @@ import { mysteryApi } from "./api";
 /**
  * The same quick-delete icon `DeleteBookButton` puts on a library card's corner (`variant="overlay"`), here for
  * one "Recently Recommended" card — removes the `MysteryRecommendationView` row, never the library book "+ Add"
- * may already have made from it (see `deleteRecommendationView`'s own doc comment). Always confirms first. The
+ * may already have made from it (see `deleteRecommendationView`'s own doc comment) — and the dialog says so
+ * when that book exists (`inLibrary`). Always confirms first. The
  * caller owns the list (`RecentlyRecommended` holds its own fetched state, not server-rendered), so success just
  * calls back up to drop this card rather than a router refresh.
  */
-export function DeleteRecommendationButton({ viewId, title, onRemoved }: { viewId: string; title: string; onRemoved: () => void }) {
+export function DeleteRecommendationButton({ viewId, title, inLibrary, onRemoved }: { viewId: string; title: string; inLibrary: boolean; onRemoved: () => void }) {
   const t = useTranslations("mysteryBook.recent.deleteDialog");
   const tc = useTranslations("common");
   const tk = useTranslateKey();
@@ -64,7 +65,7 @@ export function DeleteRecommendationButton({ viewId, title, onRemoved }: { viewI
         <ConfirmDialog
           titleId={`delete-recommendation-${viewId}`}
           title={t("title")}
-          body={t("body", { title })}
+          body={t(inLibrary ? "bodyInLibrary" : "body", { title })}
           confirmLabel={t("confirm")}
           cancelLabel={tc("cancel")}
           danger

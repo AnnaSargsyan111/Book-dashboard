@@ -235,4 +235,7 @@ export interface MysteryRecentRecommendation {
   /** Set once "+ Add" → Book Detail → Save has run for this recommendation — the card then shows "Added to My
    *  Books" / "View in My Books" instead of "+ Add", and the same recommendation can never be added a second time. */
   libraryBookId: string | null;
+  /** The reader's own review, if they left one from this card (see `mysteryFeedbackSchema`). */
+  feedbackRating: FeedbackRating | null;
+  feedbackTags: FeedbackTagKey[];
 }
