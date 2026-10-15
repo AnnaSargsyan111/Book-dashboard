@@ -145,17 +145,41 @@ describe("POST /api/v1/books/ai-fill", () => {
     expect((await aiFill(req("/api/v1/books/ai-fill", { title: "Dune" }))).status).toBe(401);
   });
 
-  it("fills in Author/Genres/Plot from Google Books, with Characters always empty", async () => {
+  it("fills in Author/Genres/Plot from Open Library, with Characters always empty", async () => {
     const { cookie } = await signedUp();
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        new Response(
-          JSON.stringify({
-            items: [{ volumeInfo: { authors: ["Frank Herbert"], categories: ["Fiction / Science Fiction / General"], description: "<p>A desert planet.</p>" } }],
-          }),
-          { status: 200 },
-        ),
+      vi.fn(async (url: string) =>
+        String(url).includes("search.json")
+          ? new Response(
+              JSON.stringify({
+                docs: [{ key: "/works/OL1W", title: "Dune", author_name: ["Frank Herbert"], cover_i: 1, subject: ["Science fiction", "Textbooks for foreign speakers", "Ecology", "Fiction, science fiction, general"] }],
+              }),
+              { status: 200 },
+            )
+          : new Response(JSON.stringify({ description: { value: "A desert planet.\r\n\r\n----------\r\nSource: somewhere" } }), { status: 200 }),
+      ),
+    );
+    const res = await aiFill(req("/api/v1/books/ai-fill", { title: "Dune" }, { cookie }));
+    expect(res.status).toBe(200);
+    const result = await json(res);
+    expect(result.author).toBe("Frank Herbert");
+    expect(result.genres).toEqual(["Science fiction"]);
+    expect(result.plot).toBe("A desert planet.");
+    expect(result.characters).toEqual([]);
+  });
+
+  it("falls back to Google Books when Open Library has no record", async () => {
+    const { cookie } = await signedUp();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) =>
+        String(url).includes("openlibrary.org")
+          ? new Response(JSON.stringify({ docs: [] }), { status: 200 })
+          : new Response(
+              JSON.stringify({ items: [{ volumeInfo: { authors: ["Frank Herbert"], categories: ["Fiction / Science Fiction / General"], description: "<p>A desert planet.</p>" } }] }),
+              { status: 200 },
+            ),
       ),
     );
     const res = await aiFill(req("/api/v1/books/ai-fill", { title: "Dune" }, { cookie }));
@@ -164,12 +188,14 @@ describe("POST /api/v1/books/ai-fill", () => {
     expect(result.author).toBe("Frank Herbert");
     expect(result.genres).toEqual(["Fiction", "Science Fiction", "General"]);
     expect(result.plot).toBe("A desert planet.");
-    expect(result.characters).toEqual([]);
   });
 
-  it("responds AI_NO_MATCH when Google Books has no record of the title", async () => {
+  it("responds AI_NO_MATCH when neither source has a record of the title", async () => {
     const { cookie } = await signedUp();
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ items: [] }), { status: 200 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => new Response(JSON.stringify(String(url).includes("openlibrary.org") ? { docs: [] } : { items: [] }), { status: 200 })),
+    );
     const res = await aiFill(req("/api/v1/books/ai-fill", { title: "Not A Real Book Title Xyz" }, { cookie }));
     expect(res.status).toBe(404);
     expect((await json(res)).error.code).toBe("AI_NO_MATCH");
@@ -309,7 +335,7 @@ describe("POST /api/v1/books/[id]/cover-lookup", () => {
   it("sets the cover when Open Library returns a match", async () => {
     const { cookie } = await signedUp();
     const created = await json(await createBook(req("/api/v1/books", book, { cookie })));
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ docs: [{ cover_i: 12345 }] }), { status: 200 })));
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ docs: [{ key: "/works/OL1W", title: "Dune", cover_i: 12345 }] }), { status: 200 })));
     const res = await findCover(req(`/api/v1/books/${created.book.id}/cover-lookup`, {}, { cookie }), withId(created.book.id));
     expect(res.status).toBe(200);
     const { book: updated } = await json(res);

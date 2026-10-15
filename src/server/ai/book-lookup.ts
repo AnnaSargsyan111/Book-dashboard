@@ -2,6 +2,7 @@ import { getEnv } from "@/server/config/env";
 import { ApiError } from "@/server/http/errors";
 import { errorMessage, log } from "@/server/log";
 import { LIMITS } from "@/shared/validation/limits";
+import { fetchPlot, genresFromSubjects, pickWork, searchWorks } from "./open-library";
 import type { BookAiFillInput, BookAiFillResult } from "@/shared/validation/book";
 
 const API_URL = "https://www.googleapis.com/books/v1/volumes";
@@ -64,15 +65,37 @@ function plainTextPlot(description: string | undefined): string | null {
 }
 
 /**
- * Looks a book up via Google Books' public API — the same real internet lookup "Find Cover" already uses (see
- * `cover-lookup.ts`), reused here instead of a paid LLM call so "Auto-fill" needs no configuration to work out of
- * the box. Works keyless against Google's shared anonymous quota (which can run dry — it's a daily bucket shared
- * with every other keyless caller); `GOOGLE_BOOKS_API_KEY` (optional, see `.env.example`) switches to a private
- * quota instead. Never fabricates anything: a title Google Books has no record of just throws `AI_NO_MATCH`.
+ * Fills a book in from the internet. Open Library is asked first: it is free, needs no key or billing account, and
+ * has no daily quota to run dry — Google Books' shared anonymous quota does, and a private key still gets `503`s
+ * unless the Google project has billing linked, which is how "Couldn't find this book" kept appearing for books
+ * that very much exist. Google Books stays as the second chance for anything Open Library lacks.
+ * Never fabricates anything: a title neither source has a record of just throws `AI_NO_MATCH`.
  * `characters` is always empty — no free structured source offers a cast list, and guessing one would break the
  * "never invent" rule this endpoint has always kept.
  */
 export async function lookUpBook(input: BookAiFillInput): Promise<BookAiFillResult> {
+  const fromOpenLibrary = await lookUpOnOpenLibrary(input).catch((e) => {
+    log.error("book lookup: Open Library failed", { message: errorMessage(e) });
+    return null;
+  });
+  if (fromOpenLibrary) return fromOpenLibrary;
+  return lookUpOnGoogle(input);
+}
+
+async function lookUpOnOpenLibrary(input: BookAiFillInput): Promise<BookAiFillResult | null> {
+  const author = input.author || undefined;
+  const work = pickWork(await searchWorks(input.title, author), author);
+  if (!work) return null;
+  return {
+    author: work.authors[0]?.trim() || null,
+    genres: genresFromSubjects(work.subjects),
+    characters: [],
+    plot: await fetchPlot(work.key, LIMITS.plotMax),
+  };
+}
+
+/** Google Books' public API (keyless against a shared daily quota, or `GOOGLE_BOOKS_API_KEY` for a private one). */
+async function lookUpOnGoogle(input: BookAiFillInput): Promise<BookAiFillResult> {
   const q = encodeURIComponent(input.author ? `intitle:${input.title} inauthor:${input.author}` : `intitle:${input.title}`);
   const apiKey = getEnv().GOOGLE_BOOKS_API_KEY;
   const keyParam = apiKey ? `&key=${apiKey}` : "";
