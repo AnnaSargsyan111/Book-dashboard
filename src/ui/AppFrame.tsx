@@ -22,7 +22,8 @@ export function AppFrame({
   alignTop,
   children,
 }: {
-  user: Pick<PublicUser, "firstName" | "lastName">;
+  /** `null` only for a page's `loading.tsx`: the same shell, with a placeholder where the account menu goes. */
+  user: Pick<PublicUser, "firstName" | "lastName"> | null;
   scene?: PageSceneKey;
   /** Desktop only: lifts the page's first block to the sidebar logo's top line, with the header floating over it. */
   alignTop?: boolean;
@@ -53,7 +54,7 @@ export function AppFrame({
               <span className="hidden lg:block">
                 <LanguageSwitcher />
               </span>
-              <AccountMenu firstName={user.firstName} lastName={user.lastName} />
+              {user ? <AccountMenu firstName={user.firstName} lastName={user.lastName} /> : <span className="size-9 animate-pulse rounded-full bg-ink/10 lg:size-8" aria-hidden="true" />}
               <MobileNav />
             </div>
           </div>

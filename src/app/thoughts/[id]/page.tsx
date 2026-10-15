@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ThoughtEditor } from "@/features/thoughts/ThoughtEditor";
 import { requireOnboardedUser } from "@/server/modules/auth/guards";
-import { listBooks } from "@/server/modules/books/book.repository";
-import { getThought } from "@/server/modules/thoughts/thought.repository";
+import { listBookOptions } from "@/server/modules/books/book.repository";
+import { getThoughtForRender } from "@/server/modules/thoughts/thought.cached";
 import { AppFrame } from "@/ui/AppFrame";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const user = await requireOnboardedUser();
-  const thought = await getThought(user.id, id);
+  const thought = await getThoughtForRender(user.id, id);
   return { title: thought?.title ?? "Thought" };
 }
 
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function ThoughtDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requireOnboardedUser();
-  const [record, books] = await Promise.all([getThought(user.id, id), listBooks(user.id)]);
+  const [record, books] = await Promise.all([getThoughtForRender(user.id, id), listBookOptions(user.id)]);
   if (!record) notFound();
 
   const thought = { ...record, createdAt: record.createdAt.toISOString(), updatedAt: record.updatedAt.toISOString() };
@@ -26,7 +26,7 @@ export default async function ThoughtDetailPage({ params }: { params: Promise<{ 
   return (
     <AppFrame user={user} scene="thoughts" alignTop>
       <div className="animate-rise mx-auto max-w-2xl lg:mt-[3.75rem]">
-        <ThoughtEditor thought={thought} books={books.map((b) => ({ id: b.id, title: b.title, author: b.author }))} />
+        <ThoughtEditor thought={thought} books={books} />
       </div>
     </AppFrame>
   );

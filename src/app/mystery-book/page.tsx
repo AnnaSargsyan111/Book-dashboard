@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { MysteryBookPageClient } from "@/features/mystery/MysteryBookPageClient";
 import { requireOnboardedUser } from "@/server/modules/auth/guards";
-import { listBooks } from "@/server/modules/books/book.repository";
+import { countRatedReads } from "@/server/modules/books/book.repository";
 import { findLastAddress } from "@/server/modules/mystery/mystery.repository";
 import { findProfile } from "@/server/modules/profile/profile.repository";
-import { needsGenreStep } from "@/server/mystery/recommend";
+import { needsGenreStepFor } from "@/server/mystery/recommend";
 import { AppFrame } from "@/ui/AppFrame";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -21,11 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function MysteryBookPage() {
   const user = await requireOnboardedUser();
-  const [profile, books, lastAddress] = await Promise.all([findProfile(user.id), listBooks(user.id), findLastAddress(user.id)]);
+  const [profile, ratedReads, lastAddress] = await Promise.all([findProfile(user.id), countRatedReads(user.id), findLastAddress(user.id)]);
 
   return (
     <AppFrame user={user} scene="mysteryBook">
-      <MysteryBookPageClient needsGenreStep={needsGenreStep(profile!, books)} initialAddress={lastAddress} />
+      <MysteryBookPageClient needsGenreStep={needsGenreStepFor(profile!, ratedReads)} initialAddress={lastAddress} />
     </AppFrame>
   );
 }

@@ -27,9 +27,9 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function AboutMePage() {
   const user = await requireOnboardedUser();
-  const t = await getTranslations("aboutMe");
   // Guaranteed to exist: created atomically when onboarding completes, and this page requires onboarding to be done.
-  const profile = (await findProfile(user.id))!;
+  const [t, found] = await Promise.all([getTranslations("aboutMe"), findProfile(user.id)]);
+  const profile = found!;
 
   return (
     <AppFrame user={user} scene="aboutMe" alignTop>

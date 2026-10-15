@@ -49,6 +49,18 @@ export async function listBooks(userId: string): Promise<BookRecord[]> {
   return rows.map(toBookRecord);
 }
 
+/** Just what a book picker needs (id, title, author) — the Thought editor's "link a book" list — instead of
+ *  pulling every column (plot, quotes, commentary, …) of every book only to throw most of it away. */
+export async function listBookOptions(userId: string): Promise<{ id: string; title: string; author: string }[]> {
+  return getDb().book.findMany({ where: { userId }, orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }], select: { id: true, title: true, author: true } });
+}
+
+/** How many books the user has read and rated — all the Mystery Book cold-start check needs from the library, so
+ *  one count instead of loading the whole library. */
+export async function countRatedReads(userId: string): Promise<number> {
+  return getDb().book.count({ where: { userId, status: "read", rating: { not: null } } });
+}
+
 /** A single book, scoped to its owner — never resolves someone else's book, even by a guessed id. */
 export async function getBook(userId: string, id: string): Promise<BookRecord | null> {
   const row = await getDb().book.findFirst({ where: { id, userId } });

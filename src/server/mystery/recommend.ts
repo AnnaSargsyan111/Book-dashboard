@@ -60,8 +60,12 @@ export interface MysteryContext {
  * genre pick, or a handful of rated "read" books, either counts as "enough."
  */
 export function needsGenreStep(profile: UserProfileData, books: BookRecord[]): boolean {
+  return needsGenreStepFor(profile, books.filter((b) => b.status === "read" && b.rating != null).length);
+}
+
+/** Same rule from a precomputed count (see `countRatedReads`), for callers that don't otherwise need the books. */
+export function needsGenreStepFor(profile: UserProfileData, ratedReads: number): boolean {
   if (profile.genres.length > 0) return false;
-  const ratedReads = books.filter((b) => b.status === "read" && b.rating != null).length;
   return ratedReads < 3;
 }
 
