@@ -115,7 +115,7 @@ export function AccountForm({ initial, email }: { initial: UpdateAccountInput; e
       <TextField label={ta("email.label")} type="email" value={email} readOnly hint={t("emailHint")} />
 
       <div>
-        <Button onClick={handleSave} disabled={!dirty} state={buttonState} loadingLabel={t("saving")} successLabel={t("saved")}>
+        <Button onClick={handleSave} disabled={!dirty} state={buttonState} successLabel={t("saved")}>
           {t("save")}
         </Button>
       </div>

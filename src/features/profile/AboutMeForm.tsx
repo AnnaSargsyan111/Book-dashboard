@@ -236,7 +236,7 @@ export function AboutMeForm({ initial }: { initial: ProfileUpdateInput }) {
       </div>
 
       <div className="pt-8">
-        <Button onClick={handleSave} disabled={!dirty} state={buttonState} loadingLabel={to("submitting")} successLabel={to("success")}>
+        <Button onClick={handleSave} disabled={!dirty} state={buttonState} successLabel={to("success")}>
           {t("save")}
         </Button>
       </div>

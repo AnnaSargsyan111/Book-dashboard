@@ -214,11 +214,11 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
           <CoverImage src={coverUrl} title={values.title || book.title} alt="" />
           <div className="mt-4 flex flex-col gap-2.5">
             <input ref={fileInputRef} type="file" accept={COVER_MIME_TYPES.join(",")} className="hidden" onChange={handleFileChosen} />
-            <Button variant="secondary" block onClick={() => fileInputRef.current?.click()} state={coverBusy === "uploading" ? "loading" : "idle"} loadingLabel={t("cover.uploading")}>
+            <Button variant="secondary" block onClick={() => fileInputRef.current?.click()} state={coverBusy === "uploading" ? "loading" : "idle"}>
               <ImagePlus className="size-[1.0625rem]" aria-hidden="true" />
               {t("cover.addPhoto")}
             </Button>
-            <Button variant="secondary" block onClick={handleFindCover} state={coverBusy === "finding" ? "loading" : "idle"} loadingLabel={t("cover.finding")}>
+            <Button variant="secondary" block onClick={handleFindCover} state={coverBusy === "finding" ? "loading" : "idle"}>
               <Search className="size-[1.0625rem]" aria-hidden="true" />
               {t("cover.findCover")}
             </Button>
@@ -357,12 +357,12 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
             />
           </div>
 
-          <TextArea label={tf("commentary.label")} value={values.commentary} onChange={(e) => setField("commentary", e.target.value)} rows={4} />
+          <TextArea label={tf("commentary.label")} value={values.commentary} onChange={(e) => setField("commentary", e.target.value)} rows={2} className="min-h-0!" />
         </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-rule pt-6 lg:pl-[calc(16rem+2.5rem)] xl:pl-[calc(18rem+2.5rem)]">
-        <Button onClick={handleSave} disabled={!dirty} state={saveState} loadingLabel={t("saving")} successLabel={t("saved")}>
+        <Button onClick={handleSave} disabled={!dirty} state={saveState} successLabel={t("saved")}>
           {t("save")}
         </Button>
         <DeleteBookButton id={book.id} title={values.title} redirectTo={booksHref} variant="button" />

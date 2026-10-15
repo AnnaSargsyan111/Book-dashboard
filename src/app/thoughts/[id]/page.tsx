@@ -24,8 +24,8 @@ export default async function ThoughtDetailPage({ params }: { params: Promise<{ 
   const thought = { ...record, createdAt: record.createdAt.toISOString(), updatedAt: record.updatedAt.toISOString() };
 
   return (
-    <AppFrame user={user} scene="thoughts">
-      <div className="animate-rise mx-auto max-w-2xl">
+    <AppFrame user={user} scene="thoughts" alignTop>
+      <div className="animate-rise mx-auto max-w-2xl lg:mt-[3.75rem]">
         <ThoughtEditor thought={thought} books={books.map((b) => ({ id: b.id, title: b.title, author: b.author }))} />
       </div>
     </AppFrame>

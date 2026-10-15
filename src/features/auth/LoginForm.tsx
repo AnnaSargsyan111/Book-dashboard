@@ -71,7 +71,7 @@ export function LoginForm({ next }: { next?: string | null }) {
         </p>
       </div>
 
-      <Button type="submit" block arrow state={form.status === "submitting" ? "loading" : "idle"}>
+      <Button type="submit" block state={form.status === "submitting" ? "loading" : "idle"}>
         {t("login.submit")}
       </Button>
 

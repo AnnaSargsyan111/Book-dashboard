@@ -37,7 +37,6 @@ export function MysteryHero({ onStart }: { onStart: () => void }) {
         <Button
           id="mystery-hero-cta"
           onClick={onStart}
-          arrow
           className="shadow-[0_18px_34px_-16px_rgb(0_0_0/0.6)]"
           style={{ background: "var(--scene-candle)", color: "var(--scene-espresso)" }}
         >

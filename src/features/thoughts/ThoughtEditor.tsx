@@ -204,7 +204,6 @@ export function ThoughtEditor({ thought, books }: { thought?: ThoughtDTO; books:
             onClick={handleSave}
             disabled={isEdit && !dirty}
             state={saveState}
-            loadingLabel={isEdit ? t("detail.saving") : undefined}
             successLabel={isEdit ? t("detail.saved") : undefined}
           >
             {t(isEdit ? "detail.save" : "new.save")}

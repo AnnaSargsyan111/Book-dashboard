@@ -17,6 +17,7 @@ import { FormAlert } from "@/ui/FormAlert";
 import { MultiSelect } from "@/ui/MultiSelect";
 import { TextArea } from "@/ui/TextArea";
 import { onboardingApi } from "./api";
+import { rearmBookIntro } from "@/lib/book-intro";
 import { BookOpeningTransition } from "./BookOpeningTransition";
 
 /**
@@ -59,6 +60,8 @@ export function OnboardingForm() {
         }
         throw error;
       }
+      // The hub's closed-book entrance must play for a new reader even if this browser has seen it before.
+      rearmBookIntro();
       await playEntrance();
       router.replace(ROUTES.home);
     },
@@ -141,7 +144,7 @@ export function OnboardingForm() {
         error={tk(form.errorKey("aboutMe"))}
       />
 
-      <Button type="submit" block arrow state={state} loadingLabel={t("submitting")} successLabel={t("success")}>
+      <Button type="submit" block state={state} successLabel={t("success")}>
         {t("continue")}
       </Button>
 

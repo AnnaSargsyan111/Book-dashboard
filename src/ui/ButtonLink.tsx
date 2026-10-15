@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
@@ -13,7 +12,7 @@ const variants: Record<Variant, string> = {
 };
 
 /**
- * A Button that navigates instead of submitting — same look (including the hover arrow), for a server component
+ * A Button that navigates instead of submitting — same look, for a server component
  * CTA that has nothing to do first (compare `Button`, which needs client state for loading/success).
  */
 export function ButtonLink({ variant = "primary", className = "", children, ...props }: ComponentProps<typeof Link> & { variant?: Variant }) {
@@ -23,7 +22,6 @@ export function ButtonLink({ variant = "primary", className = "", children, ...p
       {...props}
     >
       <span>{children}</span>
-      <ArrowRight className="size-[1.125rem] transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
     </Link>
   );
 }

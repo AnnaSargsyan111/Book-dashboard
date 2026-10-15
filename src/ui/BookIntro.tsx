@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { BOOK_INTRO_SEEN_KEY as SEEN_KEY, setBookIntroActive } from "@/lib/book-intro";
+import { BOOK_INTRO_SEEN_KEY as SEEN_KEY, setBookIntroActive, willBookIntroPlay } from "@/lib/book-intro";
 
 const HOLD_MS = 4000;
 const OPEN_MS = 1150;
@@ -14,7 +14,8 @@ type Phase = "closed" | "opening" | "revealing";
  * The hub page's one-time entrance: a closed book carrying the same real welcome text as the open book's own
  * cover below it, held for a beat, then opened with a real 3D page-turn into the actual page underneath — which
  * is already rendered, unchanged, the entire time; this is a fixed overlay on top of it, never a gate on the
- * real content or a separate route. Shown once per login (`localStorage` flag, re-armed by `LoginForm`), skipped entirely under
+ * real content or a separate route. Shown once per login and once after onboarding (`localStorage` flag, re-armed by
+ * `LoginForm`, `RegisterForm` and `OnboardingForm`), skipped entirely under
  * `prefers-reduced-motion` (nothing was ever hidden, so skipping is just rendering nothing), and safe to fail:
  * if this component's effects never run, the page beneath was never covered up in the first place. A click
  * during the hold skips straight to opening, for anyone who'd rather not wait.
@@ -26,14 +27,7 @@ export function BookIntro({ eyebrow, title, intro }: { eyebrow: string; title: R
   // Decided synchronously on mount (not via a hook that resolves a tick later) so the hub's own reveals, which
   // start observing in this same commit, already know to wait for the cover.
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let seen = false;
-    try {
-      seen = localStorage.getItem(SEEN_KEY) === "true";
-    } catch {
-      seen = false;
-    }
-    if (seen) return;
+    if (!willBookIntroPlay()) return;
     setBookIntroActive(true);
     setVisible(true);
     return () => setBookIntroActive(false);

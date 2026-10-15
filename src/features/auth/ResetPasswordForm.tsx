@@ -76,7 +76,7 @@ export function ResetPasswordForm({ token }: { token?: string }) {
         <PasswordRequirements id="password-requirements" password={form.values.newPassword} showErrors={form.submitted} />
       </div>
 
-      <Button type="submit" block arrow state={form.status === "submitting" ? "loading" : "idle"} loadingLabel={t("reset.submitting")}>
+      <Button type="submit" block state={form.status === "submitting" ? "loading" : "idle"}>
         {t("reset.submit")}
       </Button>
 

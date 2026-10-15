@@ -143,7 +143,7 @@ export function ChangePasswordModal({ onClose }: { onClose: () => void }) {
             <button type="button" onClick={() => !busy && onClose()} className="rounded-lg px-3 py-2.5 text-[0.9375rem] font-medium text-ink-2 transition-colors hover:text-ink">
               {tc("cancel")}
             </button>
-            <Button onClick={submit} state={busy ? "loading" : "idle"} loadingLabel={t("saving")}>
+            <Button onClick={submit} state={busy ? "loading" : "idle"}>
               {t("save")}
             </Button>
           </div>

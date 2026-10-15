@@ -794,19 +794,6 @@ h2 {
   }
 }
 
-@keyframes dot {
-  0%,
-  80%,
-  100% {
-    opacity: 0.25;
-    transform: translateY(0);
-  }
-  40% {
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-}
-
 @keyframes shimmer {
   to {
     background-position: -200% 0;
@@ -918,8 +905,42 @@ h2 {
 
 /* --------------------------------------------------------------------------- Books: the Welcome Modal ---
    An entrance moment, not an alert box: a library-cloth spine (with a marker-yellow ribbon) beside the message. */
+/* The page behind the welcome modal is softly blurred (and barely dimmed) so attention stays on the modal. The blur
+ * lives on this layer's own opacity, so fading the layer in/out ramps the blur in/out — on close the page eases
+ * back to exactly how it was, with no jump. */
 .welcome-backdrop {
+  background: rgb(12 20 25 / 0.14);
+  backdrop-filter: blur(4px);
   animation: fade 260ms ease-out both;
+}
+
+.welcome-backdrop[data-closing="true"] {
+  animation: welcome-backdrop-out 240ms ease-in both;
+  pointer-events: none;
+}
+
+.welcome-backdrop[data-closing="true"] .welcome-panel {
+  animation: welcome-out 220ms ease-in both;
+}
+
+@keyframes welcome-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes welcome-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
 }
 
 .welcome-panel {

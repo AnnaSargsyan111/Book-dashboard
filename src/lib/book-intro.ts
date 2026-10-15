@@ -11,6 +11,18 @@ export function rearmBookIntro(): void {
   }
 }
 
+/** Whether the closed-book entrance will play on this hub load: not under reduced motion, and not once it has
+ *  already been seen since it was last re-armed. The one place this is decided, so the intro itself and the
+ *  Welcome Modal (which waits its turn behind it) can never disagree. */
+export function willBookIntroPlay(): boolean {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+  try {
+    return localStorage.getItem(BOOK_INTRO_SEEN_KEY) !== "true";
+  } catch {
+    return true;
+  }
+}
+
 /** True while the closed-book cover is on screen — `ScrollReveal` holds its reveals until it's gone. */
 export function isBookIntroActive(): boolean {
   return document.documentElement.hasAttribute(BOOK_INTRO_ACTIVE_ATTR);

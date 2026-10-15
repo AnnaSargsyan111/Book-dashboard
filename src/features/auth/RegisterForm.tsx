@@ -10,6 +10,7 @@ import { PasswordField } from "@/ui/PasswordField";
 import { PasswordRequirements } from "@/ui/PasswordRequirements";
 import { TextField } from "@/ui/TextField";
 import { TextLink } from "@/ui/TextLink";
+import { rearmBookIntro } from "@/lib/book-intro";
 import { authApi } from "./api";
 import { useSchemaForm } from "@/lib/forms/useSchemaForm";
 import { useTranslateKey } from "@/lib/forms/useTranslateKey";
@@ -26,6 +27,7 @@ export function RegisterForm() {
     clearOnError: ["password"],
     onSubmit: async (data) => {
       const { user } = await authApi.register(data);
+      rearmBookIntro();
       router.replace(homePathFor(user));
     },
   });
@@ -100,7 +102,7 @@ export function RegisterForm() {
         <PasswordRequirements id="password-requirements" password={form.values.password} showErrors={form.submitted} />
       </div>
 
-      <Button type="submit" block arrow state={form.status === "submitting" ? "loading" : "idle"} className="mt-1">
+      <Button type="submit" block state={form.status === "submitting" ? "loading" : "idle"} className="mt-1">
         {t("register.submit")}
       </Button>
 

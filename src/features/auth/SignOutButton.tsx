@@ -59,7 +59,7 @@ export function SignOutButton({ quiet = false, menuItem = false, onAfterClick }:
   }
 
   return (
-    <Button variant="secondary" state={busy ? "loading" : "idle"} loadingLabel={t("signOut")} onClick={signOut}>
+    <Button variant="secondary" state={busy ? "loading" : "idle"} onClick={signOut}>
       {t("signOut")}
     </Button>
   );

@@ -4,11 +4,14 @@ import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { BOOK_INTRO_DONE_EVENT, isBookIntroActive, willBookIntroPlay } from "@/lib/book-intro";
 import { ROUTES } from "@/shared/routes";
 import { Button } from "@/ui/Button";
 import { LogoMark } from "@/ui/Logo";
 import { richMark } from "@/ui/rich";
 import { booksApi } from "./api";
+
+const CLOSE_MS = 240;
 
 /**
  * The one-time entrance into the user's library: shown once, right after "Tell us about yourself" (and never
@@ -20,11 +23,26 @@ export function WelcomeModal() {
   const tc = useTranslations("common");
   const router = useRouter();
   const [open, setOpen] = useState(true);
+  const [closing, setClosing] = useState(false);
+  // The modal opens only after the hub's closed-book entrance has finished (or straight away when that isn't
+  // playing): the book opens first, then the welcome appears on the page it opened onto.
+  const [ready, setReady] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const seenRef = useRef(false);
 
   useEffect(() => {
-    if (!open) return;
+    if (!willBookIntroPlay()) {
+      setReady(true);
+      return;
+    }
+    // Re-checked on the next tick: a dev-mode remount of the intro fires "done" for an instant before re-arming.
+    const onDone = () => window.setTimeout(() => !isBookIntroActive() && setReady(true), 0);
+    window.addEventListener(BOOK_INTRO_DONE_EVENT, onDone);
+    return () => window.removeEventListener(BOOK_INTRO_DONE_EVENT, onDone);
+  }, []);
+
+  useEffect(() => {
+    if (!open || !ready) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     panelRef.current?.focus();
@@ -38,7 +56,7 @@ export function WelcomeModal() {
       window.removeEventListener("keydown", onKey);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, ready]);
 
   function markSeen() {
     if (seenRef.current) return;
@@ -47,9 +65,14 @@ export function WelcomeModal() {
     booksApi.markWelcomeSeen().catch(() => {});
   }
 
+  /** Fades the modal and its page blur out (see `.welcome-backdrop[data-closing]`) before unmounting, so the page
+   *  eases back to normal instead of snapping. The timer, not `animationend`, ends it: it must also fire when
+   *  motion is reduced and nothing animates. */
   function dismiss() {
     markSeen();
-    setOpen(false);
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(() => setOpen(false), CLOSE_MS);
   }
 
   function addFirstBook() {
@@ -57,11 +80,12 @@ export function WelcomeModal() {
     router.push(ROUTES.addBook);
   }
 
-  if (!open) return null;
+  if (!open || !ready) return null;
 
   return (
     <div
       role="presentation"
+      data-closing={closing || undefined}
       className="welcome-backdrop fixed inset-0 z-[80] flex items-center justify-center p-5"
       onClick={(e) => e.target === e.currentTarget && dismiss()}
     >
@@ -99,7 +123,7 @@ export function WelcomeModal() {
             {t.rich("title", richMark)}
           </h2>
 
-          <Button arrow onClick={addFirstBook} className="mt-8">
+          <Button onClick={addFirstBook} className="mt-8">
             {t("cta")}
           </Button>
         </div>

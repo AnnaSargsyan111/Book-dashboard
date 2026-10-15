@@ -65,7 +65,7 @@ export function ForgotPasswordForm() {
         error={tk(form.errorKey("email"))}
       />
 
-      <Button type="submit" block arrow state={form.status === "submitting" ? "loading" : "idle"} loadingLabel={t("forgot.submitting")}>
+      <Button type="submit" block state={form.status === "submitting" ? "loading" : "idle"}>
         {t("forgot.submit")}
       </Button>
 

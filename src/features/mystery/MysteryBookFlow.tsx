@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Compass, CreditCard } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { ApiRequestError, isApiRequestError } from "@/lib/api/client";
 import { useTranslateKey } from "@/lib/forms/useTranslateKey";
 import { fieldErrorKeys } from "@/shared/validation/auth";
@@ -154,12 +154,12 @@ function ChoiceCard({ checked, onClick, icon, label, description }: { checked: b
       role="radio"
       aria-checked={checked}
       onClick={onClick}
-      className={`flex flex-col items-start gap-1.5 rounded-2xl border p-5 text-left transition-colors ${
+      className={`flex flex-col items-start gap-1 rounded-2xl border p-3.5 text-left transition-colors ${
         checked ? "border-ink bg-surface" : "border-rule-strong hover:border-ink"
       }`}
     >
       {icon ? <span className="text-2xl">{icon}</span> : null}
-      <span className="font-display text-lg leading-snug">{label}</span>
+      <span className="font-display text-[1.0625rem] leading-snug">{label}</span>
       {description ? <span className="text-sm leading-relaxed text-muted">{description}</span> : null}
     </button>
   );
@@ -168,10 +168,10 @@ function ChoiceCard({ checked, onClick, icon, label, description }: { checked: b
 function StepShell({ title, subtitle, children, footer }: { title: string; subtitle?: string; children: ReactNode; footer: ReactNode }) {
   return (
     <div className="animate-rise mx-auto max-w-2xl">
-      <h1 className="max-w-[24ch] text-balance font-display text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.1] tracking-[-0.01em]">{title}</h1>
-      {subtitle ? <p className="mt-3 max-w-[46ch] text-[1.0625rem] leading-relaxed text-muted">{subtitle}</p> : null}
-      <div className="mt-8">{children}</div>
-      <div className="mt-8 flex flex-wrap items-center gap-4">{footer}</div>
+      <h1 className="text-balance font-display text-[clamp(1.5rem,1.25rem+0.9vw,2.125rem)] leading-[1.1] tracking-[-0.01em]">{title}</h1>
+      {subtitle ? <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-muted">{subtitle}</p> : null}
+      <div className="mt-5">{children}</div>
+      <div className="mt-5 flex flex-wrap items-center gap-4">{footer}</div>
     </div>
   );
 }
@@ -332,6 +332,16 @@ export function MysteryBookFlow({
     feedbackSubmitted,
     hydrated,
   ]);
+
+  // Every step opens at the top of the page: a long step (address, payment) scrolled down must not carry that scroll
+  // position into the next, shorter one. The first run (initial mount / restore from sessionStorage) is left alone.
+  const stepKey = `${stage}|${teaserRevealed}|${candidateIndex}|${addressEditing}`;
+  const lastStepKey = useRef(stepKey);
+  useEffect(() => {
+    if (lastStepKey.current === stepKey) return;
+    lastStepKey.current = stepKey;
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [stepKey]);
 
   useEffect(() => {
     onEntryChange?.(stage === "entry");
@@ -632,7 +642,7 @@ export function MysteryBookFlow({
     <button
       type="button"
       onClick={handleBack}
-      className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-rule-strong px-3.5 py-1.5 text-sm font-medium text-ink-2 transition-colors hover:border-ink hover:text-ink"
+      className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-rule-strong px-3.5 py-1.5 text-sm font-medium text-ink-2 transition-colors hover:border-ink hover:text-ink"
     >
       <ArrowLeft className="size-4" aria-hidden="true" />
       {t("back")}
@@ -652,14 +662,14 @@ export function MysteryBookFlow({
        *  light surface panel here for the same reason the login page's manuscript sheet sits on library cloth:
        *  --ink text has no reliable contrast against that backdrop otherwise. Back/Cancel are the panel's own
        *  first thing, top-left, not floating above it — that's where people actually look for them. */}
-      <div className="animate-rise rounded-[2rem] border border-rule-strong bg-surface p-6 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.35)] sm:p-10">
+      <div className="animate-rise rounded-[2rem] sm:-my-12 border border-rule-strong bg-surface p-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.35)] sm:p-7">
       {topRow}
       {stage === "entry" && (
         <div className="animate-rise mx-auto flex max-w-[26rem] flex-col items-center py-4 text-center">
           <SealedBook />
-          <h1 className="mt-8 max-w-[18ch] text-balance font-display text-[clamp(2rem,1.5rem+2vw,3rem)] leading-[1.1] tracking-[-0.01em]">{t("entry.title")}</h1>
+          <h1 className="mt-5 max-w-[18ch] text-balance font-display text-[clamp(2rem,1.5rem+2vw,3rem)] leading-[1.1] tracking-[-0.01em]">{t("entry.title")}</h1>
           <p className="mt-4 max-w-[36ch] text-[1.0625rem] leading-relaxed text-muted">{t("entry.subtitle")}</p>
-          <Button className="mt-8" onClick={() => setStage("mood")} arrow>
+          <Button className="mt-5" onClick={() => setStage("mood")}>
             {t("entry.cta")}
           </Button>
         </div>
@@ -670,7 +680,7 @@ export function MysteryBookFlow({
           title={t("moodStep.title")}
           subtitle={t("moodStep.subtitle")}
           footer={
-            <Button onClick={handleMoodContinue} arrow>
+            <Button onClick={handleMoodContinue}>
               {t("moodStep.cta")}
             </Button>
           }
@@ -702,7 +712,7 @@ export function MysteryBookFlow({
           subtitle={t("genreStep.subtitle")}
           footer={
             <>
-              <Button onClick={handleGenreContinue} arrow>
+              <Button onClick={handleGenreContinue}>
                 {t("genreStep.cta")}
               </Button>
               <button type="button" onClick={handleGenreSkip} className="text-[0.9375rem] font-medium text-ink-2 underline-offset-4 hover:text-ink hover:underline">
@@ -732,7 +742,7 @@ export function MysteryBookFlow({
           subtitle={t("experienceStep.subtitle")}
           footer={
             <>
-              <Button onClick={() => setStage("reveal")} arrow>
+              <Button onClick={() => setStage("reveal")}>
                 {t("experienceStep.cta")}
               </Button>
               <button
@@ -748,7 +758,7 @@ export function MysteryBookFlow({
             </>
           }
         >
-          <div role="radiogroup" aria-label={t("experienceStep.title")} className="grid gap-3 sm:grid-cols-2">
+          <div role="radiogroup" aria-label={t("experienceStep.title")} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {EXPERIENCE_KEYS.map((key) => (
               <ChoiceCard
                 key={key}
@@ -766,7 +776,7 @@ export function MysteryBookFlow({
         <StepShell
           title={t("revealStep.title")}
           footer={
-            <Button onClick={handleRevealContinue} arrow>
+            <Button onClick={handleRevealContinue}>
               {hasResult ? t("revealStep.updateCta") : t("revealStep.cta")}
             </Button>
           }
@@ -796,7 +806,7 @@ export function MysteryBookFlow({
       )}
 
       {stage === "loading" && (
-        <div className="animate-rise mx-auto flex max-w-[26rem] flex-col items-center py-16 text-center">
+        <div className="animate-rise mx-auto flex max-w-[26rem] flex-col items-center py-10 text-center">
           <div className="animate-book-sway">
             <SealedBook />
           </div>
@@ -808,8 +818,8 @@ export function MysteryBookFlow({
         <div className="animate-rise mx-auto max-w-[30rem] text-center">
           <h1 className="max-w-[22ch] text-balance font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-[1.15] tracking-[-0.01em]">{t("noMatch.heading")}</h1>
           <p className="mt-3 text-[1.0625rem] leading-relaxed text-muted">{t("noMatch.subheading")}</p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Button onClick={() => setStage("mood")} arrow>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-4">
+            <Button onClick={() => setStage("mood")}>
               {t("noMatch.changePreferences")}
             </Button>
             <button type="button" onClick={() => void runRecommend()} className="text-[0.9375rem] font-medium text-ink-2 underline-offset-4 hover:text-ink hover:underline">
@@ -820,112 +830,116 @@ export function MysteryBookFlow({
       )}
 
       {stage === "result" && result && result.revealMode === "keep_mystery" && (
-        <div className="animate-rise mx-auto max-w-2xl text-center">
+        <div className="animate-rise mx-auto max-w-3xl text-center lg:grid lg:grid-cols-[11rem_minmax(0,1fr)] lg:items-center lg:gap-10 lg:text-left">
           <SealedBook />
-          <h1 className="mx-auto mt-8 max-w-[20ch] text-balance font-display text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.1] tracking-[-0.01em]">
-            {t("resultKeepMystery.heading")}
-          </h1>
-          <p className="mx-auto mt-3 max-w-[42ch] text-[1.0625rem] leading-relaxed text-muted">{t("resultKeepMystery.subheading")}</p>
+          <div>
+            <h1 className="mx-auto mt-5 text-balance font-display text-[clamp(1.5rem,1.25rem+0.9vw,2.125rem)] leading-[1.1] tracking-[-0.01em] lg:mx-0 lg:mt-0">{t("resultKeepMystery.heading")}</h1>
+            <p className="mx-auto mt-3 max-w-[46ch] text-base leading-relaxed text-muted lg:mx-0">{t("resultKeepMystery.subheading")}</p>
 
-          <div className="mx-auto mt-8 max-w-[26rem] rounded-2xl border border-rule-strong bg-surface p-6 text-left">
-            <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultKeepMystery.matchLabel")}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {moods.map((m) => (
-                <span key={m} className="rounded-full border border-rule px-3 py-1 text-sm text-ink-2">
-                  {MOOD_EMOJI[m]} {t(`moods.${m}`)}
-                </span>
-              ))}
+            <div className="mx-auto mt-5 max-w-[30rem] rounded-2xl border border-rule-strong bg-surface p-5 text-left lg:mx-0">
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultKeepMystery.matchLabel")}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {moods.map((m) => (
+                  <span key={m} className="rounded-full border border-rule px-3 py-1 text-sm text-ink-2">
+                    {MOOD_EMOJI[m]} {t(`moods.${m}`)}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-4 text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultKeepMystery.reasoningLabel")}</p>
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">{result.reasoning}</p>
             </div>
-            <p className="mt-5 text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultKeepMystery.reasoningLabel")}</p>
-            <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">{result.reasoning}</p>
-          </div>
 
-          <Button className="mt-8" onClick={() => setStage("address")} arrow>
-            {t("resultKeepMystery.cta")}
-          </Button>
+            <Button className="mt-5" onClick={() => setStage("address")}>
+              {t("resultKeepMystery.cta")}
+            </Button>
+          </div>
         </div>
       )}
 
       {stage === "result" && revealMode === "show_now" && !result && currentCandidate && !teaserRevealed && (
         <div className="animate-rise mx-auto max-w-2xl text-center">
-          <h1 className="mx-auto max-w-[20ch] text-balance font-display text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.1] tracking-[-0.01em]">
-            {t("resultShowNow.teaserHeading")}
-          </h1>
-          <div className="mx-auto mt-8 max-w-[13rem]">
-            <div className="pointer-events-none blur-md">
-              <CoverImage src={null} title="?" alt="" />
+          <h1 className="mx-auto text-balance font-display text-[clamp(1.5rem,1.25rem+0.9vw,2.125rem)] leading-[1.1] tracking-[-0.01em]">{t("resultShowNow.teaserHeading")}</h1>
+          <div className="mt-5 lg:flex lg:items-center lg:gap-10 lg:text-left">
+            <div className="mx-auto max-w-[9rem] lg:mx-0 lg:w-[9rem] lg:shrink-0">
+              <div className="pointer-events-none blur-md">
+                <CoverImage src={null} title="?" alt="" />
+              </div>
+            </div>
+            <div className="min-w-0 flex-1">
+              <dl className="mx-auto mt-4 flex max-w-[26rem] flex-col gap-1.5 text-left lg:mx-0 lg:mt-0">
+                <div className="flex items-center justify-between gap-4 border-b border-rule pb-1.5">
+                  <dt className="text-sm text-muted">{t("resultShowNow.genreLabel")}</dt>
+                  <dd className="font-medium text-ink">{t(`genres.${currentCandidate.book.genre}`)}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-4 border-b border-rule pb-1.5">
+                  <dt className="text-sm text-muted">{t("resultShowNow.moodMatchLabel")}</dt>
+                  <dd className="font-medium text-ink">{Math.round(currentCandidate.book.moodMatch * 100)}%</dd>
+                </div>
+                <div className="flex items-center justify-between gap-4 border-b border-rule pb-1.5">
+                  <dt className="text-sm text-muted">{t("resultShowNow.lengthLabel")}</dt>
+                  <dd className="font-medium text-ink">{t("resultShowNow.pages", { count: currentCandidate.book.approxPages })}</dd>
+                </div>
+              </dl>
+              <FormAlert>{previewError}</FormAlert>
+              <Button className="mt-5" onClick={() => setTeaserRevealed(true)}>
+                {t("resultShowNow.revealCta")}
+              </Button>
             </div>
           </div>
-          <dl className="mx-auto mt-6 flex max-w-[26rem] flex-col gap-2.5 text-left">
-            <div className="flex items-center justify-between gap-4 border-b border-rule pb-2.5">
-              <dt className="text-sm text-muted">{t("resultShowNow.genreLabel")}</dt>
-              <dd className="font-medium text-ink">{t(`genres.${currentCandidate.book.genre}`)}</dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-rule pb-2.5">
-              <dt className="text-sm text-muted">{t("resultShowNow.moodMatchLabel")}</dt>
-              <dd className="font-medium text-ink">{Math.round(currentCandidate.book.moodMatch * 100)}%</dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-rule pb-2.5">
-              <dt className="text-sm text-muted">{t("resultShowNow.lengthLabel")}</dt>
-              <dd className="font-medium text-ink">{t("resultShowNow.pages", { count: currentCandidate.book.approxPages })}</dd>
-            </div>
-          </dl>
-          <FormAlert>{previewError}</FormAlert>
-          <Button className="mt-8" onClick={() => setTeaserRevealed(true)} arrow>
-            {t("resultShowNow.revealCta")}
-          </Button>
         </div>
       )}
 
       {stage === "result" && revealMode === "show_now" && !result && currentCandidate && teaserRevealed && (
-        <div className="animate-rise mx-auto max-w-2xl text-center">
-          <div className="mx-auto max-w-[13rem]">
+        <div className="animate-rise mx-auto max-w-3xl text-center lg:grid lg:grid-cols-[9rem_minmax(0,1fr)] lg:items-start lg:gap-10 lg:text-left">
+          <div className="mx-auto max-w-[9rem]">
             <CoverImage src={currentCandidate.book.coverUrl} title={currentCandidate.book.title ?? "?"} alt="" />
           </div>
-          <h1 className="mx-auto mt-6 max-w-[24ch] text-balance font-display text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.1] tracking-[-0.01em]">
-            {currentCandidate.book.title}
-          </h1>
-          <p className="mt-2 text-[1.0625rem] text-muted">{currentCandidate.book.author}</p>
+          <div>
+            <h1 className="mx-auto mt-4 text-balance font-display text-[clamp(1.5rem,1.25rem+0.9vw,2.125rem)] leading-[1.1] tracking-[-0.01em] lg:mx-0 lg:mt-0">{currentCandidate.book.title}</h1>
+            <p className="mt-2 text-[1.0625rem] text-muted">{currentCandidate.book.author}</p>
 
-          <div className="mx-auto mt-8 max-w-[26rem] rounded-2xl border border-rule-strong bg-surface p-6 text-left">
-            <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultShowNow.reasoningLabel")}</p>
-            <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">{currentCandidate.reasoning}</p>
-          </div>
+            <div className="mx-auto mt-4 max-w-[30rem] rounded-2xl border border-rule-strong bg-surface p-5 text-left lg:mx-0">
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultShowNow.reasoningLabel")}</p>
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">{currentCandidate.reasoning}</p>
+            </div>
 
-          <FormAlert>{commitError ? tk(commitError.messageKey) : previewError}</FormAlert>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Button onClick={() => void handleCommitShowNow()} state={commitBusy ? "loading" : "idle"} arrow>
-              {t("resultShowNow.cta")}
-            </Button>
-            <button
-              type="button"
-              onClick={() => void handleTryAnother()}
-              disabled={previewBusy || commitBusy}
-              className="text-[0.9375rem] font-medium text-ink-2 underline-offset-4 hover:text-ink hover:underline disabled:opacity-50"
-            >
-              {previewBusy ? t("resultShowNow.changing") : t("resultShowNow.changeCta")}
-            </button>
+            <FormAlert>{commitError ? tk(commitError.messageKey) : previewError}</FormAlert>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+              <Button onClick={() => void handleCommitShowNow()} state={commitBusy ? "loading" : "idle"}>
+                {t("resultShowNow.cta")}
+              </Button>
+              <button
+                type="button"
+                onClick={() => void handleTryAnother()}
+                disabled={previewBusy || commitBusy}
+                className="text-[0.9375rem] font-medium text-ink-2 underline-offset-4 hover:text-ink hover:underline disabled:opacity-50"
+              >
+                {previewBusy ? t("resultShowNow.changing") : t("resultShowNow.changeCta")}
+              </button>
+            </div>
+            <p className="mt-3 text-sm text-muted">{t("resultShowNow.triedCount", { count: previewCandidates.length, max: LIMITS.mysteryRerollMax })}</p>
           </div>
-          <p className="mt-3 text-sm text-muted">{t("resultShowNow.triedCount", { count: previewCandidates.length, max: LIMITS.mysteryRerollMax })}</p>
         </div>
       )}
 
       {stage === "result" && result && result.revealMode === "show_now" && (
-        <div className="animate-rise mx-auto max-w-2xl text-center">
-          <div className="mx-auto max-w-[13rem]">
+        <div className="animate-rise mx-auto max-w-3xl text-center lg:grid lg:grid-cols-[9rem_minmax(0,1fr)] lg:items-start lg:gap-10 lg:text-left">
+          <div className="mx-auto max-w-[9rem]">
             <CoverImage src={result.book.coverUrl} title={result.book.title ?? "?"} alt="" />
           </div>
-          <h1 className="mx-auto mt-6 max-w-[24ch] text-balance font-display text-[clamp(1.75rem,1.4rem+1.2vw,2.5rem)] leading-[1.1] tracking-[-0.01em]">{result.book.title}</h1>
-          <p className="mt-2 text-[1.0625rem] text-muted">{result.book.author}</p>
+          <div>
+            <h1 className="mx-auto mt-4 text-balance font-display text-[clamp(1.5rem,1.25rem+0.9vw,2.125rem)] leading-[1.1] tracking-[-0.01em] lg:mx-0 lg:mt-0">{result.book.title}</h1>
+            <p className="mt-2 text-[1.0625rem] text-muted">{result.book.author}</p>
 
-          <div className="mx-auto mt-8 max-w-[26rem] rounded-2xl border border-rule-strong bg-surface p-6 text-left">
-            <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultShowNow.reasoningLabel")}</p>
-            <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">{result.reasoning}</p>
+            <div className="mx-auto mt-4 max-w-[30rem] rounded-2xl border border-rule-strong bg-surface p-5 text-left lg:mx-0">
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted">{t("resultShowNow.reasoningLabel")}</p>
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-2">{result.reasoning}</p>
+            </div>
+
+            <Button className="mt-5" onClick={() => setStage("address")}>
+              {t("resultShowNow.cta")}
+            </Button>
           </div>
-
-          <Button className="mt-8" onClick={() => setStage("address")} arrow>
-            {t("resultShowNow.cta")}
-          </Button>
         </div>
       )}
 
@@ -934,7 +948,7 @@ export function MysteryBookFlow({
           title={t("addressStep.summaryTitle")}
           footer={
             <>
-              <Button onClick={handleAddressSubmit} state={addressBusy ? "loading" : "idle"} arrow>
+              <Button onClick={handleAddressSubmit} state={addressBusy ? "loading" : "idle"}>
                 {t("addressStep.cta")}
               </Button>
               <button
@@ -948,7 +962,7 @@ export function MysteryBookFlow({
           }
         >
           <FormAlert>{addressError ? tk(addressError.messageKey) : null}</FormAlert>
-          <div className="rounded-2xl border border-rule-strong bg-paper p-6 text-[0.9375rem] leading-relaxed">
+          <div className="rounded-2xl border border-rule-strong bg-paper p-5 text-[0.9375rem] leading-relaxed">
             <p>{address.fullName}</p>
             <p>{address.addressLine1}</p>
             {address.addressLine2 ? <p>{address.addressLine2}</p> : null}
@@ -967,13 +981,15 @@ export function MysteryBookFlow({
           title={t("addressStep.title")}
           subtitle={t("addressStep.subtitle")}
           footer={
-            <Button onClick={handleAddressSubmit} state={addressBusy ? "loading" : "idle"} arrow>
+            <Button onClick={handleAddressSubmit} state={addressBusy ? "loading" : "idle"}>
               {t("addressStep.cta")}
             </Button>
           }
         >
           <FormAlert>{addressError ? tk(addressError.messageKey) : null}</FormAlert>
-          <div className="flex flex-col gap-5">
+          {/* Left column reads top-down as who/where (name, country, region, city); right column as the street-level
+           *  details (address, apartment, postal code, phone). */}
+          <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
             <TextField
               label={tf("fullName")}
               value={address.fullName}
@@ -988,33 +1004,29 @@ export function MysteryBookFlow({
               onBlur={() => setAddressTouched((p) => ({ ...p, addressLine1: false }))}
               error={addressErrorFor("addressLine1")}
             />
+            <TextField
+              label={tf("country")}
+              value={address.country}
+              onChange={(e) => setAddressField("country", e.target.value)}
+              onBlur={() => setAddressTouched((p) => ({ ...p, country: false }))}
+              error={addressErrorFor("country")}
+            />
             <TextField label={tf("addressLine2")} value={address.addressLine2} onChange={(e) => setAddressField("addressLine2", e.target.value)} />
-            <div className="grid gap-5 sm:grid-cols-2">
-              <TextField
-                label={tf("city")}
-                value={address.city}
-                onChange={(e) => setAddressField("city", e.target.value)}
-                onBlur={() => setAddressTouched((p) => ({ ...p, city: false }))}
-                error={addressErrorFor("city")}
-              />
-              <TextField label={tf("region")} value={address.region} onChange={(e) => setAddressField("region", e.target.value)} />
-            </div>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <TextField
-                label={tf("postalCode")}
-                value={address.postalCode}
-                onChange={(e) => setAddressField("postalCode", e.target.value)}
-                onBlur={() => setAddressTouched((p) => ({ ...p, postalCode: false }))}
-                error={addressErrorFor("postalCode")}
-              />
-              <TextField
-                label={tf("country")}
-                value={address.country}
-                onChange={(e) => setAddressField("country", e.target.value)}
-                onBlur={() => setAddressTouched((p) => ({ ...p, country: false }))}
-                error={addressErrorFor("country")}
-              />
-            </div>
+            <TextField label={tf("region")} value={address.region} onChange={(e) => setAddressField("region", e.target.value)} />
+            <TextField
+              label={tf("postalCode")}
+              value={address.postalCode}
+              onChange={(e) => setAddressField("postalCode", e.target.value)}
+              onBlur={() => setAddressTouched((p) => ({ ...p, postalCode: false }))}
+              error={addressErrorFor("postalCode")}
+            />
+            <TextField
+              label={tf("city")}
+              value={address.city}
+              onChange={(e) => setAddressField("city", e.target.value)}
+              onBlur={() => setAddressTouched((p) => ({ ...p, city: false }))}
+              error={addressErrorFor("city")}
+            />
             <TextField
               label={tf("phone")}
               type="tel"
@@ -1033,14 +1045,14 @@ export function MysteryBookFlow({
         <StepShell
           title={t("paymentStep.title")}
           footer={
-            <Button onClick={handlePlaceOrder} state={orderBusy ? "loading" : "idle"} disabled={!canPlaceOrder} arrow>
+            <Button onClick={handlePlaceOrder} state={orderBusy ? "loading" : "idle"} disabled={!canPlaceOrder}>
               {t("paymentStep.cta")}
             </Button>
           }
         >
           <FormAlert>{orderError ? tk(orderError.messageKey) : null}</FormAlert>
 
-          <div className="rounded-2xl border border-rule-strong bg-paper p-6">
+          <div className="rounded-2xl border border-rule-strong bg-paper p-5">
             <p className="font-display text-lg leading-snug">
               {result.revealMode === "show_now" && result.book.title ? result.book.title : t("entry.title")}
             </p>
@@ -1068,7 +1080,7 @@ export function MysteryBookFlow({
             </dl>
           </div>
 
-          <p className="mt-8 text-sm font-medium text-ink-2">{t("paymentStep.methodLabel")}</p>
+          <p className="mt-5 text-sm font-medium text-ink-2">{t("paymentStep.methodLabel")}</p>
           <div className="mt-2 flex items-center gap-3 rounded-2xl border border-ink bg-surface px-4 py-3">
             <CreditCard className="size-5 shrink-0 text-ink-2" aria-hidden="true" />
             <div>
@@ -1128,7 +1140,7 @@ export function MysteryBookFlow({
       )}
 
       {stage === "placing-order" && (
-        <div className="animate-rise mx-auto flex max-w-[26rem] flex-col items-center py-16 text-center">
+        <div className="animate-rise mx-auto flex max-w-[26rem] flex-col items-center py-10 text-center">
           <div className="animate-book-sway">
             <SealedBook />
           </div>
@@ -1140,7 +1152,7 @@ export function MysteryBookFlow({
         <div className="animate-rise mx-auto max-w-[30rem] text-center">
           <h1 className="max-w-[22ch] text-balance font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-[1.15] tracking-[-0.01em]">{t("outOfStock.heading")}</h1>
           <p className="mt-3 text-[1.0625rem] leading-relaxed text-muted">{t("outOfStock.subheading")}</p>
-          <Button className="mt-8" onClick={() => void runRecommend()} arrow>
+          <Button className="mt-5" onClick={() => void runRecommend()}>
             {t("outOfStock.cta")}
           </Button>
         </div>
@@ -1169,7 +1181,7 @@ export function MysteryBookFlow({
             <span className="text-muted">{t("confirmed.statusDelivered")}</span>
           </div>
 
-          <span className="group/review relative mt-8 inline-flex">
+          <span className="group/review relative mt-5 inline-flex">
             <Button onClick={() => setStage("review")}>{t("confirmed.reviewCta")}</Button>
             <span
               role="tooltip"
@@ -1196,7 +1208,7 @@ export function MysteryBookFlow({
               </div>
               <h2 className="mt-5 font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-tight">{t("reviewStep.submittedHeading")}</h2>
               <p className="mt-3 text-[1.0625rem] leading-relaxed text-muted">{t("reviewStep.submittedBody")}</p>
-              <Button className="mt-8" onClick={handleStartOver}>
+              <Button className="mt-5" onClick={handleStartOver}>
                 {t("reviewStep.submittedCta")}
               </Button>
             </div>
@@ -1223,7 +1235,7 @@ export function MysteryBookFlow({
               </div>
 
               {feedbackRating ? (
-                <div className="animate-rise mt-8">
+                <div className="animate-rise mt-5">
                   <p className="text-sm font-medium text-ink-2">{t("reviewStep.tagsLabel")}</p>
                   <div className="mt-3 flex flex-wrap justify-center gap-2.5">
                     {FEEDBACK_TAG_KEYS.map((key) => (
@@ -1235,7 +1247,7 @@ export function MysteryBookFlow({
 
                   {feedbackError ? <FormAlert>{feedbackError}</FormAlert> : null}
 
-                  <Button className="mt-8" onClick={() => void handleSubmitFeedback()} state={feedbackBusy ? "loading" : "idle"}>
+                  <Button className="mt-5" onClick={() => void handleSubmitFeedback()} state={feedbackBusy ? "loading" : "idle"}>
                     {t("reviewStep.submit")}
                   </Button>
                 </div>

@@ -22,6 +22,7 @@ import { TextField } from "@/ui/TextField";
 import { booksApi } from "./api";
 import { emptyQuote, QuotesEditor, type QuoteDraft } from "./QuotesEditor";
 import { mysteryApi } from "@/features/mystery/api";
+import { useToast } from "@/ui/toast/ToastProvider";
 
 interface FormValues {
   title: string;
@@ -79,7 +80,10 @@ export function AddBookForm({ fromViewId, initialValues }: { fromViewId?: string
   const tk = useTranslateKey();
   const router = useRouter();
 
-  const [values, setValues] = useState<FormValues>({ ...blankValues, ...initialValues });
+  const { show: showToast } = useToast();
+  // A book picked from Recently Recommended has, by definition, been read (it is already on a shelf with a cover),
+  // so Status starts on "Read" there — still changeable like any other value.
+  const [values, setValues] = useState<FormValues>({ ...blankValues, ...(fromViewId ? { status: "read" as const } : {}), ...initialValues });
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [genreReject, setGenreReject] = useState<"tooLong" | "tooMany" | null>(null);
   const [characterReject, setCharacterReject] = useState<"tooLong" | "tooMany" | null>(null);
@@ -142,9 +146,16 @@ export function AddBookForm({ fromViewId, initialValues }: { fromViewId?: string
     setFormError(null);
     try {
       const { book: created } = fromViewId ? await mysteryApi.addToLibrary(fromViewId, parsed.data) : await booksApi.create(parsed.data);
-      // Straight to Book Detail: the cover (Add Photo / Find Cover) only lives there, and this is the
-      // natural next thing to do right after adding a book.
-      router.replace(bookDetailPath(created.id));
+      if (fromViewId) {
+        // The recommendation already carries its cover (see createBook), so there is nothing left to do on Book
+        // Detail: go straight to the library, where the new book is, and confirm with a toast.
+        showToast(t("toast"));
+        router.replace(ROUTES.books);
+      } else {
+        // Straight to Book Detail: the cover (Add Photo / Find Cover) only lives there, and this is the
+        // natural next thing to do right after adding a book.
+        router.replace(bookDetailPath(created.id));
+      }
     } catch (error) {
       setSaveState("idle");
       if (isApiRequestError(error)) setFormError(error);
@@ -198,7 +209,7 @@ export function AddBookForm({ fromViewId, initialValues }: { fromViewId?: string
             </span>
             <p className="max-w-[42ch] text-[0.9375rem] leading-relaxed text-muted">{tai("hint")}</p>
           </div>
-          <Button variant="secondary" onClick={handleAiFill} state={aiBusy ? "loading" : "idle"} loadingLabel={tai("loading")}>
+          <Button variant="secondary" onClick={handleAiFill} state={aiBusy ? "loading" : "idle"}>
             {tai("button")}
           </Button>
         </div>
@@ -319,7 +330,7 @@ export function AddBookForm({ fromViewId, initialValues }: { fromViewId?: string
         />
       </div>
 
-      <TextArea label={tf("commentary.label")} placeholder={tf("commentary.placeholder")} value={values.commentary} onChange={(e) => setField("commentary", e.target.value)} rows={4} />
+      <TextArea label={tf("commentary.label")} placeholder={tf("commentary.placeholder")} value={values.commentary} onChange={(e) => setField("commentary", e.target.value)} rows={2} className="min-h-0!" />
 
       <div className="flex flex-wrap items-center gap-3 pt-2">
         <Button onClick={handleSave} state={saveState}>

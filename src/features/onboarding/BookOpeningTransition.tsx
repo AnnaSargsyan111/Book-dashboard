@@ -3,6 +3,7 @@
 import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { LogoMark } from "@/ui/Logo";
 
 /**
@@ -21,7 +22,10 @@ export function BookOpeningTransition({ onDone }: { onDone: () => void }) {
     return () => clearTimeout(id);
   }, [reduced, onDone]);
 
-  return (
+  // Portaled to <body>: this form sits inside a page-entrance animation (a transform), and a `position: fixed`
+  // child of a transformed ancestor is positioned against that ancestor, not the window — the cover would only
+  // fill the form column instead of the whole screen.
+  return createPortal(
     <div
       role="status"
       aria-live="polite"
@@ -45,6 +49,7 @@ export function BookOpeningTransition({ onDone }: { onDone: () => void }) {
         </div>
       )}
       <p className="text-[0.8125rem] font-medium uppercase tracking-[0.16em] text-cloth-ink/65">{t("opening")}</p>
-    </div>
+    </div>,
+    document.body,
   );
 }

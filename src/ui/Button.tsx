@@ -1,8 +1,7 @@
 "use client";
 
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import type { ButtonHTMLAttributes, MouseEvent, ReactNode } from "react";
-import { Spinner } from "./Spinner";
 
 type Variant = "primary" | "secondary" | "danger";
 export type ButtonState = "idle" | "loading" | "success";
@@ -10,12 +9,10 @@ export type ButtonState = "idle" | "loading" | "success";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   block?: boolean;
-  /** idle | loading (request in flight) | success (request done, navigating). Non-idle blocks further clicks. */
+  /** idle | loading (request in flight: the button keeps its label and just goes disabled — no spinner, no dots) |
+   *  success (request done, navigating). Non-idle blocks further clicks. */
   state?: ButtonState;
-  loadingLabel?: ReactNode;
   successLabel?: ReactNode;
-  /** Adds the arrow that nudges forward on hover. */
-  arrow?: boolean;
   /** Nothing to do right now (e.g. an unchanged form). Unlike the native `disabled`, focus is kept. */
   disabled?: boolean;
 }
@@ -31,7 +28,7 @@ const variants: Record<Variant, string> = {
  * focus is never lost, and a click in either state is swallowed here. That is what prevents duplicate submissions,
  * and what lets a "nothing to save" button stay reachable while doing nothing.
  */
-export function Button({ variant = "primary", block, state = "idle", loadingLabel, successLabel, arrow, disabled = false, className = "", children, onClick, type = "button", ...rest }: ButtonProps) {
+export function Button({ variant = "primary", block, state = "idle", successLabel, disabled = false, className = "", children, onClick, type = "button", ...rest }: ButtonProps) {
   const busy = state !== "idle";
   const inert = busy || disabled;
 
@@ -52,17 +49,12 @@ export function Button({ variant = "primary", block, state = "idle", loadingLabe
       className={`group relative inline-flex h-[3.125rem] items-center justify-center gap-2 rounded-xl px-6 text-base font-medium transition duration-200 ease-out active:translate-y-0 active:scale-[0.985] ${
         block ? "w-full" : ""
       } ${variants[variant]} ${state === "success" ? "!bg-ok !text-paper" : ""} ${
-        busy ? "aria-disabled:cursor-progress" : disabled ? "pointer-events-none cursor-not-allowed opacity-45" : ""
+        state === "loading" ? "pointer-events-none cursor-not-allowed opacity-55" : busy ? "" : disabled ? "pointer-events-none cursor-not-allowed opacity-45" : ""
       } ${className}`}
       {...rest}
     >
-      <span key={state} className="animate-fade inline-flex items-center gap-2.5">
-        {state === "loading" ? (
-          <>
-            <Spinner />
-            <span>{loadingLabel ?? children}</span>
-          </>
-        ) : state === "success" ? (
+      <span key={state === "success" ? "success" : "rest"} className="animate-fade inline-flex items-center gap-2.5">
+        {state === "success" ? (
           <>
             <Check className="size-[1.125rem]" strokeWidth={2.5} aria-hidden="true" />
             <span>{successLabel ?? children}</span>
@@ -70,7 +62,6 @@ export function Button({ variant = "primary", block, state = "idle", loadingLabe
         ) : (
           <>
             <span>{children}</span>
-            {arrow ? <ArrowRight className="size-[1.125rem] transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" /> : null}
           </>
         )}
       </span>
