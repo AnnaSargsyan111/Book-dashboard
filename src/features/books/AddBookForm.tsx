@@ -184,20 +184,20 @@ export function AddBookForm({ fromViewId, initialValues }: { fromViewId?: string
 
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
-          label={tf("title.label")}
-          placeholder={tf("title.placeholder")}
-          value={values.title}
-          onChange={(e) => setField("title", e.target.value)}
-          onBlur={() => touch("title")}
-          error={errorFor("title")}
-        />
-        <TextField
           label={tf("author.label")}
           placeholder={tf("author.placeholder")}
           value={values.author}
           onChange={(e) => setField("author", e.target.value)}
           onBlur={() => touch("author")}
           error={errorFor("author")}
+        />
+        <TextField
+          label={tf("title.label")}
+          placeholder={tf("title.placeholder")}
+          value={values.title}
+          onChange={(e) => setField("title", e.target.value)}
+          onBlur={() => touch("title")}
+          error={errorFor("title")}
         />
       </div>
 
