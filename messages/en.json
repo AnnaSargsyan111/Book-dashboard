@@ -285,7 +285,7 @@
       },
       "ai": {
         "button": "Auto-fill",
-        "hint": "Looks up the title (and author, if typed) online (Open Library) to fill in Author, Genre and Plot. It never overwrites anything you've already filled in.",
+        "hint": "Enter the Author and the Title, and the Plot and Genre will be filled in automatically. It never overwrites anything you've already filled in.",
         "loading": "Looking it up…"
       },
       "save": "Save Book",
