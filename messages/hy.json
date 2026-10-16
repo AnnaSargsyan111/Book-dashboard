@@ -246,6 +246,8 @@
       "statusLabel": "Կարգավիճակ",
       "allStatuses": "Բոլոր կարգավիճակները",
       "genreLabel": "Ժանր",
+      "allGenres": "Բոլոր ժանրերը",
+      "genresSelected": "Ընտրված է {count} ժանր",
       "ratingLabel": "Գնահատական",
       "allRatings": "Բոլոր գնահատականները",
       "ratingAndUp": "{count}+ աստղ",

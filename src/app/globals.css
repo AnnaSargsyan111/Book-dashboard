@@ -309,6 +309,88 @@ h2 {
   cursor: pointer;
 }
 
+/* ------------------------------------------------------------------------------------ dropdown panels ---
+   Every dropdown panel (genre list, Filters, account menu, and the browser's own list for a Status/Rating select)
+   is one material: the warm ivory of the page scenes, a little see-through and softly blurred, with a walnut-tinted
+   hairline and shadow — never a flat white card. Light and dark follow `--scene-*` automatically. Only the
+   unprefixed backdrop-filter is written: the build adds the prefixed one itself. */
+.popover {
+  background: color-mix(in oklab, var(--scene-ivory) 92%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--scene-walnut) 26%, transparent);
+  box-shadow:
+    0 22px 48px -22px color-mix(in oklab, var(--scene-walnut) 60%, transparent),
+    0 1px 0 rgb(255 255 255 / 0.45) inset;
+}
+
+/* A scrolling dropdown list gets a slim scrollbar in the panel's own colours: a soft walnut thumb on a see-through
+   track, instead of the browser's grey thumb on a white strip. */
+.popover,
+.control select::picker(select) {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--scene-walnut) 45%, transparent) transparent;
+}
+
+/* The highlighted row inside a popover (keyboard focus or hover). */
+.popover-row-active {
+  background: color-mix(in oklab, var(--scene-walnut) 14%, transparent);
+}
+
+/* The native <select> list. Browsers that support customizable selects (Chrome/Edge 135+) get the same panel and
+   rows; the rest keep their own list, which can't be styled. The field itself already draws its own chevron. */
+@supports (appearance: base-select) {
+  .control select,
+  .control select::picker(select) {
+    appearance: base-select;
+  }
+  .control select::picker-icon {
+    display: none;
+  }
+  /* In this mode the select is a flex box: keep its text on the field's middle line, as before. */
+  .control select {
+    display: flex;
+    align-items: center;
+  }
+  .control select::picker(select) {
+    /* Always below the field, never flipped above it. If the room under the field is short, the list scrolls inside
+       the space that is there (100% = the area below the field) instead of jumping upward. */
+    position-area: block-end;
+    position-try-fallbacks: none;
+    max-block-size: min(20rem, 100%);
+    overflow-y: auto;
+    margin-top: 0.5rem;
+    padding: 0.375rem;
+    border-radius: 0.75rem;
+    background: color-mix(in oklab, var(--scene-ivory) 92%, transparent);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--scene-walnut) 26%, transparent);
+    box-shadow:
+      0 22px 48px -22px color-mix(in oklab, var(--scene-walnut) 60%, transparent),
+      0 1px 0 rgb(255 255 255 / 0.45) inset;
+  }
+  .control select option {
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.5rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .control select option:hover,
+  .control select option:focus-visible {
+    background: color-mix(in oklab, var(--scene-walnut) 14%, transparent);
+    outline: none;
+  }
+  .control select option:checked {
+    color: var(--ink);
+    font-weight: 500;
+    background: color-mix(in oklab, var(--marker) 38%, transparent);
+  }
+  .control select option::checkmark {
+    display: none;
+  }
+}
+
 /* ------------------------------------------------------------------------------- the auth page ruling */
 .ruled {
   /* one ruling line every two grid steps (2 × --p, see `.auth-grid`): exactly one field height, so a field fits

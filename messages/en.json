@@ -246,6 +246,8 @@
       "statusLabel": "Status",
       "allStatuses": "All statuses",
       "genreLabel": "Genre",
+      "allGenres": "All genres",
+      "genresSelected": "{count, plural, one {# genre selected} other {# genres selected}}",
       "ratingLabel": "Rating",
       "allRatings": "All ratings",
       "ratingAndUp": "{count}+ stars",

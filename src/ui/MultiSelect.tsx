@@ -175,7 +175,7 @@ export function MultiSelect({ label, tag, name, placeholder, summary, listLabel,
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-x-0 top-full z-30 mt-2 max-h-72 overflow-y-auto rounded-xl border border-rule-strong bg-surface p-1.5 shadow-[0_18px_40px_-16px_rgb(0_0_0/0.35)]"
+              className="popover absolute inset-x-0 top-full z-30 mt-2 max-h-72 overflow-y-auto rounded-xl p-1.5"
             >
               {options.map((option, index) => {
                 const isSelected = value.includes(option.value);
@@ -190,7 +190,7 @@ export function MultiSelect({ label, tag, name, placeholder, summary, listLabel,
                     onClick={() => toggle(option.value)}
                     onMouseMove={() => setActive(index)}
                     className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-[0.9375rem] ${
-                      index === active ? "bg-rule/60" : ""
+                      index === active ? "popover-row-active" : ""
                     } ${isSelected ? "font-medium text-ink" : "text-ink-2"}`}
                   >
                     <span

@@ -5,7 +5,9 @@ import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "rea
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import type { BookDTO, BookStatus } from "@/shared/validation/book";
+import { GENRE_KEYS } from "@/shared/genres";
 import { FieldLabel } from "@/ui/FieldLabel";
+import { MultiSelect } from "@/ui/MultiSelect";
 import { TextField } from "@/ui/TextField";
 import { booksApi } from "./api";
 import { BookCard } from "./BookCard";
@@ -22,7 +24,8 @@ const DEFAULTS = { search: "", status: "all" as const, genres: [] as string[], m
  * round-trips per keystroke); the list keeps the server's own `sortOrder` throughout, since filtering never
  * reorders. Genre options are built from whatever genres actually appear across the user's own books, since a
  * book's genres are free text (a translated pick from the fixed list, a custom tag, or both mixed) rather than
- * a stable enum — see `AddBookForm`. Genre is a checkbox list rather than Status/Rating's single-select: a book
+ * a stable enum — see `AddBookForm` — and then joined by every genre in our own list. Genre is a multi-select
+ * dropdown rather than Status/Rating's single-select: a book
  * can carry several genres at once, so picking more than one here is "show books in any of these" (OR, not AND) —
  * the natural reading of ticking several boxes.
  *
@@ -36,6 +39,7 @@ const DEFAULTS = { search: "", status: "all" as const, genres: [] as string[], m
 export function BooksCollection({ books, action }: { books: BookDTO[]; action?: ReactNode }) {
   const t = useTranslations("books.filters");
   const ts = useTranslations("books.add.fields.status");
+  const tg = useTranslations("genres");
   const router = useRouter();
   const [dragId, setDragId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
@@ -50,10 +54,6 @@ export function BooksCollection({ books, action }: { books: BookDTO[]; action?: 
   const uid = useId();
   const statusId = `${uid}-status`;
   const ratingId = `${uid}-rating`;
-
-  function toggleGenre(g: string) {
-    setGenres((prev) => (prev.includes(g) ? prev.filter((v) => v !== g) : [...prev, g]));
-  }
 
   useEffect(() => {
     if (!open) return;
@@ -78,7 +78,15 @@ export function BooksCollection({ books, action }: { books: BookDTO[]; action?: 
     did_not_finish: ts("didNotFinish"),
   };
 
-  const genreOptions = useMemo(() => Array.from(new Set(books.flatMap((b) => b.genres))).sort((a, b) => a.localeCompare(b)), [books]);
+  // Our whole genre list (the same names Add Book stores), plus any custom genre a book already carries — so a
+  // reader can pick any genre, not only the ones their current books happen to use.
+  const genreOptions = useMemo(() => {
+    const all = new Set<string>(GENRE_KEYS.map((key) => tg(key)));
+    for (const book of books) for (const genre of book.genres) all.add(genre);
+    return Array.from(all)
+      .sort((a, b) => a.localeCompare(b))
+      .map((genre) => ({ value: genre, label: genre }));
+  }, [books, tg]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLocaleLowerCase();
@@ -142,7 +150,7 @@ export function BooksCollection({ books, action }: { books: BookDTO[]; action?: 
           </button>
 
           {open ? (
-            <div className="absolute right-0 top-[calc(100%+0.5rem)] z-30 w-[16rem] rounded-xl border border-rule-strong bg-surface p-4 shadow-[0_18px_40px_-16px_rgb(0_0_0/0.35)]">
+            <div className="popover absolute right-0 top-[calc(100%+0.5rem)] z-30 w-[16rem] rounded-xl p-4">
               <div className="flex flex-col gap-4">
                 <div>
                   <FieldLabel htmlFor={statusId}>{t("statusLabel")}</FieldLabel>
@@ -159,32 +167,20 @@ export function BooksCollection({ books, action }: { books: BookDTO[]; action?: 
                   </div>
                 </div>
 
-                {genreOptions.length > 0 ? (
-                  <div>
-                    <FieldLabel>{t("genreLabel")}</FieldLabel>
-                    <div className="flex max-h-44 flex-col gap-0.5 overflow-y-auto">
-                      {genreOptions.map((g) => {
-                        const checkboxId = `${uid}-genre-${g}`;
-                        return (
-                          <label
-                            key={g}
-                            htmlFor={checkboxId}
-                            className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-[0.9375rem] text-ink-2 hover:bg-paper hover:text-ink"
-                          >
-                            <input
-                              id={checkboxId}
-                              type="checkbox"
-                              checked={genres.includes(g)}
-                              onChange={() => toggleGenre(g)}
-                              className="size-4 shrink-0 rounded border-rule-strong accent-ink"
-                            />
-                            {g}
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : null}
+                <MultiSelect
+                  label={t("genreLabel")}
+                  name="genres"
+                  placeholder={t("allGenres")}
+                  summary={(count) => t("genresSelected", { count })}
+                  listLabel={t("genreLabel")}
+                  options={genreOptions}
+                  value={genres}
+                  onChange={setGenres}
+                  max={genreOptions.length}
+                  onLimit={() => {}}
+                  removeLabel={(name) => name}
+                  hideChips
+                />
 
                 <div>
                   <FieldLabel htmlFor={ratingId}>{t("ratingLabel")}</FieldLabel>
