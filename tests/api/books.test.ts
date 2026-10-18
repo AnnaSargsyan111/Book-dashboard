@@ -335,11 +335,20 @@ describe("POST /api/v1/books/[id]/cover-lookup", () => {
   it("sets the cover when Open Library returns a match", async () => {
     const { cookie } = await signedUp();
     const created = await json(await createBook(req("/api/v1/books", book, { cookie })));
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ docs: [{ key: "/works/OL1W", title: "Dune", cover_i: 12345 }] }), { status: 200 })));
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ docs: [{ key: "/works/OL1W", title: "The Left Hand of Darkness", author_name: ["Ursula K. Le Guin"], cover_i: 12345 }] }), { status: 200 })));
     const res = await findCover(req(`/api/v1/books/${created.book.id}/cover-lookup`, {}, { cookie }), withId(created.book.id));
     expect(res.status).toBe(200);
     const { book: updated } = await json(res);
     expect(updated.coverUrl).toBe("https://covers.openlibrary.org/b/id/12345-L.jpg");
+  });
+
+  it("never takes the cover of an unrelated book (a misspelt title makes Open Library answer with something else)", async () => {
+    const { cookie } = await signedUp();
+    const created = await json(await createBook(req("/api/v1/books", book, { cookie })));
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ docs: [{ key: "/works/OL9W", title: "Dracula's guest, and other weird stories", author_name: ["Bram Stoker"], cover_i: 8369722 }] }), { status: 200 })));
+    const res = await findCover(req(`/api/v1/books/${created.book.id}/cover-lookup`, {}, { cookie }), withId(created.book.id));
+    expect(res.status).toBe(404);
+    expect((await json(res)).error.code).toBe("COVER_NOT_FOUND");
   });
 
   it("responds COVER_NOT_FOUND when nothing matches", async () => {

@@ -84,7 +84,7 @@ export async function lookUpBook(input: BookAiFillInput): Promise<BookAiFillResu
 
 async function lookUpOnOpenLibrary(input: BookAiFillInput): Promise<BookAiFillResult | null> {
   const author = input.author || undefined;
-  const work = pickWork(await searchWorks(input.title, author), author);
+  const work = pickWork(await searchWorks(input.title, author), author, input.title);
   if (!work) return null;
   return {
     author: work.authors[0]?.trim() || null,

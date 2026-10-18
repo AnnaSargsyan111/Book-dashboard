@@ -69,8 +69,7 @@ type CoverBusy = "idle" | "uploading" | "finding";
 
 /**
  * Book Detail: every field from Add Book, editable in place — no separate edit mode, just a Save Changes button
- * that only does anything once something has actually changed (same dirty-tracked pattern as About Me and
- * Settings' Account form). The cover (Add Photo / Find Cover) is handled independently: each commits to the
+ * that is always active (it also confirms "Saved" when nothing changed, e.g. after only a cover was set). The cover (Add Photo / Find Cover) is handled independently: each commits to the
  * server the moment it succeeds, since it isn't one of the fields the schema validates as a set.
  */
 export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; backHref: string; booksHref: string }) {
@@ -82,7 +81,6 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
   const { show: showToast } = useToast();
 
   const initial = useMemo(() => toFormValues(book), [book]);
-  const [saved, setSaved] = useState(initial);
   const [values, setValues] = useState(initial);
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [genreReject, setGenreReject] = useState<"tooLong" | "tooMany" | null>(null);
@@ -96,7 +94,6 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
   const [coverError, setCoverError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const dirty = JSON.stringify(values) !== JSON.stringify(saved);
 
   const schemaErrors = useMemo(() => {
     const result = bookSchema.safeParse(toPayload(values));
@@ -114,7 +111,7 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
   const errorFor = (name: Field) => (touched[name] ? tk(schemaErrors[name]) : undefined);
 
   async function handleSave() {
-    if (!dirty || inFlight.current) return;
+    if (inFlight.current) return;
     const parsed = bookSchema.safeParse(toPayload(values));
     if (!parsed.success) {
       setTouched({ title: true, author: true, status: true, rating: true, genres: true, characters: true, quotes: true, plot: true, commentary: true });
@@ -126,7 +123,6 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
     try {
       const { book: updated } = await booksApi.update(book.id, parsed.data);
       const next = toFormValues(updated);
-      setSaved(next);
       setValues(next);
       setTouched({});
       setSaveState("success");
@@ -362,7 +358,7 @@ export function BookDetailForm({ book, backHref, booksHref }: { book: BookDTO; b
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-rule pt-6 lg:pl-[calc(16rem+2.5rem)] xl:pl-[calc(18rem+2.5rem)]">
-        <Button onClick={handleSave} disabled={!dirty} state={saveState} successLabel={t("saved")}>
+        <Button onClick={handleSave} state={saveState} successLabel={t("saved")}>
           {t("save")}
         </Button>
         <DeleteBookButton id={book.id} title={values.title} redirectTo={booksHref} variant="button" />

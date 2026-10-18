@@ -1,6 +1,6 @@
 import { ApiError } from "@/server/http/errors";
 import { errorMessage, log } from "@/server/log";
-import { pickCoverId, searchWorks } from "./open-library";
+import { pickCoverId, searchWorks, type OpenLibraryWork } from "./open-library";
 
 /**
  * "Find cover": a real internet lookup via Open Library's free public API, by title + author — not an
@@ -10,15 +10,22 @@ import { pickCoverId, searchWorks } from "./open-library";
  * book it can't find just means no cover. Throws `COVER_NOT_FOUND` when nothing usable turns up.
  */
 export async function lookUpCover(title: string, author: string): Promise<string> {
-  let works;
+  let works: OpenLibraryWork[];
+  let coverId: number | null;
   try {
     works = await searchWorks(title, author || undefined);
+    coverId = pickCoverId(works, author || undefined, title);
+    // A misspelt last word ("Animal firm") can bury the book entirely: try again without it, with the author.
+    const words = title.trim().split(/\s+/);
+    if (!coverId && words.length >= 2) {
+      works = await searchWorks(words.slice(0, -1).join(" "), author || undefined);
+      coverId = pickCoverId(works, author || undefined, title);
+    }
   } catch (e) {
     log.error("cover lookup: request failed", { message: errorMessage(e) });
     throw new ApiError("COVER_NOT_FOUND", 502);
   }
 
-  const coverId = pickCoverId(works, author || undefined);
   if (!coverId) throw new ApiError("COVER_NOT_FOUND", 404);
 
   return `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;

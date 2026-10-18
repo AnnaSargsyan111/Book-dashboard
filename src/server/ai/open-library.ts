@@ -76,22 +76,56 @@ export async function searchWorks(title: string, author?: string): Promise<OpenL
     }));
 }
 
-/** The best candidate: the first result by Open Library's own ranking, but one whose author matches what was typed
- *  wins over a better-ranked work by somebody else. */
-export function pickWork(works: OpenLibraryWork[], author?: string): OpenLibraryWork | null {
-  if (!works.length) return null;
-  if (author) {
-    const byAuthor = works.find((w) => authorMatches(w, author));
-    if (byAuthor) return byAuthor;
-  }
-  return works[0] ?? null;
+const STOP_WORDS = new Set(["a", "an", "the", "of", "and", "in", "on", "to"]);
+
+/** Two words that differ by at most one letter (a typo: "firm" / "farm"); short words must match exactly. */
+function sameWord(a: string, b: string): boolean {
+  if (a === b) return true;
+  if (a.length < 4 || b.length < 4 || Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  const restA = a.slice(i);
+  const restB = b.slice(i);
+  return restA.slice(1) === restB || restA === restB.slice(1) || restA.slice(1) === restB.slice(1);
 }
 
-/** A work's cover id: the picked work's own, else the next-best matching work that has one. */
-export function pickCoverId(works: OpenLibraryWork[], author?: string): number | null {
-  const withCover = works.filter((w) => w.coverId);
+/** How much of the TYPED title appears in the work's title (0..1), forgiving one-letter typos and ignoring "the", "of"... */
+export function titleScore(workTitle: string, typed: string): number {
+  const wanted = norm(typed).split(" ").filter((t) => t && !STOP_WORDS.has(t));
+  if (!wanted.length) return 0;
+  const have = norm(workTitle).split(" ").filter(Boolean);
+  return wanted.filter((w) => have.some((h) => sameWord(w, h))).length / wanted.length;
+}
+
+/**
+ * Is this work plausibly the book that was typed? Open Library's free-text search always returns SOMETHING, even for a
+ * misspelt title (a search for "Animal firm George Orwell" returns Dracula's Guest), so a result counts only when its
+ * author matches what was typed, or most of the typed title is in its title. Anything else is "not found", never
+ * somebody else's book or cover.
+ */
+export function isPlausible(work: OpenLibraryWork, title?: string, author?: string): boolean {
+  if (author && authorMatches(work, author)) return true;
+  if (title) return titleScore(work.title, title) >= 0.6;
+  return !author; // nothing typed to compare with
+}
+
+/** The best candidate: the first plausible result by Open Library's own ranking, but one whose author matches what
+ *  was typed wins over a better-ranked work by somebody else. Null when no result looks like the book. */
+export function pickWork(works: OpenLibraryWork[], author?: string, title?: string): OpenLibraryWork | null {
+  const candidates = works.filter((w) => isPlausible(w, title, author));
+  if (!candidates.length) return null;
+  if (author) {
+    const byAuthor = candidates.find((w) => authorMatches(w, author));
+    if (byAuthor) return byAuthor;
+  }
+  return candidates[0] ?? null;
+}
+
+/** A work's cover id: the picked work's own, else the next-best plausible work that has one. */
+export function pickCoverId(works: OpenLibraryWork[], author?: string, title?: string): number | null {
+  const withCover = works.filter((w) => w.coverId && isPlausible(w, title, author));
   if (!withCover.length) return null;
-  const best = pickWork(works, author);
+  const best = pickWork(works, author, title);
   if (best?.coverId) return best.coverId;
   return (author ? withCover.find((w) => authorMatches(w, author)) : undefined)?.coverId ?? withCover[0]?.coverId ?? null;
 }
