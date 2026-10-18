@@ -2,7 +2,7 @@ import { getEnv } from "@/server/config/env";
 import { ApiError } from "@/server/http/errors";
 import { errorMessage, log } from "@/server/log";
 import { LIMITS } from "@/shared/validation/limits";
-import { fetchPlot, genresFromSubjects, pickWork, searchWorks } from "./open-library";
+import { fetchPlot, findWorks, genresFromSubjects, pickWork } from "./open-library";
 import type { BookAiFillInput, BookAiFillResult } from "@/shared/validation/book";
 
 const API_URL = "https://www.googleapis.com/books/v1/volumes";
@@ -84,7 +84,7 @@ export async function lookUpBook(input: BookAiFillInput): Promise<BookAiFillResu
 
 async function lookUpOnOpenLibrary(input: BookAiFillInput): Promise<BookAiFillResult | null> {
   const author = input.author || undefined;
-  const work = pickWork(await searchWorks(input.title, author), author, input.title);
+  const work = pickWork(await findWorks(input.title, author), author, input.title);
   if (!work) return null;
   return {
     author: work.authors[0]?.trim() || null,

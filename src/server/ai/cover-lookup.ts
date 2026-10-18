@@ -1,6 +1,6 @@
 import { ApiError } from "@/server/http/errors";
 import { errorMessage, log } from "@/server/log";
-import { pickCoverId, searchWorks, type OpenLibraryWork } from "./open-library";
+import { findWorks, pickCoverId, type OpenLibraryWork } from "./open-library";
 
 /**
  * "Find cover": a real internet lookup via Open Library's free public API, by title + author — not an
@@ -13,14 +13,8 @@ export async function lookUpCover(title: string, author: string): Promise<string
   let works: OpenLibraryWork[];
   let coverId: number | null;
   try {
-    works = await searchWorks(title, author || undefined);
+    works = await findWorks(title, author || undefined); // tolerant of a misspelt title (see findWorks)
     coverId = pickCoverId(works, author || undefined, title);
-    // A misspelt last word ("Animal firm") can bury the book entirely: try again without it, with the author.
-    const words = title.trim().split(/\s+/);
-    if (!coverId && words.length >= 2) {
-      works = await searchWorks(words.slice(0, -1).join(" "), author || undefined);
-      coverId = pickCoverId(works, author || undefined, title);
-    }
   } catch (e) {
     log.error("cover lookup: request failed", { message: errorMessage(e) });
     throw new ApiError("COVER_NOT_FOUND", 502);

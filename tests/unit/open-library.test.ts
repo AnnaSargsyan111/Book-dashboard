@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { isPlausible, pickCoverId, pickWork, titleScore, type OpenLibraryWork } from "@/server/ai/open-library";
 
 const work = (title: string, authors: string[], coverId: number | null = 1): OpenLibraryWork => ({ key: `/works/${title}`, title, authors, coverId, subjects: [] });
@@ -37,5 +37,63 @@ describe("a cover or a book is only taken when it really looks like the book tha
   it("prefers a plausible work by the typed author, and skips plausible ones with no cover", () => {
     expect(pickWork([work("Animal Farm", ["J. A. Griffin"]), FARM], "George Orwell", "Animal Farm")).toBe(FARM);
     expect(pickCoverId([work("Animal Farm", ["George Orwell"], null), work("Animal Farm / Nineteen Eighty-Four", ["George Orwell"], 10524365)], "George Orwell", "Animal Farm")).toBe(10524365);
+  });
+});
+
+describe("findWorks: the lookup is tolerant of a misspelt title", () => {
+  const reply = (docs: object[]) => new Response(JSON.stringify({ docs }), { status: 200 });
+  const doc = (title: string, author: string, cover: number) => ({ key: `/works/${title}`, title, author_name: [author], cover_i: cover });
+
+  it("tries the title as typed, then without its last word, then the author's works", async () => {
+    const queries: string[] = [];
+    // 1) as typed: only an unrelated book; 2) without the last word: nothing; 3) the author's works: the right one
+    const answers = [[doc("Dracula's guest", "Bram Stoker", 1)], [], [doc("Nineteen Eighty-Four", "George Orwell", 2), doc("Animal Farm", "George Orwell", 3)]];
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      queries.push(new URL(url).searchParams.get("q") ?? "");
+      return reply(answers[queries.length - 1] ?? []);
+    }));
+    const { findWorks, pickCoverId } = await import("@/server/ai/open-library");
+    const works = await findWorks("Animal firm", "George Orwell");
+    expect(queries).toEqual(["Animal firm George Orwell", "Animal George Orwell", "George Orwell"]);
+    expect(pickCoverId(works, "George Orwell", "Animal firm")).toBe(3);
+    vi.unstubAllGlobals();
+  });
+
+  it("stops at the first pass that has a plausible match, and gives up with an empty list", async () => {
+    const calls = vi.fn(async () => reply([doc("Animal Farm", "George Orwell", 3)]));
+    vi.stubGlobal("fetch", calls);
+    const { findWorks } = await import("@/server/ai/open-library");
+    expect((await findWorks("Animal Farm", "George Orwell")).length).toBe(1);
+    expect(calls).toHaveBeenCalledTimes(1);
+    vi.stubGlobal("fetch", vi.fn(async () => reply([doc("Dracula's guest", "Bram Stoker", 1)])));
+    expect(await findWorks("Zzqxv thing", "Nobody Atall")).toEqual([]);
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("regressions that must never come back", () => {
+  it("the author alone never rescues a title that matches nothing ('Animal firm' by Bram Stoker is not Dracula's Guest)", () => {
+    expect(isPlausible(DRACULA, "Animal firm", "Bram Stoker")).toBe(false);
+    expect(pickCoverId([DRACULA], "Bram Stoker", "Animal firm")).toBeNull();
+    expect(pickWork([DRACULA], "Bram Stoker", "Animal firm")).toBeNull();
+  });
+
+  it("a title with a number may be known by its words, so there the author is enough ('1984')", () => {
+    expect(isPlausible(NINETEEN, "1984", "George Orwell")).toBe(true);
+    expect(isPlausible(NINETEEN, "1984", "Bram Stoker")).toBe(false);
+  });
+
+  it("accents do not matter in names or titles (Saint-Exupéry, Brontë)", () => {
+    expect(pickWork([work("The Little Prince", ["Antoine de Saint-Exupéry"])], "Antoine de Saint-Exupery", "The Little Prince")).not.toBeNull();
+    expect(pickWork([work("Jane Eyre", ["Charlotte Brontë"])], "charlotte bronte", "Jane Eyre")).not.toBeNull();
+  });
+
+  it("among plausible works, the typed author and a cover win over Open Library's order", () => {
+    const sis = work("The pilot and the little prince", ["Peter Sís"], 11695223);
+    const prince = work("The Little Prince", ["Antoine de Saint-Exupéry"], 42);
+    expect(pickCoverId([sis, prince], "Antoine de Saint-Exupery", "The Little Prince")).toBe(42);
+    const noCover = work("Crime and Punishmant", ["Достоевский"], null);
+    const real = work("Crime and Punishment", ["Fyodor Dostoevsky"], 15183762);
+    expect(pickWork([noCover, real], "Fyodor Dostoevsky", "Crime and Punishment")).toBe(real);
   });
 });

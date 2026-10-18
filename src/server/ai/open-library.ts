@@ -40,7 +40,8 @@ interface SearchResponse {
   docs?: Array<{ key?: string; title?: string; author_name?: string[]; cover_i?: number; subject?: string[] }>;
 }
 
-const norm = (s: string) => s.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+/** lower case, accents removed ("Saint-Exupéry" = "saint exupery", "Brontë" = "bronte"), punctuation turned into spaces */
+const norm = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
 /** Does one of the work's authors match what was typed? Tolerant of casing, initials and a surname-only entry. */
 function authorMatches(work: OpenLibraryWork, author: string): boolean {
@@ -58,10 +59,10 @@ function authorMatches(work: OpenLibraryWork, author: string): boolean {
  * only the literal title and bury it. An empty `author=` parameter also makes Open Library answer `500`, so none is
  * ever sent.
  */
-export async function searchWorks(title: string, author?: string): Promise<OpenLibraryWork[]> {
+export async function searchWorks(title: string, author?: string, limit = 8): Promise<OpenLibraryWork[]> {
   const params = new URLSearchParams({
     q: [title, author].filter(Boolean).join(" "),
-    limit: "8",
+    limit: String(limit),
     fields: "key,title,author_name,cover_i,subject",
   });
   const data = await fetchJson<SearchResponse>(`${SEARCH_URL}?${params}`);
@@ -99,14 +100,16 @@ export function titleScore(workTitle: string, typed: string): number {
 
 /**
  * Is this work plausibly the book that was typed? Open Library's free-text search always returns SOMETHING, even for a
- * misspelt title (a search for "Animal firm George Orwell" returns Dracula's Guest), so a result counts only when its
- * author matches what was typed, or most of the typed title is in its title. Anything else is "not found", never
- * somebody else's book or cover.
+ * misspelt title (a search for "Animal firm George Orwell" returns Dracula's Guest), so a result counts only when most of
+ * the typed title is in its title. The one exception: a title with a number in it ("1984") may be a book known by its
+ * words ("Nineteen Eighty-Four"), so there the author alone is enough. The author never rescues a title that matches
+ * nothing otherwise: "Animal firm" by Bram Stoker is "not found", never his Dracula's Guest. Anything else is "not
+ * found", never somebody else's book or cover.
  */
 export function isPlausible(work: OpenLibraryWork, title?: string, author?: string): boolean {
-  if (author && authorMatches(work, author)) return true;
-  if (title) return titleScore(work.title, title) >= 0.6;
-  return !author; // nothing typed to compare with
+  if (!title) return !author; // nothing typed to compare with
+  if (titleScore(work.title, title) >= 0.6) return true;
+  return !!author && /\d/.test(title) && authorMatches(work, author);
 }
 
 /** The best candidate: the first plausible result by Open Library's own ranking, but one whose author matches what
@@ -114,11 +117,42 @@ export function isPlausible(work: OpenLibraryWork, title?: string, author?: stri
 export function pickWork(works: OpenLibraryWork[], author?: string, title?: string): OpenLibraryWork | null {
   const candidates = works.filter((w) => isPlausible(w, title, author));
   if (!candidates.length) return null;
-  if (author) {
-    const byAuthor = candidates.find((w) => authorMatches(w, author));
-    if (byAuthor) return byAuthor;
+  // order: the typed author first, then a work that has a cover, then Open Library's own ranking
+  const rank = (w: OpenLibraryWork) => (author && authorMatches(w, author) ? 2 : 0) + (w.coverId ? 1 : 0);
+  return [...candidates].sort((a, b) => rank(b) - rank(a))[0] ?? null;
+}
+
+/**
+ * Looks the book up in up to three passes and returns the results of the first pass that holds a plausible match
+ * (so callers use pickWork / pickCoverId on it): 1) title + author as typed; 2) without the last word of the title,
+ * which rescues a misspelt ending ("Animal firm"); 3) the author's best-known works, matched to the title tolerantly.
+ * An empty list means no pass found anything that looks like the book.
+ */
+export async function findWorks(title: string, author?: string): Promise<OpenLibraryWork[]> {
+  // a pass is "good" when it holds a plausible work with a cover (by the typed author, when one was typed);
+  // a plausible work found earlier is kept as a fallback in case no later pass does better
+  const isGood = (w: OpenLibraryWork | null) => !!w && !!w.coverId && (!author || authorMatches(w, author));
+  let fallback: OpenLibraryWork[] = [];
+  const consider = (works: OpenLibraryWork[]): OpenLibraryWork[] | null => {
+    const pick = pickWork(works, author, title);
+    if (isGood(pick)) return works;
+    if (pick && !fallback.length) fallback = works;
+    return null;
+  };
+
+  const first = consider(await searchWorks(title, author));
+  if (first) return first;
+  const words = title.trim().split(/\s+/);
+  if (words.length >= 2) {
+    const second = consider(await searchWorks(words.slice(0, -1).join(" "), author));
+    if (second) return second;
   }
-  return candidates[0] ?? null;
+  if (author) {
+    const matching = (await searchWorks("", author, 40)).filter((w) => titleScore(w.title, title) >= 0.6);
+    const third = matching.length ? consider(matching) : null;
+    if (third) return third;
+  }
+  return fallback;
 }
 
 /** A work's cover id: the picked work's own, else the next-best plausible work that has one. */
