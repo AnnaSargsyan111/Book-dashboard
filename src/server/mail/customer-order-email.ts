@@ -34,6 +34,7 @@ const COPY = {
     thanks: "Thank you for choosing MystBook. We're happy to be part of your reading journey.",
     withLove: "With love,",
     team: "Your MystBook Team",
+    contact: "Please call to get in touch.",
     footer: "A little mystery. A lot of stories.",
   },
   hy: {
@@ -54,9 +55,14 @@ const COPY = {
     thanks: "Շնորհակալություն, որ ընտրեցիք MystBook-ը։ Ուրախ ենք լինել Ձեր ընթերցանության ճանապարհորդության մասնակիցը։",
     withLove: "Սիրով՝",
     team: "Ձեր MystBook թիմը",
+    contact: "Կապ հաստատելու համար զանգահարեք։",
     footer: "Մի քիչ առեղծված։ Շատ պատմություններ։",
   },
 } as const;
+
+/** The number customers are asked to call, shown (italic, as a tap-to-call link) at the end of their email. */
+const CONTACT_PHONE = "(+374) 77 731713";
+const CONTACT_PHONE_HREF = "tel:+37477731713";
 
 /**
  * The customer's "your order is on its way" email, in the language they are using the site in. "Keep it a mystery"
@@ -91,6 +97,9 @@ export function buildCustomerOrderEmail(input: CustomerOrderEmailInput, locale: 
     "",
     c.withLove,
     c.team,
+    "",
+    c.contact,
+    CONTACT_PHONE,
   ].join("\n");
 
   const summary = `
@@ -112,6 +121,8 @@ export function buildCustomerOrderEmail(input: CustomerOrderEmailInput, locale: 
       <div style="font-family:${SANS};font-size:16px;line-height:1.6;color:${C.muted};padding-top:16px;">${esc(c.thanks)}</div>
       <div style="font-family:${SERIF};font-size:20px;font-style:italic;color:${C.ink};padding-top:22px;">${esc(c.withLove)}</div>
       <div style="font-family:${SANS};font-size:22px;color:${C.ink};padding-top:6px;">${esc(c.team)}</div>
+      <div style="font-family:${SANS};font-size:16px;font-style:italic;color:${C.muted};padding-top:26px;">${esc(c.contact)}</div>
+      <div style="font-family:${SANS};font-size:17px;font-style:italic;padding-top:4px;"><a href="${CONTACT_PHONE_HREF}" style="color:${C.ink};text-decoration:none;font-style:italic;">${esc(CONTACT_PHONE)}</a></div>
     </td></tr>`;
 
   return { subject, text, html: emailShell({ lang: locale, title: subject, tagline: c.tagline, footer: c.footer, middle }) };

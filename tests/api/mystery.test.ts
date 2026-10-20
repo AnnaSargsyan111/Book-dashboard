@@ -509,6 +509,11 @@ describe("order emails", () => {
     expect(customer?.html).toContain("Your next literary journey is one step closer. Your new book is on the way and we're delighted to have you with us.");
     expect(customer?.html).toContain("Every book opens a door to another world<"); // no full stop on that line
     expect(customer?.text).toContain(title);
+    // The closing line asking the customer to call, in italics, with the phone number.
+    expect(customer?.html).toContain("Please call to get in touch.");
+    expect(customer?.html).toContain("(+374) 77 731713");
+    expect(customer?.html).toContain("font-style:italic");
+    expect(customer?.text.trimEnd().endsWith("Please call to get in touch.\n(+374) 77 731713")).toBe(true);
   });
 
   it("never reveals the book to a customer who chose Keep it a mystery", async () => {
@@ -532,6 +537,8 @@ describe("order emails", () => {
     expect(customer?.html).toContain("Ձեր հաջորդ գրական ճանապարհորդությունը մեկ քայլով ավելի մոտ է։ Ձեր պատվերը ճանապարհին է, և մենք ուրախ ենք, որ Դուք մեզ եք ընտրել։");
     expect(customer?.html).toContain("դեպի մեկ այլ աշխարհ<"); // no closing mark on that line
     expect(customer?.html).toContain('lang="hy"');
+    expect(customer?.html).toContain("Կապ հաստատելու համար զանգահարեք։");
+    expect(customer?.html).toContain("(+374) 77 731713");
   });
 
   it("sends nothing for an order that is rejected", async () => {

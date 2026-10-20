@@ -58,8 +58,7 @@ export function emailShell(opts: { lang: string; title: string; tagline: string;
 <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#ffffff;"><tr><td align="center" style="padding:24px 12px;">
   <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="width:100%;max-width:600px;background:${C.cream};border:1px solid ${C.rule};border-radius:16px;overflow:hidden;">
     <tr><td align="center" style="background:${C.green};padding:34px 24px 30px 24px;">
-      <table role="presentation" cellpadding="0" cellspacing="0" align="center"><tr><td align="center" width="76" height="76" style="width:76px;height:76px;background:#0f4a47;border:1px solid ${C.gold};border-radius:18px;font-family:${SERIF};font-size:44px;font-style:italic;color:${C.gold};">M</td></tr></table>
-      <div style="font-family:${SERIF};font-size:36px;font-style:italic;color:${C.gold};padding-top:14px;">MystBook</div>
+      <div style="font-family:${SERIF};font-size:38px;font-style:italic;color:${C.gold};">MystBook</div>
       <div style="font-family:${SANS};font-size:12px;letter-spacing:1.5px;color:#f1ead8;padding-top:8px;">${esc(opts.tagline)}</div>
     </td></tr>${opts.middle}
     <tr><td align="center" style="background:${C.band};padding:18px 24px;font-family:${SANS};">
