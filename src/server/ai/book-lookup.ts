@@ -2,10 +2,13 @@ import { getEnv } from "@/server/config/env";
 import { ApiError } from "@/server/http/errors";
 import { errorMessage, log } from "@/server/log";
 import { LIMITS } from "@/shared/validation/limits";
-import { fetchPlot, findWorks, genresFromSubjects, pickWork } from "./open-library";
+import { charactersFromPeople, fetchPlot, findWorks, genresFromSubjects, pickWork } from "./open-library";
 import type { BookAiFillInput, BookAiFillResult } from "@/shared/validation/book";
 
 const API_URL = "https://www.googleapis.com/books/v1/volumes";
+
+/** Auto-fill adds the main characters only — a handful, not the whole catalogued cast (the reader can add more). */
+const MAX_AUTOFILL_CHARACTERS = 6;
 
 /** Google Books' backend occasionally answers a perfectly good request with a transient `503` — not a quota
  *  problem (that's a `429`, and not worth retrying), just a backend hiccup that a moment later succeeds. Two
@@ -70,8 +73,8 @@ function plainTextPlot(description: string | undefined): string | null {
  * unless the Google project has billing linked, which is how "Couldn't find this book" kept appearing for books
  * that very much exist. Google Books stays as the second chance for anything Open Library lacks.
  * Never fabricates anything: a title neither source has a record of just throws `AI_NO_MATCH`.
- * `characters` is always empty — no free structured source offers a cast list, and guessing one would break the
- * "never invent" rule this endpoint has always kept.
+ * `characters` are the main characters Open Library has catalogued for the work (see `charactersFromPeople`); they
+ * are never guessed, so a book with none catalogued — and every Google Books fallback — simply returns an empty list.
  */
 export async function lookUpBook(input: BookAiFillInput): Promise<BookAiFillResult> {
   const fromOpenLibrary = await lookUpOnOpenLibrary(input).catch((e) => {
@@ -89,7 +92,7 @@ async function lookUpOnOpenLibrary(input: BookAiFillInput): Promise<BookAiFillRe
   return {
     author: work.authors[0]?.trim() || null,
     genres: genresFromSubjects(work.subjects),
-    characters: [],
+    characters: charactersFromPeople(work.people, MAX_AUTOFILL_CHARACTERS, LIMITS.characterMax),
     plot: await fetchPlot(work.key, LIMITS.plotMax),
   };
 }

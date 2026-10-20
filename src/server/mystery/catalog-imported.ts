@@ -1,11 +1,11 @@
 import type { CatalogBook } from "./catalog";
 
 /**
- * 293 popular English titles imported from Open Library by `scripts/import-catalog.mjs` (re-run it to
+ * 283 popular English titles imported from Open Library by `scripts/import-catalog.mjs` (re-run it to
  * refresh; slugs are `ol-<Open Library work id>`, stable). Title, author, cover, page count and the popularity score
- * come from Open Library; the mood profile, pace and age suitability are DRAFTED by rule from each book's subjects
- * and genre and should be reviewed. Every book is `available: false`: it is not recommended or orderable until
- * someone who can really supply it sets that to `true`.
+ * come from Open Library; the genre, mood profile, pace and age suitability were drafted by rule and then checked
+ * book by book (scripts/apply-catalog-review.mjs holds that review). Every book is `available: true` (recommended and orderable); set a title's flag
+ * to `false` to take it out of every recommendation.
  */
 export const IMPORTED_CATALOG: CatalogBook[] = [
   {
@@ -14,26 +14,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "George R. R. Martin",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Adult",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
       "intense": 0.9,
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "escapist": 0.75,
+      "mysterious": 0.6,
+      "emotional": 0.45
     },
     "themes": [
-      "adult",
-      "action & adventure",
       "fantasy",
       "high fantasy"
     ],
     "pace": "slow",
     "pages": 801,
     "popularity": 0.95,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9269962-L.jpg"
   },
   {
@@ -42,13 +38,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "J.R.R. Tolkien",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Elves",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
       "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "elves",
@@ -60,7 +55,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 492,
     "popularity": 0.9,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14627060-L.jpg"
   },
   {
@@ -68,14 +63,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Catching Fire",
     "author": "Suzanne Collins",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "Action/Adventure",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
       "intense": 0.9,
-      "lightFun": 0.7,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "emotional": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "action/adventure",
@@ -83,11 +77,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "teen fiction",
       "juvenile works"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 400,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12646539-L.jpg"
   },
   {
@@ -96,23 +90,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Sarah J. Maas",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Fantasy",
+    "subgenre": "Romantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "fantasy",
-      "fiction",
       "fairies",
       "blessing and cursing"
     ],
     "pace": "medium",
     "pages": 626,
     "popularity": 0.91,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14315081-L.jpg"
   },
   {
@@ -121,13 +115,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "J. K. Rowling",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Orphans",
+    "subgenre": "Fantasy",
     "moodProfile": {
       "magical": 0.9,
-      "escapist": 0.7,
-      "cozy": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "escapist": 0.75,
+      "cozy": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "orphans",
@@ -139,7 +132,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 640,
     "popularity": 0.85,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10716273-L.jpg"
   },
   {
@@ -148,15 +141,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Rick Riordan",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Fiction",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
       "magical": 0.9,
-      "escapist": 0.7,
-      "cozy": 0.8,
-      "emotional": 0.8
+      "escapist": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
-      "fiction",
       "fantasy",
       "greek mythology",
       "juvenile fiction"
@@ -165,7 +156,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 282,
     "popularity": 0.84,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/108909-L.jpg"
   },
   {
@@ -174,22 +165,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Rick Riordan",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
       "magical": 0.9,
-      "escapist": 0.7
+      "escapist": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "new york times bestseller",
       "fictitious character",
-      "children's fiction",
-      "fiction"
+      "children's fiction"
     ],
     "pace": "medium",
     "pages": 320,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14601475-L.jpg"
   },
   {
@@ -197,24 +188,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Foundation",
     "author": "Isaac Asimov",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "Psychohistory",
+    "genre": "scienceFiction",
+    "subgenre": "Classic Science Fiction",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "escapist": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "psychohistory",
       "open library staff picks",
-      "life on other planets",
-      "fiction"
+      "life on other planets"
     ],
     "pace": "medium",
     "pages": 240,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14612610-L.jpg"
   },
   {
@@ -222,15 +212,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Slaughterhouse-Five",
     "author": "Kurt Vonnegut",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "American Science Fiction",
+    "genre": "literaryFiction",
+    "subgenre": "Satirical Anti-War",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "lightFun": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "american science fiction",
@@ -241,8 +229,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 203,
     "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12727001-L.jpg"
   },
   {
@@ -251,12 +239,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Roald Dahl",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Juvenile Fiction",
+    "subgenre": "Children's Fantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "lightFun": 0.7
+      "lightFun": 0.9,
+      "cozy": 0.75,
+      "escapist": 0.6,
+      "magical": 0.45
     },
     "themes": [
       "juvenile fiction",
@@ -268,33 +256,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 240,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12889769-L.jpg"
-  },
-  {
-    "slug": "ol-ol27310398w",
-    "title": "Haunting Adeline",
-    "author": "H. D. Carlton",
-    "language": "en",
-    "genre": "fantasy",
-    "subgenre": "Dark Romance",
-    "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8
-    },
-    "themes": [
-      "dark romance",
-      "romance",
-      "dark",
-      "spicy"
-    ],
-    "pace": "medium",
-    "pages": 624,
-    "popularity": 0.89,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/12992962-L.jpg"
   },
   {
     "slug": "ol-ol17352669w",
@@ -302,12 +265,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Sarah J. Maas",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Fantasy",
+    "subgenre": "Romantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "lightFun": 0.7
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "fantasy",
@@ -318,8 +281,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 454,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/15254465-L.jpg"
   },
   {
@@ -328,25 +291,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "George R. R. Martin",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Fantasy Fiction",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
       "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "mysterious": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "fantasy fiction",
-      "fiction",
       "fantasy",
       "new york times bestseller"
     ],
     "pace": "slow",
     "pages": 761,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8231751-L.jpg"
   },
   {
@@ -355,13 +316,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Madeleine L'Engle",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Love",
+    "subgenre": "Children's Science Fantasy",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "cozy": 0.8,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "magical": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "cozy": 0.45
     },
     "themes": [
       "love",
@@ -373,7 +333,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 212,
     "popularity": 0.84,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8709146-L.jpg"
   },
   {
@@ -382,14 +342,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Terry Pratchett",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Fiction",
+    "subgenre": "Comic Fantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
-      "lightFun": 0.7
+      "lightFun": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
-      "fiction",
       "romans",
       "merveilleux",
       "fantasy"
@@ -398,56 +358,32 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 240,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14647238-L.jpg"
-  },
-  {
-    "slug": "ol-ol5738148w",
-    "title": "The Final Empire",
-    "author": "Brandon Sanderson",
-    "language": "en",
-    "genre": "fantasy",
-    "subgenre": "Courts And Courtiers",
-    "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7
-    },
-    "themes": [
-      "courts and courtiers",
-      "women revolutionaries",
-      "fiction",
-      "adventure"
-    ],
-    "pace": "slow",
-    "pages": 669,
-    "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/14658160-L.jpg"
   },
   {
     "slug": "ol-ol2172356w",
     "title": "Do Androids Dream of Electric Sheep?",
     "author": "Philip K. Dick",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "Androids",
+    "genre": "scienceFiction",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "androids",
-      "fiction",
       "science fiction",
       "twenty-first century"
     ],
     "pace": "medium",
     "pages": 224,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/207515-L.jpg"
   },
   {
@@ -456,10 +392,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Holly Black",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Fantasy",
+    "subgenre": "Faerie Fantasy",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7
+      "intense": 0.9,
+      "emotional": 0.75,
+      "escapist": 0.6,
+      "magical": 0.45
     },
     "themes": [
       "fantasy",
@@ -470,8 +408,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 378,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8361789-L.jpg"
   },
   {
@@ -480,13 +418,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "C. S. Lewis",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "The Blitz",
+    "subgenre": "Children's Fantasy",
     "moodProfile": {
       "magical": 0.9,
-      "escapist": 0.7,
-      "cozy": 0.8,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "cozy": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "the blitz",
@@ -498,7 +435,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 186,
     "popularity": 0.81,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8441376-L.jpg"
   },
   {
@@ -506,25 +443,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Snow Crash",
     "author": "Neal Stephenson",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "American Science Fiction",
+    "genre": "scienceFiction",
+    "subgenre": "Cyberpunk",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7,
       "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "lightFun": 0.45
     },
     "themes": [
       "american science fiction",
       "open library staff picks",
-      "ready player one",
-      "fiction"
+      "ready player one"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 460,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/392508-L.jpg"
   },
   {
@@ -533,10 +469,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "J.R.R. Tolkien",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Elves",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
       "magical": 0.9,
-      "escapist": 0.7
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "elves",
@@ -548,7 +486,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 499,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14627062-L.jpg"
   },
   {
@@ -556,25 +494,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Breaking Dawn",
     "author": "Stephenie Meyer",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "Vampires",
+    "genre": "romance",
+    "subgenre": "Paranormal Romance",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "vampires",
       "juvenile fiction",
-      "fiction",
       "werewolves"
     ],
     "pace": "slow",
     "pages": 756,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12643419-L.jpg"
   },
   {
@@ -583,25 +520,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Terry Pratchett",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Death",
+    "subgenre": "Comic Fantasy",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "thoughtProvoking": 0.8
+      "lightFun": 0.9,
+      "magical": 0.75,
+      "thoughtProvoking": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "death",
       "fantasy",
-      "fiction",
       "satire"
     ],
     "pace": "medium",
     "pages": 297,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14648805-L.jpg"
   },
   {
@@ -610,22 +545,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Brandon Sanderson",
     "language": "en",
     "genre": "fantasy",
-    "subgenre": "Courts And Courtiers",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "magical": 0.9,
-      "escapist": 0.7
+      "intense": 0.9,
+      "magical": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "courts and courtiers",
       "sieges",
-      "fiction",
       "magic"
     ],
     "pace": "slow",
     "pages": 784,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14658341-L.jpg"
   },
   {
@@ -633,14 +569,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Hyperion",
     "author": "Dan Simmons",
     "language": "en",
-    "genre": "fantasy",
-    "subgenre": "American Science Fiction",
+    "genre": "scienceFiction",
+    "subgenre": "Space Opera",
     "moodProfile": {
-      "magical": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "escapist": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "american science fiction",
@@ -651,8 +586,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 481,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/380332-L.jpg"
   },
   {
@@ -661,11 +596,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Colleen Hoover",
     "language": "en",
     "genre": "romance",
-    "subgenre": "Man-Woman Relationships",
+    "subgenre": "Contemporary Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "man-woman relationships",
@@ -676,8 +611,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 384,
     "popularity": 0.95,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10473609-L.jpg"
   },
   {
@@ -686,51 +621,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Colleen Hoover",
     "language": "en",
     "genre": "romance",
-    "subgenre": "Contemporary",
+    "subgenre": "Contemporary Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "contemporary",
       "romance",
-      "friendship",
-      "fiction"
+      "friendship"
     ],
     "pace": "medium",
     "pages": 352,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12749873-L.jpg"
-  },
-  {
-    "slug": "ol-ol16336633w",
-    "title": "Fifty Shades of Grey",
-    "author": "E. L. James",
-    "language": "en",
-    "genre": "romance",
-    "subgenre": "FICTION / Contemporary Women",
-    "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "intense": 0.9
-    },
-    "themes": [
-      "fiction / contemporary women",
-      "sexual dominance and submission",
-      "college students",
-      "businessmen"
-    ],
-    "pace": "medium",
-    "pages": 544,
-    "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/12648183-L.jpg"
   },
   {
     "slug": "ol-ol24390422w",
@@ -738,11 +645,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ana Huang",
     "language": "en",
     "genre": "romance",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Dark Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4
+      "emotional": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "new york times bestseller",
@@ -753,8 +660,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 358,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12940491-L.jpg"
   },
   {
@@ -762,25 +669,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Shatter Me",
     "author": "Tahereh Mafi",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Love",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6,
+      "magical": 0.45
     },
     "themes": [
       "love",
       "ability",
-      "dictatorship",
-      "fiction"
+      "dictatorship"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 357,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6974992-L.jpg"
   },
   {
@@ -789,11 +695,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ali Hazelwood",
     "language": "en",
     "genre": "romance",
-    "subgenre": "American Literature",
+    "subgenre": "Romantic Comedy",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4
+      "lightFun": 0.9,
+      "emotional": 0.75,
+      "cozy": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "american literature",
@@ -804,8 +711,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 398,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10601402-L.jpg"
   },
   {
@@ -813,12 +720,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Perks of Being a Wallflower",
     "author": "Stephen Chbosky",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Young Adult Fiction",
+    "genre": "youngAdult",
+    "subgenre": "Coming of Age",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "young adult fiction",
@@ -829,8 +736,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 231,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14315052-L.jpg"
   },
   {
@@ -838,26 +745,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "House of Hades",
     "author": "Rick Riordan",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Juvenile Fiction",
+    "genre": "fantasy",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4,
       "magical": 0.9,
-      "escapist": 0.7
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "juvenile fiction",
       "roman mythology",
-      "greek mythology",
-      "fiction"
+      "greek mythology"
     ],
     "pace": "medium",
     "pages": 597,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8057334-L.jpg"
   },
   {
@@ -866,12 +771,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Stephenie Meyer",
     "language": "en",
     "genre": "romance",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Paranormal Romance",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "new york times bestseller",
@@ -882,8 +787,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 629,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12643410-L.jpg"
   },
   {
@@ -891,14 +796,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Milk and Honey",
     "author": "Rupi Kaur",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Canadian Poetry",
+    "genre": "literaryFiction",
+    "subgenre": "Poetry",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "escapist": 0.7,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "canadian poetry",
@@ -909,8 +812,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 226,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8743595-L.jpg"
   },
   {
@@ -919,23 +822,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Casey McQuiston",
     "language": "en",
     "genre": "romance",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Romantic Comedy",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "cozy": 0.4
+      "lightFun": 0.9,
+      "emotional": 0.75,
+      "cozy": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "new york times bestseller",
-      "fiction",
       "humor",
       "romance"
     ],
     "pace": "medium",
     "pages": 440,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9171544-L.jpg"
   },
   {
@@ -944,23 +847,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Hannah Grace",
     "language": "en",
     "genre": "romance",
-    "subgenre": "Figure Skating",
+    "subgenre": "Sports Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "lightFun": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "figure skating",
       "hockey",
-      "young adult",
       "romance"
     ],
     "pace": "medium",
     "pages": 448,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13180728-L.jpg"
   },
   {
@@ -969,12 +871,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ana Huang",
     "language": "en",
     "genre": "romance",
-    "subgenre": "Romance",
+    "subgenre": "Dark Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "romance",
@@ -985,8 +886,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 616,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14425197-L.jpg"
   },
   {
@@ -994,14 +895,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Insurgent",
     "author": "Veronica Roth",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Future",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.8,
       "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "emotional": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "future",
@@ -1009,11 +909,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "science fiction",
       "children's fiction"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 525,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7083755-L.jpg"
   },
   {
@@ -1021,12 +921,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Fourth Wing",
     "author": "Rebecca Yarros",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "FantasíA",
+    "genre": "fantasy",
+    "subgenre": "Romantasy",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4
+      "intense": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "fantasía",
@@ -1034,11 +935,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "ficción",
       "ficciones"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 518,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14407898-L.jpg"
   },
   {
@@ -1046,15 +947,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Throne of Glass",
     "author": "Sarah J. Maas",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Assassins",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "magical": 0.9,
-      "escapist": 0.7,
-      "intense": 0.9
+      "intense": 0.9,
+      "magical": 0.75,
+      "escapist": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "assassins",
@@ -1065,132 +964,71 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 432,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13312488-L.jpg"
-  },
-  {
-    "slug": "ol-ol627084w",
-    "title": "Lolita",
-    "author": "Vladimir Nabokov",
-    "language": "en",
-    "genre": "romance",
-    "subgenre": "Erotic Fiction",
-    "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "cozy": 0.4,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
-    },
-    "themes": [
-      "erotic fiction",
-      "romance fiction",
-      "fiction",
-      "love stories"
-    ],
-    "pace": "medium",
-    "pages": 336,
-    "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/12984540-L.jpg"
   },
   {
     "slug": "ol-ol8455255w",
     "title": "City of Bones",
     "author": "Cassandra Clare",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Demonology",
+    "genre": "fantasy",
+    "subgenre": "Urban Fantasy",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.7,
-      "cozy": 0.4,
       "magical": 0.9,
-      "escapist": 0.7,
-      "mysterious": 0.9
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "demonology",
-      "fiction",
       "horror stories",
       "supernatural"
     ],
     "pace": "medium",
     "pages": 512,
     "popularity": 0.78,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10121449-L.jpg"
   },
   {
     "slug": "ol-ol274505w",
-    "title": "Cien años de soledad",
+    "title": "One Hundred Years of Solitude",
     "author": "Gabriel García Márquez",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Spanish Language Books",
+    "genre": "literaryFiction",
+    "subgenre": "Magical Realism",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "magical": 0.9
+      "magical": 0.9,
+      "emotional": 0.75,
+      "thoughtProvoking": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "spanish language books",
-      "fiction",
       "social conditions",
       "novel"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 432,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/12627383-L.jpg"
-  },
-  {
-    "slug": "ol-ol81625w",
-    "title": "A Torre Negra",
-    "author": "Stephen King",
-    "language": "en",
-    "genre": "romance",
-    "subgenre": "Thrillers",
-    "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "magical": 0.9,
-      "escapist": 0.7,
-      "mysterious": 0.9
-    },
-    "themes": [
-      "thrillers",
-      "supernatural",
-      "dark fantasy",
-      "riddles"
-    ],
-    "pace": "medium",
-    "pages": 566,
-    "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/8443630-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15185412-L.jpg"
   },
   {
     "slug": "ol-ol16361029w",
-    "title": "The Selection (The Selection #1)",
+    "title": "The Selection",
     "author": "Kiera Cass",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Contests",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "contests",
@@ -1201,8 +1039,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 328,
     "popularity": 0.76,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7101900-L.jpg"
   },
   {
@@ -1210,24 +1048,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "If He Had Been With Me",
     "author": "Laura Nowlin",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Friendship",
+    "genre": "youngAdult",
+    "subgenre": "Young Adult Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "friendship",
-      "fiction",
       "love",
       "love stories"
     ],
     "pace": "medium",
     "pages": 368,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14339089-L.jpg"
   },
   {
@@ -1235,14 +1072,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "In Cold Blood",
     "author": "Truman Capote",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "True",
+    "genre": "nonFiction",
+    "subgenre": "True Crime",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "cozy": 0.4,
       "intense": 0.9,
-      "mysterious": 0.9
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "true",
@@ -1253,8 +1089,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 352,
     "popularity": 0.78,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/228066-L.jpg"
   },
   {
@@ -1262,14 +1098,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "One Of Us Is Lying",
     "author": "Karen M. McManus",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Children'S Fiction",
+    "genre": "mysteryThriller",
+    "subgenre": "Young Adult Mystery",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4,
-      "intense": 0.9,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "children's fiction",
@@ -1277,11 +1111,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "young adult fiction",
       "juvenile fiction"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 360,
     "popularity": 0.78,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12503935-L.jpg"
   },
   {
@@ -1289,16 +1123,16 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Princess Bride",
     "author": "William Goldman",
     "language": "en",
-    "genre": "romance",
-    "subgenre": "Castles",
+    "genre": "fantasy",
+    "subgenre": "Fairy-tale Adventure",
     "moodProfile": {
-      "emotional": 0.7,
-      "lightFun": 0.5,
-      "cozy": 0.4
+      "lightFun": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "castles",
-      "fiction",
       "princesses",
       "good and evil"
     ],
@@ -1306,7 +1140,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 399,
     "popularity": 0.78,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9284881-L.jpg"
   },
   {
@@ -1314,26 +1148,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Lord of the Flies",
     "author": "William Golding",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Fiction",
+    "genre": "literaryFiction",
+    "subgenre": "Allegorical Classic",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
-      "fiction",
       "relationships",
       "adventure",
       "morality"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 243,
     "popularity": 0.95,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8684447-L.jpg"
   },
   {
@@ -1341,25 +1172,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Shining",
     "author": "Stephen King",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Fiction",
+    "genre": "horror",
+    "subgenre": "Supernatural Horror",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "emotional": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
-      "fiction",
       "horror fiction",
       "demonology",
       "precognition"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 506,
     "popularity": 0.92,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12376585-L.jpg"
   },
   {
@@ -1367,25 +1197,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Ready Player One",
     "author": "Ernest Cline",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Utopias",
+    "genre": "scienceFiction",
+    "subgenre": "Gamer Science Fiction",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "escapist": 0.9,
+      "lightFun": 0.75,
+      "intense": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "utopias",
       "virtual reality",
-      "fiction",
       "puzzles"
     ],
     "pace": "fast",
     "pages": 462,
     "popularity": 0.93,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8737626-L.jpg"
   },
   {
@@ -1394,11 +1223,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Dan Brown",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Heparin",
+    "subgenre": "Conspiracy Thriller",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7
+      "intense": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "heparin",
@@ -1410,7 +1240,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 575,
     "popularity": 0.92,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11408459-L.jpg"
   },
   {
@@ -1419,11 +1249,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Dan Brown",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Suspense & Thriller",
+    "subgenre": "Conspiracy Thriller",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7
+      "intense": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "suspense & thriller",
@@ -1435,7 +1266,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 489,
     "popularity": 0.89,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9255229-L.jpg"
   },
   {
@@ -1443,25 +1274,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Carrie",
     "author": "Stephen King",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Horror Fiction",
+    "genre": "horror",
+    "subgenre": "Supernatural Horror",
     "moodProfile": {
-      "mysterious": 0.9,
       "intense": 0.9,
-      "lightFun": 0.7,
-      "thoughtProvoking": 0.8
+      "emotional": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "horror fiction",
       "psychological thrillers",
-      "fiction",
       "horror"
     ],
     "pace": "fast",
     "pages": 255,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9256043-L.jpg"
   },
   {
@@ -1470,11 +1299,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Agatha Christie",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Roman Policier",
+    "subgenre": "Golden Age Mystery",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "roman policier",
@@ -1486,7 +1315,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 222,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11172296-L.jpg"
   },
   {
@@ -1494,12 +1323,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Jurassic Park",
     "author": "Michael Crichton",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Dichogamy",
+    "genre": "scienceFiction",
+    "subgenre": "Techno-Thriller",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "thoughtProvoking": 0.8
+      "intense": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "dichogamy",
@@ -1511,7 +1341,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 455,
     "popularity": 0.89,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12882940-L.jpg"
   },
   {
@@ -1520,10 +1350,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Holly Jackson",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Mystery And Detective Stories.",
+    "subgenre": "Young Adult Mystery",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.8
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "mystery and detective stories.",
@@ -1534,8 +1365,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 431,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13156188-L.jpg"
   },
   {
@@ -1544,23 +1375,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Colleen Hoover",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Psychological Thriller",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "emotional": 0.8
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "emotional": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "new york times bestseller",
       "secrecy in fiction",
-      "fiction",
       "romance"
     ],
     "pace": "fast",
     "pages": 340,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8747160-L.jpg"
   },
   {
@@ -1569,11 +1400,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Arthur Conan Doyle",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Aortic Aneurysm",
+    "subgenre": "Classic Detective",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "emotional": 0.8
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "aortic aneurysm",
@@ -1581,11 +1412,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "blessing and cursing",
       "children's fiction"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 162,
     "popularity": 0.85,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13405534-L.jpg"
   },
   {
@@ -1594,22 +1425,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Agatha Christie",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Fiction",
+    "subgenre": "Cozy Golden Age Mystery",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9
+      "cozy": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
-      "fiction",
       "mystery",
       "crime fiction",
       "mystery thriller"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 204,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13699667-L.jpg"
   },
   {
@@ -1617,12 +1448,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Twisted Games",
     "author": "Ana Huang",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Romance",
+    "genre": "romance",
+    "subgenre": "Dark Romance",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "romance",
@@ -1630,11 +1461,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "romantic suspense",
       "new adult romance"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 454,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12821465-L.jpg"
   },
   {
@@ -1642,27 +1473,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Six of Crows",
     "author": "Leigh Bardugo",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Young Adult Fiction",
+    "genre": "fantasy",
+    "subgenre": "Heist Fantasy",
     "moodProfile": {
-      "mysterious": 0.9,
       "intense": 0.9,
-      "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "mysterious": 0.6,
+      "magical": 0.45
     },
     "themes": [
       "young adult fiction",
       "fantasy fiction",
-      "fiction",
       "young adult works"
     ],
     "pace": "fast",
     "pages": 512,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12667417-L.jpg"
   },
   {
@@ -1670,15 +1498,15 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Artemis",
     "author": "Andy Weir",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Fiction",
+    "genre": "scienceFiction",
+    "subgenre": "Heist Science Fiction",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "thoughtProvoking": 0.8
+      "escapist": 0.9,
+      "lightFun": 0.75,
+      "intense": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
-      "fiction",
       "science fiction",
       "smuggling",
       "conspiracies"
@@ -1686,21 +1514,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 322,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8235551-L.jpg"
   },
   {
     "slug": "ol-ol8996439w",
-    "title": "Il nome della rosa",
+    "title": "The Name of the Rose",
     "author": "Umberto Eco",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Novela De Misterio",
+    "subgenre": "Historical Mystery",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.8,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "intense": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "novela de misterio",
@@ -1708,24 +1537,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "monasticismo y vida religiosa",
       "novela didáctica"
     ],
-    "pace": "fast",
+    "pace": "slow",
     "pages": 533,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/8598263-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15023290-L.jpg"
   },
   {
     "slug": "ol-ol5784622w",
-    "title": "Män som hatar kvinnor",
+    "title": "The Girl with the Dragon Tattoo",
     "author": "Stieg Larsson",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Novels",
+    "subgenre": "Nordic Noir",
     "moodProfile": {
-      "mysterious": 0.9,
       "intense": 0.9,
-      "emotional": 0.8
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "novels",
@@ -1736,9 +1565,9 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 576,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/9274740-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol257746w",
@@ -1746,20 +1575,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Dean Koontz",
     "language": "en",
     "genre": "mysteryThriller",
-    "subgenre": "Mothers And Sons",
+    "subgenre": "Supernatural Thriller",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6
     },
     "themes": [
-      "mothers and sons",
-      "fiction"
+      "mothers and sons"
     ],
     "pace": "fast",
     "pages": 341,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12547107-L.jpg"
   },
   {
@@ -1767,24 +1596,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Where the Crawdads Sing",
     "author": "Delia Owens",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Solitude",
+    "genre": "literaryFiction",
+    "subgenre": "Southern Gothic",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.9,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "solitude",
-      "fiction",
       "new york times bestseller",
       "abandoned children"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 416,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8362947-L.jpg"
   },
   {
@@ -1792,17 +1621,15 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Treasure",
     "author": "Clive Cussler",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Invasions",
+    "genre": "adventure",
+    "subgenre": "Treasure-Hunt Adventure",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "escapist": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "invasions",
-      "fiction",
       "treasure troves",
       "treasure-trove"
     ],
@@ -1810,7 +1637,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 608,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8231769-L.jpg"
   },
   {
@@ -1818,40 +1645,37 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Annihilation",
     "author": "Jeff VanderMeer",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Nebula Award Winner",
+    "genre": "scienceFiction",
+    "subgenre": "Weird Fiction",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "intense": 0.75,
+      "thoughtProvoking": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "nebula award winner",
       "discoveries in geography",
-      "fiction",
       "scientists"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 208,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8408974-L.jpg"
   },
   {
     "slug": "ol-ol9264548w",
-    "title": "Thirteen reasons why",
+    "title": "Thirteen Reasons Why",
     "author": "Jay Asher",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Mystery",
+    "genre": "youngAdult",
+    "subgenre": "Contemporary Drama",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.8,
-      "emotional": 0.8,
-      "lightFun": 0.7
+      "emotional": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "mystery",
@@ -1859,11 +1683,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "young adult fiction",
       "schools in fiction"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 312,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/15162168-L.jpg"
   },
   {
@@ -1871,39 +1695,38 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Secret History",
     "author": "Donna Tartt",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Fiction",
+    "genre": "literaryFiction",
+    "subgenre": "Dark Academia",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "emotional": 0.6,
+      "intense": 0.45
     },
     "themes": [
-      "fiction",
       "college students",
       "teacher-student relationships",
       "classicists"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 608,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/744854-L.jpg"
   },
   {
     "slug": "ol-ol10834w",
-    "title": "Das Parfum",
+    "title": "Perfume: The Story of a Murderer",
     "author": "Patrick Süskind",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Historical Fiction",
+    "genre": "literaryFiction",
+    "subgenre": "Historical Thriller",
     "moodProfile": {
       "mysterious": 0.9,
-      "intense": 0.9,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "intense": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "historical fiction",
@@ -1911,37 +1734,35 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "dark fantasy",
       "coming-of-age"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 263,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/10910286-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol84916w",
     "title": "Cyclops",
     "author": "Clive Cussler",
     "language": "en",
-    "genre": "mysteryThriller",
-    "subgenre": "Cold War",
+    "genre": "adventure",
+    "subgenre": "Adventure Thriller",
     "moodProfile": {
-      "mysterious": 0.9,
-      "intense": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8
+      "escapist": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "cold war",
       "conspiracies",
-      "open library staff picks",
-      "fiction"
+      "open library staff picks"
     ],
     "pace": "fast",
     "pages": 480,
     "popularity": 0.87,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8231759-L.jpg"
   },
   {
@@ -1949,12 +1770,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Animal Farm",
     "author": "George Orwell",
     "language": "en",
-    "genre": "scienceFiction",
+    "genre": "literaryFiction",
     "subgenre": "Political Satire",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "political satire",
@@ -1966,7 +1787,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 128,
     "popularity": 0.95,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11261770-L.jpg"
   },
   {
@@ -1975,24 +1796,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Aldous Huxley",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Utopias",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "utopias",
       "brainwashing",
-      "fiction",
       "science and state"
     ],
     "pace": "medium",
     "pages": 240,
     "popularity": 0.93,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8231823-L.jpg"
   },
   {
@@ -2001,11 +1820,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ray Bradbury",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Mechanical Hound",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "mechanical hound",
@@ -2017,7 +1836,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 188,
     "popularity": 0.93,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12993656-L.jpg"
   },
   {
@@ -2026,12 +1845,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Orson Scott Card",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Military Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "intense": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "new york times bestseller",
@@ -2039,11 +1858,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "end of the world",
       "hegemony"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 330,
     "popularity": 0.92,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12996033-L.jpg"
   },
   {
@@ -2051,24 +1870,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Mockingjay",
     "author": "Suzanne Collins",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "New York Times Bestseller",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "intense": 0.9,
+      "emotional": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "new york times bestseller",
       "sci-fi",
-      "young adult",
       "science fiction"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 424,
     "popularity": 0.89,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12646459-L.jpg"
   },
   {
@@ -2076,12 +1895,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Misery",
     "author": "Stephen King",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Dope",
+    "genre": "horror",
+    "subgenre": "Psychological Horror",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.7,
-      "mysterious": 0.9
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "dope",
@@ -2089,11 +1908,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "american novelists",
       "captives"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 382,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8259296-L.jpg"
   },
   {
@@ -2102,14 +1921,15 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Frank Herbert",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "American Science Fiction",
+    "subgenre": "Space Opera",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "american science fiction",
-      "fiction",
       "imaginary places",
       "science fiction"
     ],
@@ -2117,7 +1937,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 279,
     "popularity": 0.84,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/980253-L.jpg"
   },
   {
@@ -2126,15 +1946,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Cormac McCarthy",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Post-Apocalyptic",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
-      "fiction",
       "dystopia",
       "adventure",
       "post-apocalyptic fiction"
@@ -2142,8 +1960,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 256,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/198120-L.jpg"
   },
   {
@@ -2151,26 +1969,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Maze Runner",
     "author": "James Dashner",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6
     },
     "themes": [
-      "fiction",
       "science fiction",
       "amnesia",
       "cooperativeness"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 375,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10464801-L.jpg"
   },
   {
@@ -2179,13 +1994,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Isaac Asimov",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Classic Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6
     },
     "themes": [
-      "fiction",
       "psychohistory",
       "life on other planets",
       "american science fiction"
@@ -2194,7 +2009,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 253,
     "popularity": 0.84,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9300695-L.jpg"
   },
   {
@@ -2202,26 +2017,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "A Feast for Crows",
     "author": "George R. R. Martin",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "New York Times Bestseller",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "magical": 0.9,
-      "emotional": 0.8,
-      "intense": 0.9
+      "intense": 0.9,
+      "escapist": 0.75,
+      "mysterious": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "new york times bestseller",
-      "fiction",
       "fantasy fiction",
       "fantasy"
     ],
     "pace": "slow",
     "pages": 792,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6501256-L.jpg"
   },
   {
@@ -2230,24 +2043,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "James S. A. Corey",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Space Warfare",
+    "subgenre": "Space Opera",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9
+      "intense": 0.9,
+      "escapist": 0.75,
+      "mysterious": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "space warfare",
-      "fiction",
       "interplanetary voyages",
       "conspiracies"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 592,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7314237-L.jpg"
   },
   {
@@ -2256,13 +2068,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Isaac Asimov",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Classic Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6
     },
     "themes": [
-      "fiction",
       "psychohistory",
       "life on other planets",
       "science fiction"
@@ -2271,7 +2083,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 235,
     "popularity": 0.84,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9261324-L.jpg"
   },
   {
@@ -2279,12 +2091,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Wolves of the Calla",
     "author": "Stephen King",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Lightsabers",
+    "genre": "fantasy",
+    "subgenre": "Dark Fantasy Western",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.7,
-      "mysterious": 0.9
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "magical": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "lightsabers",
@@ -2295,8 +2108,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "slow",
     "pages": 714,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14652470-L.jpg"
   },
   {
@@ -2305,10 +2118,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Douglas Adams",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Sofas",
+    "subgenre": "Comic Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "lightFun": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "sofas",
@@ -2320,7 +2134,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 210,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8569244-L.jpg"
   },
   {
@@ -2328,14 +2142,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Fight Club",
     "author": "Chuck Palahniuk",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "genre": "literaryFiction",
+    "subgenre": "Transgressive Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "intense": 0.9,
+      "thoughtProvoking": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
-      "fiction",
       "millennialism",
       "young men",
       "science fiction"
@@ -2343,8 +2157,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 222,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7890578-L.jpg"
   },
   {
@@ -2352,26 +2166,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "World War Z",
     "author": "Max Brooks",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Humor",
+    "genre": "horror",
+    "subgenre": "Zombie Horror",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
       "intense": 0.9,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.75,
+      "emotional": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "humor",
-      "fiction",
       "new york times bestseller",
       "zombies"
     ],
     "pace": "medium",
     "pages": 422,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/168106-L.jpg"
   },
   {
@@ -2379,24 +2191,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Amber Spyglass",
     "author": "Philip Pullman",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Fantasy",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "fantasy",
       "fantasy fiction",
-      "fiction",
       "missing persons"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 536,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12613246-L.jpg"
   },
   {
@@ -2404,17 +2216,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "A Wizard of Earthsea",
     "author": "Ursula K. Le Guin",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "genre": "fantasy",
+    "subgenre": "Coming-of-Age Fantasy",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
       "magical": 0.9,
-      "emotional": 0.8,
-      "intense": 0.9
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
-      "fiction",
       "magic",
       "magic in fiction",
       "fantasy"
@@ -2422,8 +2231,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 205,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13617691-L.jpg"
   },
   {
@@ -2432,15 +2241,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Arthur C. Clarke",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Hard Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6
     },
     "themes": [
-      "fiction",
       "future in literature",
       "hugo award winner",
       "nebula award winner"
@@ -2449,7 +2256,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 256,
     "popularity": 0.81,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13472608-L.jpg"
   },
   {
@@ -2458,10 +2265,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ray Bradbury",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "American Science Fiction",
+    "subgenre": "Classic Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "escapist": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "american science fiction",
@@ -2473,7 +2282,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 262,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9346537-L.jpg"
   },
   {
@@ -2482,12 +2291,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "William Gibson",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Information Superhighway",
+    "subgenre": "Cyberpunk",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "intense": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "information superhighway",
@@ -2495,11 +2304,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "conspiracies",
       "open library staff picks"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 317,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/283860-L.jpg"
   },
   {
@@ -2507,12 +2316,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Deception Point",
     "author": "Dan Brown",
     "language": "en",
-    "genre": "scienceFiction",
-    "subgenre": "Mystery Fiction",
+    "genre": "mysteryThriller",
+    "subgenre": "Techno-Thriller",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "mystery fiction",
@@ -2520,11 +2329,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "literature",
       "meteors"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 559,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14553479-L.jpg"
   },
   {
@@ -2533,15 +2342,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Philip K. Dick",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Alternate History",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6
     },
     "themes": [
-      "fiction",
       "hugo award winner",
       "science fiction",
       "new york times bestseller"
@@ -2549,8 +2356,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 258,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/420452-L.jpg"
   },
   {
@@ -2559,25 +2366,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Kurt Vonnegut",
     "language": "en",
     "genre": "scienceFiction",
-    "subgenre": "End Of The World",
+    "subgenre": "Satirical Science Fiction",
     "moodProfile": {
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "end of the world",
-      "fiction",
       "american fantasy fiction",
       "classic literature"
     ],
     "pace": "medium",
     "pages": 231,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12709654-L.jpg"
   },
   {
@@ -2586,14 +2390,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Harper Lee",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Southern Classic",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6
     },
     "themes": [
-      "fiction",
       "fiction classics",
       "contemporary fiction",
       "racial segregation"
@@ -2602,7 +2405,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 320,
     "popularity": 0.95,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14351077-L.jpg"
   },
   {
@@ -2611,11 +2414,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Khaled Hosseini",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Desertion",
+    "subgenre": "Family Saga",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "desertion",
@@ -2626,8 +2429,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 406,
     "popularity": 0.89,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8579790-L.jpg"
   },
   {
@@ -2635,16 +2438,16 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Help",
     "author": "Kathryn Stockett",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Novels",
+    "genre": "historicalFiction",
+    "subgenre": "1960s Civil Rights",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.7,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "lightFun": 0.6,
+      "cozy": 0.45
     },
     "themes": [
       "novels",
-      "fiction",
       "civil rights movements",
       "household employees"
     ],
@@ -2652,7 +2455,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 479,
     "popularity": 0.87,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8387264-L.jpg"
   },
   {
@@ -2661,11 +2464,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "John Steinbeck",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Migrant Labor",
+    "subgenre": "Family Saga",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "migrant labor",
@@ -2673,39 +2476,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "domestic fiction",
       "depravity"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 613,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11386937-L.jpg"
-  },
-  {
-    "slug": "ol-ol1812933w",
-    "title": "American Psycho",
-    "author": "Bret Easton Ellis",
-    "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Gothic & Horror",
-    "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.7,
-      "mysterious": 0.9
-    },
-    "themes": [
-      "gothic & horror",
-      "literary fiction",
-      "capitalism",
-      "postmodernism"
-    ],
-    "pace": "medium",
-    "pages": 477,
-    "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/8401686-L.jpg"
   },
   {
     "slug": "ol-ol66346w",
@@ -2713,10 +2489,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Arthur Miller",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Flashback",
+    "subgenre": "Classic Play",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "flashback",
@@ -2728,7 +2505,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 139,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9254686-L.jpg"
   },
   {
@@ -2737,10 +2514,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Arundhati Roy",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Literary Fiction",
+    "subgenre": "Contemporary Literary Fiction",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "literary fiction",
@@ -2751,8 +2529,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 357,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10513792-L.jpg"
   },
   {
@@ -2760,26 +2538,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Magicians",
     "author": "Lev Grossman",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "College Graduates",
+    "genre": "fantasy",
+    "subgenre": "Urban Fantasy",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
       "magical": 0.9,
-      "cozy": 0.8,
-      "mysterious": 0.9
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "college graduates",
       "college students",
-      "magic",
-      "fiction"
+      "magic"
     ],
     "pace": "medium",
     "pages": 416,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6294573-L.jpg"
   },
   {
@@ -2787,12 +2563,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "A Gentleman in Moscow",
     "author": "Amor Towles",
     "language": "en",
-    "genre": "literaryFiction",
+    "genre": "historicalFiction",
     "subgenre": "Historical Fiction",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "cozy": 0.75,
+      "lightFun": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "historical fiction",
@@ -2800,11 +2577,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "political fiction",
       "home detention"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 511,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11326818-L.jpg"
   },
   {
@@ -2813,10 +2590,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Stephen King",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Somatoform Disorders",
+    "subgenre": "Literary Fiction",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.7
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "somatoform disorders",
@@ -2827,8 +2606,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 610,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8536326-L.jpg"
   },
   {
@@ -2836,13 +2615,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Dreamcatcher",
     "author": "Stephen King",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Male Friendship",
+    "genre": "horror",
+    "subgenre": "Supernatural Horror",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8,
-      "mysterious": 0.9
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6,
+      "lightFun": 0.45
     },
     "themes": [
       "male friendship",
@@ -2850,11 +2629,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "telepathy",
       "down syndrome"
     ],
-    "pace": "slow",
+    "pace": "fast",
     "pages": 736,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14651654-L.jpg"
   },
   {
@@ -2863,60 +2642,60 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Gustave Flaubert",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Literary Fiction",
+    "subgenre": "Classic Novel",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "literary fiction",
       "french literature",
-      "fiction",
       "adultery"
     ],
     "pace": "medium",
     "pages": 351,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12993424-L.jpg"
   },
   {
     "slug": "ol-ol278437w",
-    "title": "La sombra del viento",
+    "title": "The Shadow of the Wind",
     "author": "Carlos Ruiz Zafón",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Mothers And Sons",
+    "subgenre": "Gothic Mystery",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.7,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "emotional": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "mothers and sons",
       "verschollenheit",
-      "widowers",
-      "fiction"
+      "widowers"
     ],
     "pace": "medium",
     "pages": 528,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/10107644-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol675722w",
     "title": "Oryx and Crake",
     "author": "Margaret Atwood",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Literary Fiction",
+    "genre": "scienceFiction",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "literary fiction",
@@ -2927,8 +2706,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 389,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12507658-L.jpg"
   },
   {
@@ -2936,14 +2715,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Dirk Gently’s Holistic Detective Agency",
     "author": "Douglas Adams",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Fantasy",
+    "genre": "scienceFiction",
+    "subgenre": "Comic Science Fiction",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7,
-      "lightFun": 0.7,
-      "mysterious": 0.9
+      "lightFun": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "fantasy",
@@ -2955,7 +2733,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 278,
     "popularity": 0.78,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11465456-L.jpg"
   },
   {
@@ -2964,10 +2742,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Toni Morrison",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Foster Care",
+    "subgenre": "Contemporary Classic",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "foster care",
@@ -2978,8 +2757,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 181,
     "popularity": 0.76,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/15152696-L.jpg"
   },
   {
@@ -2988,10 +2767,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Chimamanda Ngozi Adichie",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Nigerians",
+    "subgenre": "Contemporary Literary Fiction",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "lightFun": 0.45
     },
     "themes": [
       "nigerians",
@@ -3002,8 +2783,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 592,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8474037-L.jpg"
   },
   {
@@ -3011,24 +2792,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Soul Music",
     "author": "Terry Pratchett",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Fantasy",
+    "genre": "fantasy",
+    "subgenre": "Comic Fantasy",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.7,
-      "lightFun": 0.7
+      "lightFun": 0.9,
+      "magical": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "fantasy",
       "ficción",
-      "fiction",
       "novela fantástica"
     ],
     "pace": "medium",
     "pages": 384,
     "popularity": 0.77,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14645780-L.jpg"
   },
   {
@@ -3037,15 +2818,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Toni Morrison",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Contemporary Classic",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "cozy": 0.8,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
-      "fiction",
       "african american women",
       "female friendship",
       "city and town life"
@@ -3053,8 +2832,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 174,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8384008-L.jpg"
   },
   {
@@ -3063,10 +2842,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Kate Chopin",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Adultery",
+    "subgenre": "Classic Novel",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "adultery",
@@ -3077,35 +2857,33 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 214,
     "popularity": 0.78,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8750241-L.jpg"
   },
   {
     "slug": "ol-ol27420w",
-    "title": "Ensaio Sobre a Cegueira",
+    "title": "Blindness",
     "author": "José Saramago",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Blind",
+    "subgenre": "Allegorical Fiction",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7,
-      "intense": 0.9
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "blind",
       "blindness",
-      "fiction",
       "modern literature"
     ],
     "pace": "medium",
     "pages": 352,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/10482411-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": "https://covers.openlibrary.org/b/id/115428-L.jpg"
   },
   {
     "slug": "ol-ol457179w",
@@ -3113,12 +2891,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Salman Rushdie",
     "language": "en",
     "genre": "literaryFiction",
-    "subgenre": "Literary Fiction",
+    "subgenre": "Magical Realism",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8,
       "magical": 0.9,
-      "mysterious": 0.9
+      "emotional": 0.75,
+      "thoughtProvoking": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "literary fiction",
@@ -3126,11 +2904,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "epic literature",
       "epic fiction"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 580,
     "popularity": 0.78,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8346713-L.jpg"
   },
   {
@@ -3138,12 +2916,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Half of a Yellow Sun",
     "author": "Chimamanda Ngozi Adichie",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Literary Fiction",
+    "genre": "historicalFiction",
+    "subgenre": "War Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "literary fiction",
@@ -3154,8 +2932,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 500,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8472660-L.jpg"
   },
   {
@@ -3163,12 +2941,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Snow Falling on Cedars",
     "author": "David Guterson",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Dear John Letters",
+    "genre": "historicalFiction",
+    "subgenre": "Courtroom Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "intense": 0.9
+      "emotional": 0.9,
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6,
+      "cozy": 0.45
     },
     "themes": [
       "dear john letters",
@@ -3179,8 +2958,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 416,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13108904-L.jpg"
   },
   {
@@ -3188,15 +2967,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Salmon of Doubt",
     "author": "Douglas Adams",
     "language": "en",
-    "genre": "literaryFiction",
-    "subgenre": "Fiction",
+    "genre": "nonFiction",
+    "subgenre": "Essays",
     "moodProfile": {
-      "emotional": 0.7,
-      "thoughtProvoking": 0.8,
-      "lightFun": 0.7
+      "lightFun": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
-      "fiction",
       "science fiction",
       "english essays",
       "english literature"
@@ -3205,7 +2982,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 299,
     "popularity": 0.76,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9290943-L.jpg"
   },
   {
@@ -3213,24 +2990,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Catcher in the Rye",
     "author": "J. D. Salinger",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Fictional Works",
+    "genre": "literaryFiction",
+    "subgenre": "Coming of Age",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.7,
-      "escapist": 0.4
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "fictional works",
       "runaway teenagers",
-      "fiction",
       "adolescence"
     ],
     "pace": "medium",
     "pages": 240,
     "popularity": 0.95,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9273490-L.jpg"
   },
   {
@@ -3238,26 +3014,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Battle of the Labyrinth",
     "author": "Rick Riordan",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Greek Mythology",
+    "genre": "fantasy",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.7,
       "magical": 0.9,
-      "cozy": 0.8
+      "escapist": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "greek mythology",
       "juvenile fiction",
-      "fiction",
       "monsters in fiction"
     ],
     "pace": "medium",
     "pages": 367,
     "popularity": 0.86,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6274739-L.jpg"
   },
   {
@@ -3265,17 +3038,15 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Last Olympian",
     "author": "Rick Riordan",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Fiction",
+    "genre": "fantasy",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.4,
       "magical": 0.9,
-      "cozy": 0.8
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
-      "fiction",
       "greek mythology",
       "monsters",
       "mythical animals"
@@ -3283,8 +3054,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 381,
     "popularity": 0.87,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6624107-L.jpg"
   },
   {
@@ -3293,14 +3064,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "R. J. Palacio",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Health",
+    "subgenre": "Contemporary Middle Grade",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "cozy": 0.8,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "cozy": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "health",
@@ -3311,8 +3079,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 368,
     "popularity": 0.91,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8223160-L.jpg"
   },
   {
@@ -3321,24 +3089,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Louis Sachar",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Newbery Medal",
+    "subgenre": "Adventure Mystery",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "escapist": 0.7,
-      "cozy": 0.8
+      "escapist": 0.9,
+      "mysterious": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "newbery medal",
       "fluch",
-      "amistad",
-      "fiction"
+      "amistad"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 240,
     "popularity": 0.89,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/19797-L.jpg"
   },
   {
@@ -3347,16 +3113,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "John Green",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Fiction",
+    "subgenre": "Contemporary Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
-      "fiction",
       "boarding schools",
       "death",
       "grief"
@@ -3365,7 +3128,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 288,
     "popularity": 0.86,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12614602-L.jpg"
   },
   {
@@ -3374,16 +3137,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Angie Thomas",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Black Lives Matter",
+    "subgenre": "Contemporary Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "black lives matter",
-      "fiction",
       "national book awards longlist",
       "race relations"
     ],
@@ -3391,7 +3152,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 448,
     "popularity": 0.86,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11521588-L.jpg"
   },
   {
@@ -3399,16 +3160,15 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Brisingr",
     "author": "Christopher Paolini",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Fiction",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
-      "fiction",
       "juvenile fiction",
       "new york times bestseller",
       "fantasy"
@@ -3416,8 +3176,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "slow",
     "pages": 784,
     "popularity": 0.82,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/2411585-L.jpg"
   },
   {
@@ -3425,13 +3185,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Eldest",
     "author": "Christopher Paolini",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Fantasy",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.7,
-      "escapist": 0.7,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "fantasy",
@@ -3442,8 +3202,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "slow",
     "pages": 705,
     "popularity": 0.82,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12848701-L.jpg"
   },
   {
@@ -3451,14 +3211,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Boy in the Striped Pyjamas",
     "author": "John Boyne",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Naivety",
+    "genre": "historicalFiction",
+    "subgenre": "Holocaust Fiction",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "escapist": 0.7,
-      "cozy": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "naivety",
@@ -3470,7 +3228,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 216,
     "popularity": 0.81,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12720687-L.jpg"
   },
   {
@@ -3478,13 +3236,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Hired Girl",
     "author": "Laura Amy Schlitz",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Women Household Employees",
+    "genre": "historicalFiction",
+    "subgenre": "Young Adult Historical",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "lightFun": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "women household employees",
@@ -3496,7 +3253,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 400,
     "popularity": 0.83,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11610624-L.jpg"
   },
   {
@@ -3505,24 +3262,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "E. Lockhart",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Love",
+    "subgenre": "Mystery Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.7,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "love",
       "wealth",
-      "juvenile fiction",
-      "fiction"
+      "juvenile fiction"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 240,
     "popularity": 0.79,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14425312-L.jpg"
   },
   {
@@ -3531,13 +3287,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Wilson Rawls",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Social Issues - Friendship",
+    "subgenre": "Classic Boy-and-Dog Story",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "cozy": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "cozy": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "social issues - friendship",
@@ -3548,8 +3302,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 249,
     "popularity": 0.83,
-    "ageSuitability": "teen",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7996608-L.jpg"
   },
   {
@@ -3558,16 +3312,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "John Green",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Fiction",
+    "subgenre": "Contemporary Mystery",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "cozy": 0.8,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "mysterious": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
-      "fiction",
       "coming of age",
       "missing persons",
       "mystery and detective stories"
@@ -3576,7 +3327,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 367,
     "popularity": 0.81,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/5731773-L.jpg"
   },
   {
@@ -3585,12 +3336,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Beatrice Sparks",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Homelessness",
+    "subgenre": "Cautionary Diary",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "homelessness",
@@ -3598,11 +3348,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "psychiatric hospitals",
       "child prostitution"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 185,
     "popularity": 0.78,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8749018-L.jpg"
   },
   {
@@ -3611,24 +3361,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Jennifer Niven",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Suicide",
+    "subgenre": "Contemporary Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6,
+      "cozy": 0.45
     },
     "themes": [
       "suicide",
       "friendship",
-      "emotional problems",
-      "fiction"
+      "emotional problems"
     ],
     "pace": "medium",
     "pages": 402,
     "popularity": 0.8,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14559665-L.jpg"
   },
   {
@@ -3636,24 +3385,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Good Girl, Bad Blood",
     "author": "Holly Jackson",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Young Adult Fiction",
+    "genre": "mysteryThriller",
+    "subgenre": "Young Adult Mystery",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "intense": 0.9
+      "mysterious": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "young adult fiction",
       "thrillers & suspense",
       "crime\""
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 416,
     "popularity": 0.81,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11466695-L.jpg"
   },
   {
@@ -3661,22 +3410,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Inheritance Games",
     "author": "Jennifer Lynn Barnes",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Children'S Fiction",
+    "genre": "mysteryThriller",
+    "subgenre": "Young Adult Puzzle Mystery",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.4
+      "mysterious": 0.9,
+      "escapist": 0.75,
+      "lightFun": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "children's fiction",
       "new york times bestseller"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 392,
     "popularity": 0.8,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10472357-L.jpg"
   },
   {
@@ -3685,12 +3435,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Lynn Painter",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Children'S Fiction",
+    "subgenre": "Young Adult Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "escapist": 0.4,
-      "cozy": 0.8
+      "lightFun": 0.9,
+      "cozy": 0.75,
+      "emotional": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "children's fiction",
@@ -3702,7 +3452,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 368,
     "popularity": 0.81,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11182600-L.jpg"
   },
   {
@@ -3711,14 +3461,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Marissa Meyer",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Extraterrestrial Beings",
+    "subgenre": "Fairy-tale Science Fiction",
     "moodProfile": {
+      "escapist": 0.9,
+      "magical": 0.75,
       "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "magical": 0.9,
-      "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "intense": 0.45
     },
     "themes": [
       "extraterrestrial beings",
@@ -3730,7 +3478,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 416,
     "popularity": 0.79,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6998634-L.jpg"
   },
   {
@@ -3738,26 +3486,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Heir of Fire",
     "author": "Sarah J. Maas",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Magic",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
+      "intense": 0.9,
+      "magical": 0.75,
       "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "magical": 0.9,
-      "intense": 0.9
+      "escapist": 0.45
     },
     "themes": [
       "magic",
       "ya",
-      "high fantasy",
-      "fiction"
+      "high fantasy"
     ],
     "pace": "medium",
     "pages": 576,
     "popularity": 0.77,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9318480-L.jpg"
   },
   {
@@ -3765,25 +3511,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Tombs of Atuan",
     "author": "Ursula K. Le Guin",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Magic",
+    "genre": "fantasy",
+    "subgenre": "Coming-of-Age Fantasy",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.7,
-      "magical": 0.9
+      "magical": 0.9,
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "magic",
       "novela fantástica estadounidense",
-      "magic in fiction",
-      "fiction"
+      "magic in fiction"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 173,
     "popularity": 0.79,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6633403-L.jpg"
   },
   {
@@ -3791,14 +3536,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Shadow and Bone",
     "author": "Leigh Bardugo",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Magic",
+    "genre": "fantasy",
+    "subgenre": "Young Adult Fantasy",
     "moodProfile": {
-      "emotional": 0.8,
-      "lightFun": 0.5,
-      "escapist": 0.4,
       "magical": 0.9,
-      "intense": 0.9
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "magic",
@@ -3810,7 +3554,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 352,
     "popularity": 0.75,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13816048-L.jpg"
   },
   {
@@ -3818,16 +3562,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Alanna",
     "author": "Tamora Pierce",
     "language": "en",
-    "genre": "youngAdult",
-    "subgenre": "Fiction",
+    "genre": "fantasy",
+    "subgenre": "Young Adult Fantasy",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.4,
-      "thoughtProvoking": 0.8
+      "magical": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6
     },
     "themes": [
-      "fiction",
       "song of the lioness",
       "tortall",
       "knights and knighthood"
@@ -3836,7 +3578,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 241,
     "popularity": 0.77,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9256278-L.jpg"
   },
   {
@@ -3845,13 +3587,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Suzanne Collins",
     "language": "en",
     "genre": "youngAdult",
-    "subgenre": "Snow",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "emotional": 0.6,
-      "lightFun": 0.5,
-      "escapist": 0.7,
       "intense": 0.9,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "emotional": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "snow",
@@ -3863,7 +3604,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 528,
     "popularity": 0.77,
     "ageSuitability": "teen",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14421833-L.jpg"
   },
   {
@@ -3872,10 +3613,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Robert Greene",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Business",
+    "subgenre": "Strategy",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "intense": 0.75
     },
     "themes": [
       "business",
@@ -3886,8 +3627,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 452,
     "popularity": 0.95,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6424160-L.jpg"
   },
   {
@@ -3896,10 +3637,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Eric Robertson",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Self-Help",
+    "subgenre": "Mindset",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "self-help",
@@ -3911,7 +3652,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 231,
     "popularity": 0.89,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12009823-L.jpg"
   },
   {
@@ -3922,8 +3663,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "genre": "selfDevelopment",
     "subgenre": "Money",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "money",
@@ -3935,7 +3676,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 288,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10389354-L.jpg"
   },
   {
@@ -3944,10 +3685,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Napoleon Hill",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Wealth",
+    "subgenre": "Success",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "wealth",
@@ -3959,7 +3700,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 257,
     "popularity": 0.9,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14542536-L.jpg"
   },
   {
@@ -3968,10 +3709,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Dale Carnegie",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "SuccèS",
+    "subgenre": "Relationships",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "succès",
@@ -3983,7 +3724,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 283,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13314878-L.jpg"
   },
   {
@@ -3992,10 +3733,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Joseph Murphy",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Self-Help",
+    "subgenre": "Mindset",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "self-help",
@@ -4007,7 +3748,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 222,
     "popularity": 0.85,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6553019-L.jpg"
   },
   {
@@ -4016,10 +3757,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Marcus Aurelius",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Philosophy",
+    "subgenre": "Stoic Philosophy",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "philosophy",
@@ -4031,7 +3772,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 203,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/211529-L.jpg"
   },
   {
@@ -4040,10 +3781,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "George S. Clason",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Business Ethics",
+    "subgenre": "Money Parable",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "business ethics",
@@ -4055,7 +3796,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 124,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10491331-L.jpg"
   },
   {
@@ -4064,11 +3805,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Jordan B. Peterson",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Conduct Of Life",
+    "subgenre": "Life Philosophy",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3,
-      "magical": 0.9
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "conduct of life",
@@ -4080,7 +3821,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 480,
     "popularity": 0.79,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8131760-L.jpg"
   },
   {
@@ -4089,10 +3830,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Eckhart Tolle",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Religion & Spirituality",
+    "subgenre": "Spirituality",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "religion & spirituality",
@@ -4104,7 +3845,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 224,
     "popularity": 0.79,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/551262-L.jpg"
   },
   {
@@ -4113,11 +3854,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Bianca Sparacino",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Self-Help",
+    "subgenre": "Healing",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
       "self-help",
@@ -4129,34 +3869,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 146,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14424196-L.jpg"
-  },
-  {
-    "slug": "ol-ol66946w",
-    "title": "A child called \"it\"",
-    "author": "David J. Pelzer",
-    "language": "en",
-    "genre": "selfDevelopment",
-    "subgenre": "Biography",
-    "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
-    },
-    "themes": [
-      "biography",
-      "abused children",
-      "foster home care",
-      "abusive mothers"
-    ],
-    "pace": "medium",
-    "pages": 168,
-    "popularity": 0.75,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/14559604-L.jpg"
   },
   {
     "slug": "ol-ol27203w",
@@ -4164,10 +3878,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Don Miguel Ruiz",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Conduct Of Life",
+    "subgenre": "Spiritual Wisdom",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "conduct of life",
@@ -4179,7 +3893,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 152,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/924521-L.jpg"
   },
   {
@@ -4188,11 +3902,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Norman Vincent Peale",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Applied Psychology",
+    "subgenre": "Mindset",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "applied psychology",
@@ -4204,7 +3917,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 276,
     "popularity": 0.79,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14570194-L.jpg"
   },
   {
@@ -4213,10 +3926,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Malcolm Gladwell",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Intuition",
+    "subgenre": "Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "intuition",
@@ -4228,7 +3941,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 295,
     "popularity": 0.77,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14421850-L.jpg"
   },
   {
@@ -4239,8 +3952,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "genre": "selfDevelopment",
     "subgenre": "Success",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "success",
@@ -4252,7 +3965,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 270,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/480539-L.jpg"
   },
   {
@@ -4261,10 +3974,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Daniel Goleman",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Emotions And Cognition",
+    "subgenre": "Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "emotions and cognition",
@@ -4276,7 +3989,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 376,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/1359485-L.jpg"
   },
   {
@@ -4285,10 +3998,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Carol S. Dweck",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Belief And Doubt",
+    "subgenre": "Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "belief and doubt",
@@ -4300,19 +4013,19 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 288,
     "popularity": 0.74,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/746414-L.jpg"
   },
   {
     "slug": "ol-ol2392324w",
-    "title": "Eat That Frog! 21 Great Ways to Stop Procrastinating and Get More Done in Less Time",
+    "title": "Eat That Frog!",
     "author": "Brian Tracy",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Procrastination",
+    "subgenre": "Productivity",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "procrastination",
@@ -4324,7 +4037,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 128,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/847534-L.jpg"
   },
   {
@@ -4333,10 +4046,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Robert B. Cialdini",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Compliance",
+    "subgenre": "Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "compliance",
@@ -4348,7 +4061,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 287,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/431011-L.jpg"
   },
   {
@@ -4357,10 +4070,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Rhonda Byrne",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "The Law Of Attraction",
+    "subgenre": "Mindset",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "the law of attraction",
@@ -4372,7 +4085,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 216,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/845815-L.jpg"
   },
   {
@@ -4381,10 +4094,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Brianna Wiest",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Self-Help",
+    "subgenre": "Essays",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "self-help",
@@ -4396,7 +4109,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 440,
     "popularity": 0.76,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10524689-L.jpg"
   },
   {
@@ -4405,10 +4118,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Leil Lowndes",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Interpersonal Communication",
+    "subgenre": "Communication",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "interpersonal communication",
@@ -4420,7 +4133,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 352,
     "popularity": 0.74,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/58950-L.jpg"
   },
   {
@@ -4429,15 +4142,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Robin S. Sharma",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Self-Realization",
+    "subgenre": "Inspirational Parable",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3,
-      "emotional": 0.8
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "self-realization",
-      "fiction",
       "conduct of life",
       "success"
     ],
@@ -4445,7 +4157,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 216,
     "popularity": 0.75,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/48817-L.jpg"
   },
   {
@@ -4454,10 +4166,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Brianna Wiest",
     "language": "en",
     "genre": "selfDevelopment",
-    "subgenre": "Self-Help Techniques",
+    "subgenre": "Healing",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.3
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
       "self-help techniques",
@@ -4469,7 +4181,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 248,
     "popularity": 0.73,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13838236-L.jpg"
   },
   {
@@ -4478,12 +4190,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Stephen Hawking",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Cosmologie",
+    "subgenre": "Popular Science",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9
+      "thoughtProvoking": 0.9,
+      "escapist": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "cosmologie",
@@ -4495,7 +4206,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 241,
     "popularity": 0.95,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10432365-L.jpg"
   },
   {
@@ -4504,10 +4215,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Steven D. Levitt",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Economics",
+    "subgenre": "Popular Economics",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "economics",
@@ -4519,7 +4230,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 320,
     "popularity": 0.93,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11172914-L.jpg"
   },
   {
@@ -4527,10 +4238,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Steve Jobs",
     "author": "Walter Isaacson",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "History",
+    "genre": "biography",
+    "subgenre": "Biography",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "history",
@@ -4542,7 +4255,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 664,
     "popularity": 0.92,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12374726-L.jpg"
   },
   {
@@ -4551,10 +4264,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Robert M. Pirsig",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Biography",
+    "subgenre": "Philosophy",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7
+      "thoughtProvoking": 0.9,
+      "escapist": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "biography",
@@ -4566,7 +4280,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 421,
     "popularity": 0.89,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10673266-L.jpg"
   },
   {
@@ -4574,10 +4288,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Power of Habit",
     "author": "Charles Duhigg",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Social Aspects",
+    "genre": "selfDevelopment",
+    "subgenre": "Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "social aspects",
@@ -4589,7 +4304,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 404,
     "popularity": 0.91,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9078085-L.jpg"
   },
   {
@@ -4598,11 +4313,9 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Benjamin Graham",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Securities",
+    "subgenre": "Investing",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "thoughtProvoking": 0.9
     },
     "themes": [
       "securities",
@@ -4614,7 +4327,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 360,
     "popularity": 0.9,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/36434-L.jpg"
   },
   {
@@ -4622,11 +4335,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Tuesdays with Morrie",
     "author": "Mitch Albom",
     "language": "en",
-    "genre": "nonFiction",
+    "genre": "biography",
     "subgenre": "Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "memoir",
@@ -4638,20 +4352,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 199,
     "popularity": 0.85,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12560417-L.jpg"
   },
   {
     "slug": "ol-ol74128w",
-    "title": "A short history of nearly everything",
+    "title": "A Short History of Nearly Everything",
     "author": "Bill Bryson",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Science",
+    "subgenre": "Popular Science",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "science",
@@ -4663,7 +4377,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 592,
     "popularity": 0.87,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12725620-L.jpg"
   },
   {
@@ -4671,11 +4385,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "I'm Glad My Mom Died",
     "author": "Jennette McCurdy",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "New York Times Bestseller",
+    "genre": "biography",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "lightFun": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "new york times bestseller",
@@ -4686,8 +4401,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 320,
     "popularity": 0.85,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12855985-L.jpg"
   },
   {
@@ -4695,11 +4410,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Into the Wild",
     "author": "Jon Krakauer",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Adventure And Adventurers",
+    "genre": "biography",
+    "subgenre": "Adventure Biography",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7
+      "escapist": 0.9,
+      "emotional": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "adventure and adventurers",
@@ -4711,7 +4427,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 284,
     "popularity": 0.86,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/1377482-L.jpg"
   },
   {
@@ -4720,9 +4436,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Malcolm Gladwell",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Business",
+    "subgenre": "Popular Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "business",
@@ -4734,20 +4451,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 288,
     "popularity": 0.87,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10873292-L.jpg"
   },
   {
     "slug": "ol-ol14856842w",
-    "title": "La Nuit",
+    "title": "Night",
     "author": "Elie Wiesel",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Holocaust Literature",
+    "genre": "biography",
+    "subgenre": "Holocaust Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "holocaust literature",
@@ -4759,8 +4476,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 135,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/9154540-L.jpg"
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol1968364w",
@@ -4768,9 +4485,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Robert Greene",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Courtship",
+    "subgenre": "Psychology",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75
     },
     "themes": [
       "courtship",
@@ -4781,8 +4499,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 467,
     "popularity": 0.89,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/917840-L.jpg"
   },
   {
@@ -4791,10 +4509,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Stephen King",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "The Fog",
+    "subgenre": "Horror Criticism",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "the fog",
@@ -4805,8 +4524,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 479,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8443662-L.jpg"
   },
   {
@@ -4814,14 +4533,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Glass Castle",
     "author": "Jeannette Walls",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Poor",
+    "genre": "biography",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "poor",
@@ -4832,8 +4550,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 347,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11517692-L.jpg"
   },
   {
@@ -4841,11 +4559,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The 4-Hour Workweek",
     "author": "Timothy Ferriss",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Business",
+    "genre": "selfDevelopment",
+    "subgenre": "Lifestyle Design",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "business",
@@ -4857,7 +4575,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 341,
     "popularity": 0.87,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/539652-L.jpg"
   },
   {
@@ -4866,10 +4584,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Bill Bryson",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Description And Travel",
+    "subgenre": "Travel Humor",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7
+      "lightFun": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "description and travel",
@@ -4881,7 +4600,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 328,
     "popularity": 0.84,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12722649-L.jpg"
   },
   {
@@ -4890,9 +4609,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Oliver Sacks",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Neurology -",
+    "subgenre": "Neuroscience",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "neurology -",
@@ -4904,7 +4625,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 308,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6986188-L.jpg"
   },
   {
@@ -4913,10 +4634,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Erik Larson",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Social Life And Customs",
+    "subgenre": "True Crime History",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "mysterious": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "social life and customs",
@@ -4927,8 +4649,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 496,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/541027-L.jpg"
   },
   {
@@ -4936,10 +4658,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Kitchen Confidential",
     "author": "Anthony Bourdain",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Cooks",
+    "genre": "biography",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "lightFun": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "cooks",
@@ -4950,8 +4674,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 320,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/843879-L.jpg"
   },
   {
@@ -4960,9 +4684,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "C. S. Lewis",
     "language": "en",
     "genre": "nonFiction",
-    "subgenre": "Apologetics",
+    "subgenre": "Religion",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "apologetics",
@@ -4974,7 +4699,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 191,
     "popularity": 0.81,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6538891-L.jpg"
   },
   {
@@ -4982,10 +4707,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Permanent Record",
     "author": "Edward Snowden",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Government Information",
+    "genre": "biography",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "government information",
@@ -4997,7 +4724,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 352,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8751316-L.jpg"
   },
   {
@@ -5005,11 +4732,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "I Know Why the Caged Bird Sings",
     "author": "Maya Angelou",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Social Life And Customs",
+    "genre": "biography",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "social life and customs",
@@ -5020,8 +4748,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 281,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9367075-L.jpg"
   },
   {
@@ -5029,17 +4757,16 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Island of the Blue Dolphins",
     "author": "Scott O’Dell",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Children'S Fiction",
+    "genre": "adventure",
+    "subgenre": "Survival Adventure",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7,
-      "emotional": 0.8,
-      "intense": 0.9
+      "escapist": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "children's fiction",
-      "fiction",
       "indians of north america",
       "islands"
     ],
@@ -5047,7 +4774,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 184,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/5021868-L.jpg"
   },
   {
@@ -5055,11 +4782,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Men are From Mars, Women are From Venus",
     "author": "John Gray",
     "language": "en",
-    "genre": "nonFiction",
-    "subgenre": "Communication",
+    "genre": "selfDevelopment",
+    "subgenre": "Relationships",
     "moodProfile": {
-      "thoughtProvoking": 0.8,
-      "emotional": 0.8
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "communication",
@@ -5071,7 +4798,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 321,
     "popularity": 0.83,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10991-L.jpg"
   },
   {
@@ -5080,15 +4807,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Stephen King",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Fiction",
+    "subgenre": "Supernatural Horror",
     "moodProfile": {
       "intense": 0.9,
+      "emotional": 0.75,
       "mysterious": 0.6,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.45
     },
     "themes": [
-      "fiction",
       "thrillers",
       "suspense",
       "horror"
@@ -5097,7 +4823,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 423,
     "popularity": 0.95,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12015500-L.jpg"
   },
   {
@@ -5105,25 +4831,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Green Mile",
     "author": "Stephen King",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Horror Fiction",
+    "genre": "literaryFiction",
+    "subgenre": "Supernatural Drama",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.9,
-      "cozy": 0.8,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "horror fiction",
-      "fiction",
       "death row inmates",
       "prisons"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 465,
     "popularity": 0.9,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9334567-L.jpg"
   },
   {
@@ -5131,14 +4856,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Ocean at the End of the Lane",
     "author": "Neil Gaiman",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Good And Evil",
+    "genre": "fantasy",
+    "subgenre": "Dark Fantasy",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.9,
       "magical": 0.9,
-      "escapist": 0.7,
-      "emotional": 0.8
+      "emotional": 0.75,
+      "mysterious": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "good and evil",
@@ -5146,11 +4870,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "women",
       "magic"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 224,
     "popularity": 0.91,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7258156-L.jpg"
   },
   {
@@ -5158,24 +4882,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Neverwhere",
     "author": "Neil Gaiman",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Fiction",
+    "genre": "fantasy",
+    "subgenre": "Urban Fantasy",
     "moodProfile": {
-      "intense": 0.9,
+      "magical": 0.9,
+      "escapist": 0.75,
       "mysterious": 0.6,
-      "cozy": 0.8
+      "lightFun": 0.45
     },
     "themes": [
-      "fiction",
       "underground areas",
       "underground homeless persons",
       "businessmen"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 388,
     "popularity": 0.92,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/1008998-L.jpg"
   },
   {
@@ -5186,8 +4910,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "genre": "horror",
     "subgenre": "Gothic Horror",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "mysterious": 0.75,
+      "intense": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "gothic horror",
@@ -5195,11 +4921,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "vampires",
       "translations into spanish"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 349,
     "popularity": 0.89,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8401488-L.jpg"
   },
   {
@@ -5208,12 +4934,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "V.C. Andrews",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Gothic Fiction",
+    "subgenre": "Gothic Horror",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.9,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "gothic fiction",
@@ -5221,83 +4946,61 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "coming of age",
       "classics"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 411,
     "popularity": 0.86,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14598487-L.jpg"
   },
   {
-    "slug": "ol-ol27297240w",
-    "title": "Hunting Adeline",
-    "author": "H. D. Carlton",
-    "language": "en",
-    "genre": "horror",
-    "subgenre": "Fiction",
-    "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.6
-    },
-    "themes": [
-      "fiction",
-      "dark romance",
-      "contemporary",
-      "abduction"
-    ],
-    "pace": "slow",
-    "pages": 685,
-    "popularity": 0.92,
-    "ageSuitability": "adult",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/14614757-L.jpg"
-  },
-  {
     "slug": "ol-ol2577486w",
-    "title": "Krew elfów",
+    "title": "Blood of Elves",
     "author": "Andrzej Sapkowski",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Fantasy",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.6
+      "magical": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "fantasy",
-      "fiction",
       "assassins",
       "polish fantasy fiction"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 379,
     "popularity": 0.87,
     "ageSuitability": "adult",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/8457619-L.jpg"
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol453661w",
     "title": "Pyramids",
     "author": "Terry Pratchett",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "American Fantasy Fiction",
+    "genre": "fantasy",
+    "subgenre": "Comic Fantasy",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.6
+      "lightFun": 0.9,
+      "magical": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "american fantasy fiction",
       "fantasy",
-      "fiction",
       "pyramids"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 366,
     "popularity": 0.84,
-    "ageSuitability": "adult",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14646151-L.jpg"
   },
   {
@@ -5306,24 +5009,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Shirley Jackson",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Mystery",
+    "subgenre": "Gothic Horror",
     "moodProfile": {
-      "intense": 0.9,
       "mysterious": 0.9,
-      "lightFun": 0.7,
-      "thoughtProvoking": 0.8
+      "emotional": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "mystery",
       "first-person narrative",
-      "fiction",
       "literature"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 187,
     "popularity": 0.85,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11545332-L.jpg"
   },
   {
@@ -5332,22 +5033,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Mark Z. Danielewski",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Holes",
+    "subgenre": "Experimental Horror",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "holes",
       "documentary films",
-      "manuscripts",
-      "fiction"
+      "manuscripts"
     ],
     "pace": "slow",
     "pages": 736,
     "popularity": 0.85,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6450442-L.jpg"
   },
   {
@@ -5355,12 +5057,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Gideon the Ninth",
     "author": "Tamsyn Muir",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Paranormal",
+    "genre": "fantasy",
+    "subgenre": "Gothic Science Fantasy",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9,
-      "magical": 0.9
+      "mysterious": 0.75,
+      "lightFun": 0.6,
+      "magical": 0.45
     },
     "themes": [
       "paranormal",
@@ -5372,7 +5075,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 440,
     "popularity": 0.86,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10139515-L.jpg"
   },
   {
@@ -5380,13 +5083,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Silence of the Lambs",
     "author": "Thomas Harris",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Lambs",
+    "genre": "mysteryThriller",
+    "subgenre": "Psychological Thriller",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9,
-      "magical": 0.9,
-      "thoughtProvoking": 0.8
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "lambs",
@@ -5398,7 +5101,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 352,
     "popularity": 0.83,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8580475-L.jpg"
   },
   {
@@ -5407,14 +5110,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ira Levin",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Horror Tales",
+    "subgenre": "Satirical Horror",
     "moodProfile": {
-      "intense": 0.9,
       "mysterious": 0.9,
-      "cozy": 0.8,
-      "emotional": 0.8,
-      "lightFun": 0.7,
-      "thoughtProvoking": 0.8
+      "intense": 0.75,
+      "thoughtProvoking": 0.6,
+      "lightFun": 0.45
     },
     "themes": [
       "horror tales",
@@ -5426,7 +5127,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 159,
     "popularity": 0.78,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8409254-L.jpg"
   },
   {
@@ -5435,10 +5136,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Robert Lawrence Stine",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Horror Tales",
+    "subgenre": "Children's Horror",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9
+      "lightFun": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "horror tales",
@@ -5449,8 +5151,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 144,
     "popularity": 0.8,
-    "ageSuitability": "adult",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11290170-L.jpg"
   },
   {
@@ -5458,24 +5160,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Interesting Times",
     "author": "Terry Pratchett",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Fantasy Fiction",
+    "genre": "fantasy",
+    "subgenre": "Comic Fantasy",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.6,
-      "magical": 0.9
+      "lightFun": 0.9,
+      "magical": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "fantasy fiction",
-      "fiction",
       "fantasy",
       "drama"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 352,
     "popularity": 0.83,
-    "ageSuitability": "adult",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14646167-L.jpg"
   },
   {
@@ -5483,13 +5185,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Congo",
     "author": "Michael Crichton",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Kakundakari",
+    "genre": "adventure",
+    "subgenre": "Techno-Thriller Adventure",
     "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.9,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "escapist": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "kakundakari",
@@ -5500,8 +5202,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 348,
     "popularity": 0.82,
-    "ageSuitability": "adult",
-    "available": false,
+    "ageSuitability": "all",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10653144-L.jpg"
   },
   {
@@ -5510,35 +5212,36 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Anne Rice",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Fiction",
+    "subgenre": "Gothic Horror",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.6
+      "mysterious": 0.75,
+      "emotional": 0.6,
+      "magical": 0.45
     },
     "themes": [
-      "fiction",
       "vampires",
       "horror tales",
       "horror"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 573,
     "popularity": 0.8,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9255774-L.jpg"
   },
   {
     "slug": "ol-ol17864836w",
-    "title": "Cadáver exquisito",
+    "title": "Tender Is the Flesh",
     "author": "Agustina Bazterrica",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Romance Literature",
+    "subgenre": "Dystopian Horror",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.6,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
       "romance literature",
@@ -5550,21 +5253,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 228,
     "popularity": 0.81,
     "ageSuitability": "adult",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/8169547-L.jpg"
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol17793648w",
-    "title": "The Silver Eyes (Five Nights At Freddy's #1)",
+    "title": "Five Nights at Freddy's: The Silver Eyes",
     "author": "Scott Cawthon",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Horror",
+    "subgenre": "Young Adult Horror",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.6,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8
+      "mysterious": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "horror",
@@ -5575,8 +5277,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 396,
     "popularity": 0.87,
-    "ageSuitability": "adult",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8075533-L.jpg"
   },
   {
@@ -5585,22 +5287,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "William Peter Blatty",
     "language": "en",
     "genre": "horror",
-    "subgenre": "Fiction",
+    "subgenre": "Supernatural Horror",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9
+      "mysterious": 0.75,
+      "emotional": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
-      "fiction",
       "horror",
       "horror fiction",
       "demonic possession"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 400,
     "popularity": 0.76,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12715730-L.jpg"
   },
   {
@@ -5608,12 +5311,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Red Dragon",
     "author": "Thomas Harris",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Novel",
+    "genre": "mysteryThriller",
+    "subgenre": "Crime Thriller",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9,
-      "emotional": 0.8
+      "mysterious": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "novel",
@@ -5625,7 +5328,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 373,
     "popularity": 0.8,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6997898-L.jpg"
   },
   {
@@ -5633,11 +5336,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Butterfly Garden",
     "author": "Dot Hutchison",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Kidnapping Victims",
+    "genre": "mysteryThriller",
+    "subgenre": "Crime Thriller",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9
+      "mysterious": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "kidnapping victims",
@@ -5649,7 +5353,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 304,
     "popularity": 0.72,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11576000-L.jpg"
   },
   {
@@ -5657,51 +5361,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Locked Door",
     "author": "Freida McFadden",
     "language": "en",
-    "genre": "horror",
-    "subgenre": "Thriller",
+    "genre": "mysteryThriller",
+    "subgenre": "Psychological Thriller",
     "moodProfile": {
       "intense": 0.9,
-      "mysterious": 0.9,
-      "thoughtProvoking": 0.8
+      "mysterious": 0.75
     },
     "themes": [
       "thriller",
       "mystery",
-      "mystery thriller",
-      "fiction"
+      "mystery thriller"
     ],
     "pace": "fast",
     "pages": 312,
     "popularity": 0.74,
     "ageSuitability": "adult",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13156268-L.jpg"
-  },
-  {
-    "slug": "ol-ol25088743w",
-    "title": "Her Soul to Take",
-    "author": "Harley Laroux",
-    "language": "en",
-    "genre": "horror",
-    "subgenre": "Dark Romance",
-    "moodProfile": {
-      "intense": 0.9,
-      "mysterious": 0.6,
-      "magical": 0.9,
-      "emotional": 0.8
-    },
-    "themes": [
-      "dark romance",
-      "fantasy",
-      "dark",
-      "paranormal"
-    ],
-    "pace": "fast",
-    "pages": 458,
-    "popularity": 0.67,
-    "ageSuitability": "adult",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/11968055-L.jpg"
   },
   {
     "slug": "ol-ol276798w",
@@ -5709,25 +5385,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Joseph Heller",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Open Library Staff Picks",
+    "subgenre": "War Satire",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.7
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75,
+      "emotional": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "open library staff picks",
       "satire",
-      "war stories",
-      "fiction"
+      "war stories"
     ],
     "pace": "medium",
     "pages": 463,
     "popularity": 0.95,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6468653-L.jpg"
   },
   {
@@ -5735,26 +5409,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Song of Achilles",
     "author": "Madeline Miller",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Trojan War",
+    "genre": "fantasy",
+    "subgenre": "Mythological Retelling",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "trojan war",
       "male friendship",
-      "fiction",
       "gay love"
     ],
     "pace": "medium",
     "pages": 386,
     "popularity": 0.91,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7098465-L.jpg"
   },
   {
@@ -5762,13 +5434,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Lost Symbol",
     "author": "Dan Brown",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Suspense & Thriller",
+    "genre": "mysteryThriller",
+    "subgenre": "Conspiracy Thriller",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "suspense & thriller",
@@ -5776,11 +5448,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "aventures",
       "kidnapping"
     ],
-    "pace": "medium",
+    "pace": "fast",
     "pages": 604,
     "popularity": 0.88,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8373389-L.jpg"
   },
   {
@@ -5789,15 +5461,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Lois Lowry",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Children's Historical",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "cozy": 0.6
     },
     "themes": [
-      "fiction",
       "friendship",
       "rescue",
       "jews"
@@ -5806,7 +5476,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 147,
     "popularity": 0.89,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13249599-L.jpg"
   },
   {
@@ -5815,13 +5485,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Arthur Miller",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Fiction Classics",
+    "subgenre": "Classic Play",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "magical": 0.9,
-      "intense": 0.9
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "fiction classics",
@@ -5832,8 +5500,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 151,
     "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8431392-L.jpg"
   },
   {
@@ -5842,11 +5510,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Arthur Golden",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Social Life And Customs",
+    "subgenre": "Historical Fiction",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "social life and customs",
@@ -5857,8 +5525,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 512,
     "popularity": 0.88,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8231782-L.jpg"
   },
   {
@@ -5867,24 +5535,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Toni Morrison",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "African American History",
+    "subgenre": "Gothic Historical",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "african american history",
       "ohio",
-      "history",
-      "fiction"
+      "history"
     ],
     "pace": "medium",
     "pages": 321,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8261367-L.jpg"
   },
   {
@@ -5892,24 +5559,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Cloud Atlas",
     "author": "David Mitchell",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Fate And Fatalism",
+    "genre": "scienceFiction",
+    "subgenre": "Literary Science Fiction",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "mysterious": 0.75,
+      "escapist": 0.6
     },
     "themes": [
       "fate and fatalism",
-      "fiction",
       "reincarnation",
       "fantasy"
     ],
     "pace": "medium",
     "pages": 537,
     "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6714077-L.jpg"
   },
   {
@@ -5918,11 +5584,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Jean M. Auel",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Neanderthals",
+    "subgenre": "Prehistoric Fiction",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.4
+      "escapist": 0.9,
+      "emotional": 0.75,
+      "intense": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "neanderthals",
@@ -5930,11 +5597,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "sign language",
       "taboos"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 524,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12529015-L.jpg"
   },
   {
@@ -5943,38 +5610,35 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Diana Gabaldon",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Historical Fiction",
+    "subgenre": "Time-Travel Historical",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "historical fiction",
       "history",
-      "scotland in fiction",
-      "fiction"
+      "scotland in fiction"
     ],
     "pace": "slow",
     "pages": 672,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14428230-L.jpg"
   },
   {
     "slug": "ol-ol274518w",
-    "title": "El amor en los tiempos del cólera",
+    "title": "Love in the Time of Cholera",
     "author": "Gabriel García Márquez",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Vida Familiar",
+    "genre": "romance",
+    "subgenre": "Literary Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.4,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "vida familiar",
@@ -5985,33 +5649,31 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 451,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/10096404-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol27778127w",
     "title": "Their Eyes Were Watching God",
     "author": "Zora Neale Hurston",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "African American Women",
+    "genre": "literaryFiction",
+    "subgenre": "Classic Novel",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
       "african american women",
-      "fiction",
       "psychology",
       "self-realization"
     ],
     "pace": "medium",
     "pages": 231,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12752055-L.jpg"
   },
   {
@@ -6019,14 +5681,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Mystery of the Blue Train",
     "author": "Agatha Christie",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Crimes Against",
+    "genre": "mysteryThriller",
+    "subgenre": "Golden Age Mystery",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.4,
-      "intense": 0.9,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "escapist": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "crimes against",
@@ -6038,7 +5698,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 257,
     "popularity": 0.77,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14575533-L.jpg"
   },
   {
@@ -6046,25 +5706,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Sun Also Rises",
     "author": "Ernest Hemingway",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Americans",
+    "genre": "literaryFiction",
+    "subgenre": "Lost Generation Classic",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
       "americans",
       "history",
-      "fiction",
       "american literature"
     ],
     "pace": "medium",
     "pages": 249,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/78741-L.jpg"
   },
   {
@@ -6073,12 +5730,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ian McEwan",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Historical Romance",
+    "subgenre": "WWII Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "lightFun": 0.7
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "historical romance",
@@ -6089,35 +5746,32 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 384,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8381043-L.jpg"
   },
   {
     "slug": "ol-ol471940w",
-    "title": "Poirot investigates",
+    "title": "Poirot Investigates",
     "author": "Agatha Christie",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Private Investigators",
+    "genre": "mysteryThriller",
+    "subgenre": "Golden Age Mystery",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "cozy": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "private investigators",
       "belgians",
-      "detective and mystery stories",
-      "fiction"
+      "detective and mystery stories"
     ],
     "pace": "medium",
     "pages": 192,
     "popularity": 0.73,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13670505-L.jpg"
   },
   {
@@ -6125,25 +5779,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "A Darker Shade of Magic",
     "author": "V. E. Schwab",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Quantum Theory",
+    "genre": "fantasy",
+    "subgenre": "Parallel-World Fantasy",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.7,
-      "thoughtProvoking": 0.4,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "intense": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "quantum theory",
       "magic",
-      "fiction",
       "magic - fiction"
     ],
     "pace": "medium",
     "pages": 400,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7410930-L.jpg"
   },
   {
@@ -6152,14 +5805,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Philip Roth",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Alternate History",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
-      "fiction",
       "fiction - general",
       "historical - general",
       "political"
@@ -6167,35 +5819,32 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 400,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8349176-L.jpg"
   },
   {
     "slug": "ol-ol2941508w",
-    "title": "The secret life of bees",
+    "title": "The Secret Life of Bees",
     "author": "Sue Monk Kidd",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Teenage Girls",
+    "subgenre": "Coming of Age",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.4,
-      "lightFun": 0.7,
-      "mysterious": 0.9
+      "emotional": 0.9,
+      "cozy": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "teenage girls",
-      "fiction",
       "african american women",
       "beekeepers"
     ],
     "pace": "medium",
     "pages": 303,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/402759-L.jpg"
   },
   {
@@ -6204,14 +5853,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Sara Gruen",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Circus Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
-      "fiction",
       "circus performers",
       "depression era",
       "historical"
@@ -6219,8 +5867,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 355,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/6690864-L.jpg"
   },
   {
@@ -6229,15 +5877,14 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Pam Muñoz Ryan",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Agricultural Laborers",
+    "subgenre": "Young Adult Historical",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "agricultural laborers",
-      "fiction",
       "juvenile works",
       "juvenile fiction"
     ],
@@ -6245,7 +5892,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 262,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/275937-L.jpg"
   },
   {
@@ -6254,23 +5901,22 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Colson Whitehead",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "History",
+    "subgenre": "Alternate Slavery History",
     "moodProfile": {
-      "emotional": 0.6,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "history",
       "underground railroad",
-      "fiction",
       "fugitive slaves"
     ],
     "pace": "medium",
     "pages": 378,
     "popularity": 0.82,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7899016-L.jpg"
   },
   {
@@ -6279,14 +5925,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Edith Wharton",
     "language": "en",
     "genre": "historicalFiction",
-    "subgenre": "Fiction",
+    "subgenre": "Classic Novel",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.4
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
-      "fiction",
       "upper class",
       "married people",
       "separated people"
@@ -6294,8 +5938,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 348,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11196262-L.jpg"
   },
   {
@@ -6303,24 +5947,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Redeeming Love",
     "author": "Francine Rivers",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Prostitutes In Fiction",
+    "genre": "romance",
+    "subgenre": "Christian Romance",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.4
+      "emotional": 0.9,
+      "cozy": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "prostitutes in fiction",
       "frontier and pioneer life",
-      "prostitutes",
-      "fiction"
+      "prostitutes"
     ],
     "pace": "medium",
     "pages": 474,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8272833-L.jpg"
   },
   {
@@ -6328,25 +5971,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The One and Only Ivan",
     "author": "Katherine Applegate",
     "language": "en",
-    "genre": "historicalFiction",
-    "subgenre": "Animals",
+    "genre": "youngAdult",
+    "subgenre": "Animal Middle Grade",
     "moodProfile": {
-      "emotional": 0.8,
-      "escapist": 0.5,
-      "thoughtProvoking": 0.4,
-      "cozy": 0.8
+      "emotional": 0.9,
+      "cozy": 0.75,
+      "thoughtProvoking": 0.6,
+      "lightFun": 0.45
     },
     "themes": [
       "animals",
       "elephants",
-      "fiction",
       "gorilla"
     ],
     "pace": "medium",
     "pages": 322,
     "popularity": 0.81,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12656488-L.jpg"
   },
   {
@@ -6355,10 +5997,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "David Goggins",
     "language": "en",
     "genre": "biography",
-    "subgenre": "New York Times Bestseller",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.7
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "new york times bestseller",
@@ -6370,7 +6013,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 364,
     "popularity": 0.95,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8305903-L.jpg"
   },
   {
@@ -6379,11 +6022,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Stephen King",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Writing",
+    "subgenre": "Writing Memoir",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "writing",
@@ -6394,8 +6037,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 288,
     "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9255939-L.jpg"
   },
   {
@@ -6403,12 +6046,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Fear and Loathing in Las Vegas",
     "author": "Hunter S. Thompson",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Comedy",
+    "genre": "nonFiction",
+    "subgenre": "Gonzo Journalism",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.7,
-      "lightFun": 0.7
+      "lightFun": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "comedy",
@@ -6419,8 +6062,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 206,
     "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/13396-L.jpg"
   },
   {
@@ -6429,10 +6072,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "A. P. J. Abdul Kalam",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Biography",
+    "subgenre": "Autobiography",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.7
+      "thoughtProvoking": 0.9,
+      "escapist": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "biography",
@@ -6443,7 +6087,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 180,
     "popularity": 0.89,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9153819-L.jpg"
   },
   {
@@ -6451,24 +6095,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "A Farewell to Arms",
     "author": "Ernest Hemingway",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Cuentos De Guerra",
+    "genre": "historicalFiction",
+    "subgenre": "WWI Drama",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "cuentos de guerra",
       "open library staff picks",
-      "fiction",
       "campaigns"
     ],
     "pace": "medium",
     "pages": 332,
     "popularity": 0.84,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7226599-L.jpg"
   },
   {
@@ -6476,11 +6119,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Never Split the Difference",
     "author": "Chris Voss",
     "language": "en",
-    "genre": "biography",
+    "genre": "selfDevelopment",
     "subgenre": "Negotiation",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75
     },
     "themes": [
       "negotiation",
@@ -6492,19 +6135,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 288,
     "popularity": 0.86,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8365942-L.jpg"
   },
   {
     "slug": "ol-ol1938043w",
-    "title": "Fear no evil",
+    "title": "Fear No Evil",
     "author": "Anatoly Shcharansky",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Biography",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "biography",
@@ -6515,8 +6159,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 437,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9156872-L.jpg"
   },
   {
@@ -6525,11 +6169,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Rebecca Skloot",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Cancer",
+    "subgenre": "Science Biography",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75
     },
     "themes": [
       "cancer",
@@ -6541,7 +6184,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 381,
     "popularity": 0.81,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8364866-L.jpg"
   },
   {
@@ -6550,12 +6193,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "David Sedaris",
     "language": "en",
     "genre": "biography",
-    "subgenre": "David Sedaris",
+    "subgenre": "Humor Essays",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "intense": 0.9,
-      "lightFun": 0.7
+      "lightFun": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "david sedaris",
@@ -6566,44 +6207,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 272,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8567510-L.jpg"
   },
   {
-    "slug": "ol-ol1067314w",
-    "title": "Mein Kampf",
-    "author": "Adolf Hitler",
-    "language": "en",
-    "genre": "biography",
-    "subgenre": "Politics And Government",
-    "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
-    },
-    "themes": [
-      "politics and government",
-      "national socialism",
-      "general",
-      "germany"
-    ],
-    "pace": "medium",
-    "pages": 615,
-    "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/12724015-L.jpg"
-  },
-  {
     "slug": "ol-ol3946622w",
-    "title": "Gorin no sho",
+    "title": "The Book of Five Rings",
     "author": "Miyamoto Musashi",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Biography",
+    "genre": "selfDevelopment",
+    "subgenre": "Strategy Philosophy",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75
     },
     "themes": [
       "biography",
@@ -6615,8 +6232,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 124,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/6621293-L.jpg"
+    "available": true,
+    "coverUrl": "https://covers.openlibrary.org/b/id/15218876-L.jpg"
   },
   {
     "slug": "ol-ol17201654w",
@@ -6624,11 +6241,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Ta-Nehisi Coates",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Race Discrimination",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "race discrimination",
@@ -6639,8 +6256,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 156,
     "popularity": 0.81,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11328078-L.jpg"
   },
   {
@@ -6649,10 +6266,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Paul Kalanithi",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Philosophy",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "philosophy",
@@ -6664,7 +6282,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 232,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11463139-L.jpg"
   },
   {
@@ -6673,11 +6291,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "J. D. Vance",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Mountain People",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8,
-      "cozy": 0.8
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "mountain people",
@@ -6688,8 +6306,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 272,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14846900-L.jpg"
   },
   {
@@ -6697,11 +6315,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Paradise Lost",
     "author": "John Milton",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Bible",
+    "genre": "literaryFiction",
+    "subgenre": "Epic Poem",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "magical": 0.6
     },
     "themes": [
       "bible",
@@ -6709,23 +6328,25 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "criticism and interpretation",
       "devil"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 333,
     "popularity": 0.79,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/5992814-L.jpg"
   },
   {
     "slug": "ol-ol93082w",
-    "title": "La Divina Commedia",
+    "title": "The Divine Comedy",
     "author": "Dante Alighieri",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Literatura",
+    "genre": "literaryFiction",
+    "subgenre": "Epic Poem",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "mysterious": 0.6,
+      "magical": 0.45
     },
     "themes": [
       "literatura",
@@ -6733,24 +6354,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "paradise",
       "poetry"
     ],
-    "pace": "medium",
+    "pace": "slow",
     "pages": 503,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/11621024-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol1974548w",
     "title": "Into Thin Air",
     "author": "Jon Krakauer",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "History",
+    "genre": "nonFiction",
+    "subgenre": "Mountaineering",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8,
-      "escapist": 0.7
+      "intense": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "history",
@@ -6762,7 +6383,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 335,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/241603-L.jpg"
   },
   {
@@ -6770,24 +6391,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "From the Mixed-Up Files of Mrs. Basil E. Frankweiler",
     "author": "E. L. Konigsburg",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Juvenile Fiction",
+    "genre": "youngAdult",
+    "subgenre": "Children's Mystery",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "mysterious": 0.9,
+      "escapist": 0.75,
+      "lightFun": 0.6,
+      "cozy": 0.45
     },
     "themes": [
       "juvenile fiction",
       "large type books",
-      "fiction",
       "runaways"
     ],
     "pace": "medium",
     "pages": 162,
     "popularity": 0.78,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/541206-L.jpg"
   },
   {
@@ -6795,11 +6416,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Moonwalking with Einstein",
     "author": "Joshua Foer",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "New York Times Bestseller",
+    "genre": "nonFiction",
+    "subgenre": "Popular Science",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "lightFun": 0.75
     },
     "themes": [
       "new york times bestseller",
@@ -6811,20 +6432,20 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 307,
     "popularity": 0.8,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14426425-L.jpg"
   },
   {
     "slug": "ol-ol860066w",
-    "title": "Se questo è un uomo",
+    "title": "If This Is a Man",
     "author": "Primo Levi",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Italian Personal Narratives",
+    "subgenre": "Holocaust Memoir",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "intense": 0.9
+      "emotional": 0.9,
+      "intense": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "italian personal narratives",
@@ -6835,9 +6456,9 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 206,
     "popularity": 0.78,
-    "ageSuitability": "all",
-    "available": false,
-    "coverUrl": "https://covers.openlibrary.org/b/id/1049023-L.jpg"
+    "ageSuitability": "adult",
+    "available": true,
+    "coverUrl": null
   },
   {
     "slug": "ol-ol16142316w",
@@ -6845,11 +6466,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Cheryl Strayed",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Travel",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.7,
-      "escapist": 0.7
+      "emotional": 0.9,
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6
     },
     "themes": [
       "travel",
@@ -6860,8 +6481,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 363,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7249596-L.jpg"
   },
   {
@@ -6870,10 +6491,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Corrie ten Boom",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Concentration Camps",
+    "subgenre": "WWII Memoir",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "concentration camps",
@@ -6885,7 +6507,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 241,
     "popularity": 0.77,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12817925-L.jpg"
   },
   {
@@ -6893,24 +6515,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Stone Butch Blues",
     "author": "Leslie Feinberg",
     "language": "en",
-    "genre": "biography",
-    "subgenre": "Gay",
+    "genre": "literaryFiction",
+    "subgenre": "Literary Fiction",
     "moodProfile": {
-      "emotional": 0.8,
-      "thoughtProvoking": 0.7,
-      "intense": 0.9
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "gay",
-      "fiction",
       "lgbt",
       "transsexuals"
     ],
     "pace": "medium",
     "pages": 440,
     "popularity": 0.75,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/3935729-L.jpg"
   },
   {
@@ -6919,10 +6540,10 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Yogananda Paramahansa",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Autobiography",
+    "subgenre": "Spiritual Autobiography",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.7
+      "thoughtProvoking": 0.9,
+      "emotional": 0.75
     },
     "themes": [
       "autobiography",
@@ -6934,7 +6555,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 514,
     "popularity": 0.82,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/805448-L.jpg"
   },
   {
@@ -6943,10 +6564,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Susanna Kaysen",
     "language": "en",
     "genre": "biography",
-    "subgenre": "Mental Health",
+    "subgenre": "Memoir",
     "moodProfile": {
-      "emotional": 0.5,
-      "thoughtProvoking": 0.7
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "intense": 0.6
     },
     "themes": [
       "mental health",
@@ -6957,8 +6579,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "medium",
     "pages": 168,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/3956219-L.jpg"
   },
   {
@@ -6966,13 +6588,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Lost Hero",
     "author": "Rick Riordan",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "New York Times Bestseller",
+    "genre": "fantasy",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.7,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "new york times bestseller",
@@ -6980,11 +6601,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "adventure",
       "kids"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 556,
     "popularity": 0.95,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12848687-L.jpg"
   },
   {
@@ -6992,26 +6613,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Mark of Athena",
     "author": "Rick Riordan",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Greek Gods",
+    "genre": "fantasy",
+    "subgenre": "Mythological Adventure",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.7,
       "magical": 0.9,
-      "emotional": 0.8
+      "escapist": 0.75,
+      "lightFun": 0.6
     },
     "themes": [
       "greek gods",
       "camps",
-      "action & adventure",
       "greek mythology"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 582,
     "popularity": 0.92,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12848680-L.jpg"
   },
   {
@@ -7020,13 +6638,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "author": "Gary Paulsen",
     "language": "en",
     "genre": "adventure",
-    "subgenre": "Divorce",
+    "subgenre": "Survival Adventure",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.7,
-      "emotional": 0.8,
-      "mysterious": 0.9
+      "escapist": 0.9,
+      "intense": 0.75,
+      "emotional": 0.6
     },
     "themes": [
       "divorce",
@@ -7038,7 +6654,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 192,
     "popularity": 0.94,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/11240448-L.jpg"
   },
   {
@@ -7046,15 +6662,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The BFG",
     "author": "Roald Dahl",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Open Library Staff Picks",
+    "genre": "fantasy",
+    "subgenre": "Children's Fantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.7,
-      "magical": 0.9,
-      "cozy": 0.8,
-      "emotional": 0.8
+      "lightFun": 0.9,
+      "magical": 0.75,
+      "escapist": 0.6,
+      "cozy": 0.45
     },
     "themes": [
       "open library staff picks",
@@ -7066,7 +6680,7 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pages": 208,
     "popularity": 0.93,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9176033-L.jpg"
   },
   {
@@ -7074,13 +6688,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Prince Caspian",
     "author": "C. S. Lewis",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Fantasy",
+    "genre": "fantasy",
+    "subgenre": "Children's Fantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "fantasy",
@@ -7088,11 +6701,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "juvenile fiction",
       "good and evil"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 216,
     "popularity": 0.9,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/45897-L.jpg"
   },
   {
@@ -7100,13 +6713,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Voyage of the Dawn Treader",
     "author": "C. S. Lewis",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Narnia",
+    "genre": "fantasy",
+    "subgenre": "Children's Fantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4,
-      "magical": 0.9
+      "magical": 0.9,
+      "escapist": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "narnia",
@@ -7114,11 +6726,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "children's fiction",
       "fantasy fiction"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 224,
     "popularity": 0.91,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9184719-L.jpg"
   },
   {
@@ -7126,24 +6738,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Silmarillion",
     "author": "J.R.R. Tolkien",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Fantasy Fiction",
+    "genre": "fantasy",
+    "subgenre": "Mythopoeic Fantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4
+      "magical": 0.9,
+      "thoughtProvoking": 0.75,
+      "escapist": 0.6,
+      "intense": 0.45
     },
     "themes": [
       "fantasy fiction",
       "short stories",
-      "elves",
-      "fiction"
+      "elves"
     ],
-    "pace": "fast",
+    "pace": "slow",
     "pages": 424,
     "popularity": 0.92,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14627042-L.jpg"
   },
   {
@@ -7151,15 +6763,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "The Gunslinger",
     "author": "Stephen King",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Succubus",
+    "genre": "fantasy",
+    "subgenre": "Dark Fantasy Western",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4,
-      "magical": 0.9,
-      "thoughtProvoking": 0.8,
-      "mysterious": 0.9
+      "intense": 0.9,
+      "mysterious": 0.75,
+      "magical": 0.6,
+      "escapist": 0.45
     },
     "themes": [
       "succubus",
@@ -7167,29 +6777,27 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "american fiction",
       "fantastic fiction"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 256,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/8396638-L.jpg"
   },
   {
     "slug": "ol-ol7924135w",
-    "title": "The Great Hunt (The Wheel of Time Book 2)",
+    "title": "The Great Hunt",
     "author": "Robert Jordan",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Fiction",
+    "genre": "fantasy",
+    "subgenre": "Epic Fantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.4,
       "magical": 0.9,
-      "emotional": 0.8
+      "escapist": 0.75,
+      "intense": 0.6,
+      "emotional": 0.45
     },
     "themes": [
-      "fiction",
       "fantasy fiction",
       "fantasy",
       "aes sedai"
@@ -7197,8 +6805,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "slow",
     "pages": 656,
     "popularity": 0.89,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/182352-L.jpg"
   },
   {
@@ -7206,26 +6814,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Xenocide",
     "author": "Orson Scott Card",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Space Warfare",
+    "genre": "scienceFiction",
+    "subgenre": "Philosophical Science Fiction",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.9,
-      "lightFun": 0.4,
-      "emotional": 0.8,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.9,
+      "intense": 0.75,
+      "escapist": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "space warfare",
-      "fiction",
       "life on other planets",
       "viruses"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 569,
     "popularity": 0.89,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/10564838-L.jpg"
   },
   {
@@ -7233,14 +6839,12 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "They Both Die at the End",
     "author": "Adam Silvera",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Death",
+    "genre": "youngAdult",
+    "subgenre": "Contemporary Drama",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4,
-      "cozy": 0.8,
-      "emotional": 0.8
+      "emotional": 0.9,
+      "thoughtProvoking": 0.75,
+      "cozy": 0.6
     },
     "themes": [
       "death",
@@ -7248,11 +6852,11 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
       "gay men",
       "adventure and adventurers"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 373,
     "popularity": 0.87,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9280553-L.jpg"
   },
   {
@@ -7260,26 +6864,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Fire & Blood",
     "author": "George R. R. Martin",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Kings And Rulers",
+    "genre": "fantasy",
+    "subgenre": "Fictional History",
     "moodProfile": {
-      "escapist": 0.8,
       "intense": 0.9,
-      "lightFun": 0.4,
-      "magical": 0.9,
-      "emotional": 0.8
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "kings and rulers",
       "magic",
-      "monarchy",
-      "fiction"
+      "monarchy"
     ],
     "pace": "slow",
     "pages": 840,
     "popularity": 0.83,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/12063529-L.jpg"
   },
   {
@@ -7287,13 +6889,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "A Clockwork Orange",
     "author": "Anthony Burgess",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Bible",
+    "genre": "scienceFiction",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.8,
       "intense": 0.9,
-      "lightFun": 0.7,
-      "thoughtProvoking": 0.8
+      "thoughtProvoking": 0.75,
+      "lightFun": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "bible",
@@ -7304,8 +6906,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 192,
     "popularity": 0.86,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14430663-L.jpg"
   },
   {
@@ -7313,24 +6915,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Blood Meridian",
     "author": "Cormac McCarthy",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Fiction",
+    "genre": "historicalFiction",
+    "subgenre": "Western Historical",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.7
+      "intense": 0.9,
+      "thoughtProvoking": 0.75,
+      "mysterious": 0.6
     },
     "themes": [
-      "fiction",
       "glanton gang",
       "outlaws",
       "teenage boys"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 353,
     "popularity": 0.72,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/419991-L.jpg"
   },
   {
@@ -7338,12 +6939,13 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Iron Flame",
     "author": "Rebecca Yarros",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "New York Times Bestseller",
+    "genre": "fantasy",
+    "subgenre": "Romantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4
+      "intense": 0.9,
+      "escapist": 0.75,
+      "magical": 0.6,
+      "emotional": 0.45
     },
     "themes": [
       "new york times bestseller"
@@ -7351,8 +6953,8 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "pace": "fast",
     "pages": 640,
     "popularity": 0.8,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14405746-L.jpg"
   },
   {
@@ -7360,25 +6962,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Red Rising",
     "author": "Pierce Brown",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Fantasy",
+    "genre": "scienceFiction",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.8,
       "intense": 0.9,
-      "lightFun": 0.4,
-      "thoughtProvoking": 0.8
+      "escapist": 0.75,
+      "thoughtProvoking": 0.6,
+      "mysterious": 0.45
     },
     "themes": [
       "fantasy",
-      "fiction",
-      "dystopia",
-      "young adult"
+      "dystopia"
     ],
     "pace": "fast",
     "pages": 416,
     "popularity": 0.9,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "adult",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/7316188-L.jpg"
   },
   {
@@ -7386,25 +6986,23 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Sunrise on the Reaping",
     "author": "Suzanne Collins",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Dystopia",
+    "genre": "youngAdult",
+    "subgenre": "Dystopian",
     "moodProfile": {
-      "escapist": 0.8,
       "intense": 0.9,
-      "lightFun": 0.4,
-      "thoughtProvoking": 0.8
+      "emotional": 0.75,
+      "escapist": 0.6,
+      "thoughtProvoking": 0.45
     },
     "themes": [
       "dystopia",
-      "young adult",
-      "fantasy",
-      "fiction"
+      "fantasy"
     ],
     "pace": "fast",
     "pages": 400,
     "popularity": 0.77,
-    "ageSuitability": "all",
-    "available": false,
+    "ageSuitability": "teen",
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/14847912-L.jpg"
   },
   {
@@ -7412,27 +7010,24 @@ export const IMPORTED_CATALOG: CatalogBook[] = [
     "title": "Keeper of the Lost Cities",
     "author": "Shannon Messenger",
     "language": "en",
-    "genre": "adventure",
-    "subgenre": "Ability",
+    "genre": "fantasy",
+    "subgenre": "Middle Grade Fantasy",
     "moodProfile": {
-      "escapist": 0.8,
-      "intense": 0.5,
-      "lightFun": 0.4,
       "magical": 0.9,
-      "cozy": 0.8,
-      "emotional": 0.8
+      "escapist": 0.75,
+      "cozy": 0.6,
+      "lightFun": 0.45
     },
     "themes": [
       "ability",
-      "fiction",
       "fantasy",
       "psychic ability"
     ],
-    "pace": "fast",
+    "pace": "medium",
     "pages": 512,
     "popularity": 0.85,
     "ageSuitability": "all",
-    "available": false,
+    "available": true,
     "coverUrl": "https://covers.openlibrary.org/b/id/9320507-L.jpg"
   }
 ];

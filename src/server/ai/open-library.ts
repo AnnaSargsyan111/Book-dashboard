@@ -34,10 +34,12 @@ export interface OpenLibraryWork {
   authors: string[];
   coverId: number | null;
   subjects: string[];
+  /** The people (characters) librarians catalogued for this work: "Elizabeth Bennet", "Marianne Sheridan (fictional character)". */
+  people?: string[];
 }
 
 interface SearchResponse {
-  docs?: Array<{ key?: string; title?: string; author_name?: string[]; cover_i?: number; subject?: string[] }>;
+  docs?: Array<{ key?: string; title?: string; author_name?: string[]; cover_i?: number; subject?: string[]; person?: string[] }>;
 }
 
 /** lower case, accents removed ("Saint-Exupéry" = "saint exupery", "Brontë" = "bronte"), punctuation turned into spaces */
@@ -63,7 +65,7 @@ export async function searchWorks(title: string, author?: string, limit = 8): Pr
   const params = new URLSearchParams({
     q: [title, author].filter(Boolean).join(" "),
     limit: String(limit),
-    fields: "key,title,author_name,cover_i,subject",
+    fields: "key,title,author_name,cover_i,subject,person",
   });
   const data = await fetchJson<SearchResponse>(`${SEARCH_URL}?${params}`);
   return (data?.docs ?? [])
@@ -74,6 +76,7 @@ export async function searchWorks(title: string, author?: string, limit = 8): Pr
       authors: d.author_name ?? [],
       coverId: d.cover_i ?? null,
       subjects: d.subject ?? [],
+      people: d.person ?? [],
     }));
 }
 
@@ -219,6 +222,32 @@ export function genresFromSubjects(subjects: string[]): string[] {
   // A bare "Fiction" adds nothing next to a more specific genre.
   const specific = known.length > 1 ? known.filter((g) => g !== "Fiction") : known;
   return specific.length ? specific.slice(0, 4) : clean.slice(0, 2);
+}
+
+/** Words that mark a catalogue qualifier rather than a name: "Harry Potter (Fictitious character)". */
+const CHARACTER_QUALIFIER = /\s*\((?:[^)]*\b(?:fictitious|fictional|fiction)\b[^)]*|character)\)\s*$/i;
+
+/**
+ * The main characters, from the people Open Library lists for the work (librarians catalogue these — nothing is
+ * invented). Cleaned the way a reader would write them: the "(Fictitious character)" tag dropped, "Weasley, Ron"
+ * turned into "Ron Weasley", dates and over-long entries (real people catalogued with years, "Napoleon I, ... 1769-1821")
+ * skipped, repeats and bare first names of a name already listed ("Dumbledore" then "Albus Dumbledore") folded together.
+ * Keeps the first few, which is the catalogue's own order and in practice the central cast.
+ */
+export function charactersFromPeople(people: string[] | undefined, max: number, maxLength: number): string[] {
+  const kept: string[] = [];
+  const words = (s: string) => norm(s).split(" ").filter(Boolean);
+  for (const raw of people ?? []) {
+    let name = raw.replace(CHARACTER_QUALIFIER, "").replace(/\s+/g, " ").trim();
+    const comma = name.split(",");
+    if (comma.length === 2 && comma.every((p) => /^[\p{L}.'’ -]+$/u.test(p.trim()))) name = `${comma[1]!.trim()} ${comma[0]!.trim()}`;
+    if (!name || name.length > maxLength || /\d|[,;:()]/.test(name) || name.split(/\s+/).length > 4) continue;
+    const mine = words(name);
+    if (kept.some((k) => { const theirs = words(k); return mine.every((w) => theirs.includes(w)) || theirs.every((w) => mine.includes(w)); })) continue;
+    kept.push(name);
+    if (kept.length >= max) break;
+  }
+  return kept;
 }
 
 interface WorkResponse {

@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * A book's cover — or, when there isn't one yet, a bookplate-style placeholder: a warm gradient, an inset frame
@@ -9,15 +11,28 @@ import type { ReactNode } from "react";
  * `overlay`, when given, sits directly on the cover behind a warm dark scrim fading up from the bottom — the
  * library grid's card metadata lives here, ON the cover itself, the way a real book's own jacket carries its
  * title. Omit it (Book Detail's own, larger cover) and the cover is shown plain.
+ *
+ * A `src` that doesn't load (a dead link, a blocked host) falls back to the same placeholder, so a broken-image icon
+ * never shows.
  */
 export function CoverImage({ src, title, alt, overlay }: { src: string | null; title: string; alt: string; overlay?: ReactNode }) {
   const initial = title.trim().charAt(0).toUpperCase() || "?";
+  // Remember WHICH url failed (not just "failed"), so a new `src` is tried afresh without any reset effect.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const showImage = Boolean(src) && failedSrc !== src;
+
+  // An image that already failed before React attached `onError` (server-rendered markup) never fires it again.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (src && img?.complete && img.naturalWidth === 0) setFailedSrc(src);
+  }, [src]);
 
   return (
     <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl bg-surface">
-      {src ? (
+      {showImage ? (
         // eslint-disable-next-line @next/next/no-img-element -- covers may be an arbitrary external URL
-        <img src={src} alt={alt} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
+        <img ref={imgRef} src={src ?? undefined} alt={alt} onError={() => setFailedSrc(src)} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
       ) : (
         <div
           className="relative h-full w-full"

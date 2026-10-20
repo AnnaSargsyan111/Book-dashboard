@@ -3,8 +3,8 @@
 //
 // What Open Library supplies: title, author, cover, page count, ratings, subjects. What it does NOT supply, and so is
 // *drafted here by rule* and meant to be reviewed: the 0-1 mood profile, pace, age suitability and popularity score.
-// Every imported book is written with `available: false` — nothing here is offered or ordered until someone who can
-// actually supply the book switches it on (edit the flag in the generated file, or ask for it to be flipped).
+// Every imported book is written with `available: true`, so the whole import is recommended and orderable. To hold a
+// title back (say, it can't be supplied), set its flag to `false` in the generated file.
 import { readFileSync, writeFileSync } from "node:fs";
 
 const PER_GENRE = 25;
@@ -195,7 +195,7 @@ for (const [genre, clause] of Object.entries(GENRES)) {
       pages: d.number_of_pages_median,
       popularity,
       ageSuitability: finalGenre === "youngAdult" ? "teen" : finalGenre === "horror" ? "adult" : "all",
-      available: false,
+      available: true,
       coverUrl: `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`,
     });
   }
@@ -209,8 +209,8 @@ const header = `import type { CatalogBook } from "./catalog";
  * ${books.length} popular English titles imported from Open Library by \`scripts/import-catalog.mjs\` (re-run it to
  * refresh; slugs are \`ol-<Open Library work id>\`, stable). Title, author, cover, page count and the popularity score
  * come from Open Library; the mood profile, pace and age suitability are DRAFTED by rule from each book's subjects
- * and genre and should be reviewed. Every book is \`available: false\`: it is not recommended or orderable until
- * someone who can really supply it sets that to \`true\`.
+ * and genre and should be reviewed. Every book is \`available: true\` (recommended and orderable); set a title's flag
+ * to \`false\` to take it out of every recommendation.
  */
 export const IMPORTED_CATALOG: CatalogBook[] = `;
 writeFileSync(new URL("../src/server/mystery/catalog-imported.ts", import.meta.url), header + JSON.stringify(books, null, 2) + ";\n");

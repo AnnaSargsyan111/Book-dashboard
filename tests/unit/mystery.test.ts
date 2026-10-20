@@ -124,16 +124,16 @@ describe("pickBook (Sections 9–11, filtering + ranking)", () => {
     expect(result?.slug).toBe(inStock[inStock.length - 1]!.slug);
   });
 
-  it("keeps the Open Library import (all out of stock) out of every recommendation until it is switched on", () => {
+  it("offers the Open Library import in recommendations once the hand-curated titles are used up", () => {
     const imported = CATALOG.filter((b) => b.slug.startsWith("ol-"));
     expect(imported.length).toBeGreaterThan(250);
-    expect(imported.every((b) => !b.available)).toBe(true);
+    expect(imported.every((b) => b.available)).toBe(true);
     expect(new Set(CATALOG.map((b) => b.slug)).size).toBe(CATALOG.length);
 
-    // Even with every hand-curated title used up, nothing imported is offered — the honest answer is "no match".
-    const handCurated = new Set(CATALOG.filter((b) => b.available).map((b) => b.slug));
+    // With every hand-curated title used up, an imported one is still offered instead of "no match".
+    const handCurated = new Set(CATALOG.filter((b) => !b.slug.startsWith("ol-")).map((b) => b.slug));
     const result = pickBook({ moods: ["intense"], revealMode: "keep_mystery" }, { profile: emptyProfile, books: [], previousSlugs: handCurated });
-    expect(result).toBeNull();
+    expect(result?.slug.startsWith("ol-")).toBe(true);
   });
 
   it("never returns a book flagged unavailable", () => {

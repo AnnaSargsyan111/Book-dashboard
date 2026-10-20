@@ -145,7 +145,34 @@ describe("POST /api/v1/books/ai-fill", () => {
     expect((await aiFill(req("/api/v1/books/ai-fill", { title: "Dune" }))).status).toBe(401);
   });
 
-  it("fills in Author/Genres/Plot from Open Library, with Characters always empty", async () => {
+  it("fills in the main characters Open Library has catalogued, cleaned up and capped", async () => {
+    const { cookie } = await signedUp();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) =>
+        String(url).includes("search.json")
+          ? new Response(
+              JSON.stringify({
+                docs: [
+                  {
+                    key: "/works/OL2W",
+                    title: "Pride and Prejudice",
+                    author_name: ["Jane Austen"],
+                    cover_i: 1,
+                    person: ["Elizabeth Bennet (Fictitious character)", "Darcy, Fitzwilliam", "Elizabeth Bennet", "Napoleon I, Emperor of the French, 1769-1821", "Jane Bennet", "Charlotte Lucas", "George Wickham", "Mr. Bennet", "Mrs. Bennet"],
+                  },
+                ],
+              }),
+              { status: 200 },
+            )
+          : new Response(JSON.stringify({}), { status: 200 }),
+      ),
+    );
+    const res = await aiFill(req("/api/v1/books/ai-fill", { title: "Pride and Prejudice" }, { cookie }));
+    expect((await json(res)).characters).toEqual(["Elizabeth Bennet", "Fitzwilliam Darcy", "Jane Bennet", "Charlotte Lucas", "George Wickham", "Mr. Bennet"]);
+  });
+
+  it("fills in Author/Genres/Plot from Open Library, with Characters empty when none are catalogued", async () => {
     const { cookie } = await signedUp();
     vi.stubGlobal(
       "fetch",
