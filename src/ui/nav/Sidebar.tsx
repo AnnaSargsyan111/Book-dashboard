@@ -123,7 +123,7 @@ export function Sidebar() {
               const Icon = item.icon;
               return (
                 <li key={item.href}>
-                  <Link href={item.href} aria-current={active ? "page" : undefined} data-active={active || undefined} className="sidebar-link">
+                  <Link href={item.href} prefetch aria-current={active ? "page" : undefined} data-active={active || undefined} className="sidebar-link">
                     <span className="sidebar-link-icon">
                       <Icon className="size-[1.0625rem]" strokeWidth={1.75} aria-hidden="true" />
                     </span>

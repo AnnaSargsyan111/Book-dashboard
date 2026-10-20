@@ -20,6 +20,15 @@ export class ApiRequestError extends Error {
 
 export const isApiRequestError = (e: unknown): e is ApiRequestError => e instanceof ApiRequestError;
 
+/** Fired on `window` after every successful write, so pages remembered for instant navigation can be dropped
+ *  (see `DataRefresher`). Reads, and the Auto-fill lookup (a POST that changes nothing), do not fire it. */
+export const DATA_CHANGED_EVENT = "mystbook:data-changed";
+
+function announceWrite(method: string, path: string) {
+  if (method === "GET" || path.endsWith("/ai-fill") || typeof window === "undefined") return;
+  window.dispatchEvent(new Event(DATA_CHANGED_EVENT));
+}
+
 /** Turns a non-ok response into the shared ApiRequestError shape (or returns the parsed body when ok). */
 async function readResponse<T>(res: Response): Promise<T> {
   if (res.ok) {
@@ -55,7 +64,9 @@ export async function apiRequest<T>(method: "GET" | "POST" | "PATCH" | "DELETE",
     if (e instanceof DOMException && e.name === "AbortError") throw e;
     throw new ApiRequestError("NETWORK", 0);
   }
-  return readResponse<T>(res);
+  const data = await readResponse<T>(res);
+  announceWrite(method, path);
+  return data;
 }
 
 /** Same contract as `apiRequest`, for a multipart upload (a cover photo) — no JSON body, no content-type header
@@ -68,5 +79,7 @@ export async function apiUpload<T>(path: string, formData: FormData, signal?: Ab
     if (e instanceof DOMException && e.name === "AbortError") throw e;
     throw new ApiRequestError("NETWORK", 0);
   }
-  return readResponse<T>(res);
+  const data = await readResponse<T>(res);
+  announceWrite("POST", path);
+  return data;
 }

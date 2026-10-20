@@ -4,6 +4,7 @@ import type { PublicUser } from "@/shared/api-errors";
 import { ROUTES } from "@/shared/routes";
 import { AccountMenu } from "./AccountMenu";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { DataRefresher } from "./DataRefresher";
 import { Logo } from "./Logo";
 import { MobileNav } from "./nav/MobileNav";
 import { Sidebar } from "./nav/Sidebar";
@@ -44,6 +45,7 @@ export function AppFrame({
   return (
     <div className="min-h-dvh lg:flex">
       <Sidebar />
+      <DataRefresher />
       <div className="relative flex min-h-dvh flex-1 flex-col">
         {scene && <PageScene scene={scene} rules={rules} />}
         <header

@@ -87,7 +87,7 @@ export function MobileNav() {
                   const Icon = item.icon;
                   return (
                     <li key={item.href} className="toc-row" style={{ ["--i" as string]: i } as CSSProperties}>
-                      <Link href={item.href} aria-current={active ? "page" : undefined} data-active={active || undefined} className="toc-link">
+                      <Link href={item.href} prefetch aria-current={active ? "page" : undefined} data-active={active || undefined} className="toc-link">
                         <Icon className="size-5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
                         <span className="toc-title">{t(item.key)}</span>
                       </Link>
