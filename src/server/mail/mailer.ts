@@ -1,3 +1,4 @@
+import nodemailer from "nodemailer";
 import { getEnv, isProduction } from "@/server/config/env";
 import { log } from "@/server/log";
 
@@ -10,7 +11,7 @@ export interface EmailMessage {
 }
 
 export interface EmailProvider {
-  name: "resend" | "console";
+  name: "resend" | "gmail" | "console";
   send(message: EmailMessage): Promise<void>;
 }
 
@@ -44,8 +45,25 @@ function resendProvider(apiKey: string, from: string): EmailProvider {
   };
 }
 
+/**
+ * Sends through a Gmail account over SMTP (smtp.gmail.com), signed in with an App password — never the account's
+ * real password. Gmail delivers to any address, so this works before a domain is verified with Resend. The sender
+ * is always the Gmail address itself (Gmail rewrites any other "from"), named "MystBook". Limits worth knowing:
+ * about 500 messages a day, and mail from a personal Gmail can land in spam more often than from a verified domain.
+ */
+function gmailProvider(user: string, appPassword: string): EmailProvider {
+  const transport = nodemailer.createTransport({ host: "smtp.gmail.com", port: 465, secure: true, auth: { user, pass: appPassword } });
+  return {
+    name: "gmail",
+    async send(message) {
+      await transport.sendMail({ from: `MystBook <${user}>`, to: message.to, subject: message.subject, text: message.text, ...(message.html ? { html: message.html } : {}) });
+    },
+  };
+}
+
 export function getEmailProvider(): EmailProvider {
   const env = getEnv();
+  if (env.GMAIL_USER && env.GMAIL_APP_PASSWORD) return gmailProvider(env.GMAIL_USER.trim(), env.GMAIL_APP_PASSWORD.replace(/\s+/g, ""));
   if (env.RESEND_API_KEY && env.EMAIL_FROM) return resendProvider(env.RESEND_API_KEY, env.EMAIL_FROM);
   if (isProduction()) throw new Error("RESEND_API_KEY and EMAIL_FROM must be set in production");
   return consoleProvider;

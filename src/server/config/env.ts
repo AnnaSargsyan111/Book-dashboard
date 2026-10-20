@@ -7,6 +7,10 @@ const envSchema = z.object({
   TRUSTED_ORIGINS: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional(),
+  /** A Gmail account to send email through (with an App password) — a stop-gap for sending to anyone before a
+   *  domain is verified with Resend. When both are set, Gmail is used instead of Resend. */
+  GMAIL_USER: z.string().optional(),
+  GMAIL_APP_PASSWORD: z.string().optional(),
   /** Where "a new Mystery Book order was placed" emails go. Unset = no such email (ordering is unaffected). */
   ORDER_NOTIFICATION_EMAIL: z.string().optional(),
   /** Powers "Auto-fill" (Google Books). Without it, it still works against Google's shared keyless quota — a free
