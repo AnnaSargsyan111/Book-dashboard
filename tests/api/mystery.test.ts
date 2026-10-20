@@ -476,7 +476,7 @@ describe("order emails", () => {
     expect(mail?.subject).toBe("Գրքի պատվեր (Ցույց տվեք հիմա)");
     expect(mail?.text).toContain("Հարգելի Աննա,");
     expect(mail?.text).toContain("ԱՆՈՒՆ ԱԶԳԱՆՈՒՆ: Anna Sargsyan");
-    expect(mail?.text).toContain("ՊԱՏՎԵՐԻ ՎԱՅՐԸ: 1 Mesrop Mashtots Ave, Yerevan, 0001, Armenia");
+    expect(mail?.text).toContain("ՊԱՏՎԵՐԻ ՀԱՍՑԵ: 1 Mesrop Mashtots Ave, Yerevan, 0001, Armenia");
     expect(mail?.text).toContain("ԳԻՆ: 9,400 ֏");
     expect(mail?.text).toContain(`ԸՆՏՐՎԱԾ ԳԻՐՔԸ: ${title} (Ցույց տվեք հիմա)`);
     expect(mail?.text.trimEnd().endsWith("Ձեր սիրելի MystBook-ը")).toBe(true);

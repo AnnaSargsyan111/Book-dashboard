@@ -48,7 +48,7 @@ const COPY = {
     mysteryTitle: "Առեղծվածային գիրք",
     mysterySub: "Կբացահայտեք առեղծված, երբ ստանաք գիրքը",
     orderedBy: "ՊԱՏՎԻՐԵԼ Է",
-    orderLocation: "ՊԱՏՎԵՐԻ ՎԱՅՐԸ",
+    orderLocation: "ՊԱՏՎԵՐԻ ՀԱՍՑԵ",
     orderStatus: "ՊԱՏՎԵՐԻ ԿԱՐԳԱՎԻՃԱԿԸ",
     onTheWay: "Ճանապարհին",
     door: "Ամեն գիրք դուռ է բացում դեպի մեկ այլ աշխարհ",

@@ -22,7 +22,7 @@ const COPY = {
   selectedBook: "ԸՆՏՐՎԱԾ ԳԻՐՔԸ",
   by: (author: string) => `Հեղինակ՝ ${author}`,
   nameSurname: "ԱՆՈՒՆ ԱԶԳԱՆՈՒՆ",
-  orderLocation: "ՊԱՏՎԵՐԻ ՎԱՅՐԸ",
+  orderLocation: "ՊԱՏՎԵՐԻ ՀԱՍՑԵ",
   price: "ԳԻՆ",
   withLove: "Ձեր սիրելի",
   team: "MystBook-ը",
