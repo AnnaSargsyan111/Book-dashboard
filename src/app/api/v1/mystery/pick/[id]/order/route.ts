@@ -32,7 +32,7 @@ export const POST = route({ auth: true }, async (ctx) => {
       firstName: ctx.user!.firstName,
       lastName: ctx.user!.lastName,
       address: pick,
-      bookTitle: book.title,
+      book: { title: book.title, author: book.author, coverUrl: book.coverUrl },
       revealMode,
     }),
     sendCustomerOrderEmail(

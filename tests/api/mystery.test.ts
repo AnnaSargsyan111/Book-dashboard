@@ -470,21 +470,28 @@ describe("order emails", () => {
   }
 
   it("emails the owner when a Show me now order is placed", async () => {
-    const { mail, title } = await orderedWith("show_now");
+    const { mail, title, author, coverUrl } = await orderedWith("show_now");
     expect(mail?.to).toBe("owner@example.com");
-    expect(mail?.subject).toBe("Book order (Show me now)");
-    expect(mail?.text).toContain("Dear Anna,");
-    expect(mail?.text).toContain("Name Surname: Anna Sargsyan");
-    expect(mail?.text).toContain("Order location: 1 Mesrop Mashtots Ave, Yerevan, 0001, Armenia");
-    expect(mail?.text).toContain("Price: 9,400 ֏");
-    expect(mail?.text).toContain(`Selected book: ${title} (Show me now)`);
-    expect(mail?.text.trimEnd().endsWith("Your beloved MystBook")).toBe(true);
+    // The owner's email is in Armenian only, in the same design as the customer's.
+    expect(mail?.subject).toBe("Գրքի պատվեր (Ցույց տվեք հիմա)");
+    expect(mail?.text).toContain("Հարգելի Աննա,");
+    expect(mail?.text).toContain("ԱՆՈՒՆ ԱԶԳԱՆՈՒՆ: Anna Sargsyan");
+    expect(mail?.text).toContain("ՊԱՏՎԵՐԻ ՎԱՅՐԸ: 1 Mesrop Mashtots Ave, Yerevan, 0001, Armenia");
+    expect(mail?.text).toContain("ԳԻՆ: 9,400 ֏");
+    expect(mail?.text).toContain(`ԸՆՏՐՎԱԾ ԳԻՐՔԸ: ${title} (Ցույց տվեք հիմա)`);
+    expect(mail?.text.trimEnd().endsWith("Ձեր սիրելի MystBook-ը")).toBe(true);
+    expect(mail?.html).toContain('lang="hy"');
+    expect(mail?.html).toContain(title.replace(/&/g, "&amp;"));
+    expect(mail?.html).toContain(author.replace(/&/g, "&amp;"));
+    expect(mail?.html).toContain(coverUrl); // the owner sees the cover of the book picked
+    expect(mail?.html).toContain("(Ցույց տվեք հիմա)");
   });
 
   it("names the real book, marked as Keep it a mystery, when that mode was chosen", async () => {
     const { mail, title } = await orderedWith("keep_mystery");
-    expect(mail?.subject).toBe("Book order (Keep it a mystery)");
-    expect(mail?.text).toContain(`Selected book: ${title} (Keep it a mystery)`);
+    expect(mail?.subject).toBe("Գրքի պատվեր (Թող մնա առեղծված)");
+    expect(mail?.text).toContain(`ԸՆՏՐՎԱԾ ԳԻՐՔԸ: ${title} (Թող մնա առեղծված)`);
+    expect(mail?.html).toContain(title.replace(/&/g, "&amp;")); // for the owner only — never for the customer
   });
 
   it("emails the customer, with the book, when they chose Show me now", async () => {
