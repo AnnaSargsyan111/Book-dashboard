@@ -5,6 +5,8 @@ export interface EmailMessage {
   to: string;
   subject: string;
   text: string;
+  /** Optional rich version; `text` is always sent too, for clients that show plain text. */
+  html?: string;
 }
 
 export interface EmailProvider {
@@ -34,7 +36,7 @@ function resendProvider(apiKey: string, from: string): EmailProvider {
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
-        body: JSON.stringify({ from, to: [message.to], subject: message.subject, text: message.text }),
+        body: JSON.stringify({ from, to: [message.to], subject: message.subject, text: message.text, ...(message.html ? { html: message.html } : {}) }),
         signal: AbortSignal.timeout(10_000),
       });
       if (!res.ok) throw new Error(`Resend responded ${res.status}`);

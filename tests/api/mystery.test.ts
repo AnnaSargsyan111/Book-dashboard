@@ -447,16 +447,26 @@ describe("DELETE /api/v1/mystery/recommendation-view/[id]", () => {
   });
 });
 
-describe("order notification email", () => {
-  async function orderedWith(revealMode: "keep_mystery" | "show_now") {
+describe("order emails", () => {
+  async function orderedWith(revealMode: "keep_mystery" | "show_now", locale?: "hy") {
     const { cookie } = await signedUpAndOnboarded();
     const { pickId } = await json(await recommend(req("/api/v1/mystery/recommend", { moods: ["cozy"], revealMode }, { cookie })));
     await saveAddress(req(`/api/v1/mystery/pick/${pickId}/address`, address, { cookie }), withId(pickId));
     devOutbox.length = 0;
-    const res = await placeOrder(req(`/api/v1/mystery/pick/${pickId}/order`, order, { cookie }), withId(pickId));
+    const orderCookie = locale ? `${cookie}; NEXT_LOCALE=${locale}` : cookie;
+    const res = await placeOrder(req(`/api/v1/mystery/pick/${pickId}/order`, order, { cookie: orderCookie }), withId(pickId));
     expect(res.status).toBe(200);
     const pick = await getDb().mysteryPick.findUniqueOrThrow({ where: { id: pickId } });
-    return { mail: devOutbox.at(-1), title: CATALOG.find((b) => b.slug === pick.bookSlug)!.title };
+    const book = CATALOG.find((b) => b.slug === pick.bookSlug)!;
+    // Two emails per order: one to the owner, one to the customer (the account's own address).
+    expect(devOutbox).toHaveLength(2);
+    return {
+      mail: devOutbox.find((m) => m.to === "owner@example.com"),
+      customer: devOutbox.find((m) => m.to === account.email),
+      title: book.title,
+      author: book.author,
+      coverUrl: book.coverUrl!,
+    };
   }
 
   it("emails the owner when a Show me now order is placed", async () => {
@@ -475,6 +485,46 @@ describe("order notification email", () => {
     const { mail, title } = await orderedWith("keep_mystery");
     expect(mail?.subject).toBe("Book order (Keep it a mystery)");
     expect(mail?.text).toContain(`Selected book: ${title} (Keep it a mystery)`);
+  });
+
+  it("emails the customer, with the book, when they chose Show me now", async () => {
+    const { customer, title, author, coverUrl } = await orderedWith("show_now");
+    expect(customer?.subject).toBe(`Your MystBook Order Is on Its Way ✨ | ${title}`);
+    expect(customer?.html).toContain("Dear Anna,");
+    expect(customer?.html).toContain(title.replace(/&/g, "&amp;"));
+    expect(customer?.html).toContain(author.replace(/&/g, "&amp;"));
+    expect(customer?.html).not.toContain("Show me now"); // no mode row in the card
+    expect(customer?.html).toContain(coverUrl); // the very cover of the book that was picked
+    expect(customer?.html).toContain("9,400 ֏");
+    expect(customer?.html).toContain("Anna Sargsyan");
+    expect(customer?.html).toContain("Yerevan, Armenia"); // city (and region, if any), country
+    expect(customer?.html).toContain("On the way");
+    expect(customer?.html).toContain("Your next literary journey is one step closer. Your new book is on the way and we're delighted to have you with us.");
+    expect(customer?.html).toContain("Every book opens a door to another world<"); // no full stop on that line
+    expect(customer?.text).toContain(title);
+  });
+
+  it("never reveals the book to a customer who chose Keep it a mystery", async () => {
+    const { customer, title, author } = await orderedWith("keep_mystery");
+    expect(customer?.subject).toBe("Your MystBook Order Is on Its Way ✨");
+    for (const part of [customer?.subject, customer?.html, customer?.text]) {
+      expect(part).not.toContain(title);
+      expect(part).not.toContain(author);
+    }
+    expect(customer?.html).not.toContain("covers.openlibrary.org");
+    expect(customer?.html).toContain("A Mystery Book");
+    expect(customer?.html).not.toContain("Keep it a mystery");
+  });
+
+  it("writes the customer's email in Armenian when they use the Armenian site", async () => {
+    const { customer, title } = await orderedWith("show_now", "hy");
+    expect(customer?.subject).toBe(`Ձեր MystBook պատվերը ճանապարհին է ✨ | ${title}`);
+    expect(customer?.html).toContain("Հարգելի Anna,");
+    expect(customer?.html).not.toContain("Ցույց տվեք հիմա");
+    expect(customer?.html).toContain("Ճանապարհին");
+    expect(customer?.html).toContain("Ձեր հաջորդ գրական ճանապարհորդությունը մեկ քայլով ավելի մոտ է։ Ձեր պատվերը ճանապարհին է, և մենք ուրախ ենք, որ Դուք մեզ եք ընտրել։");
+    expect(customer?.html).toContain("դեպի մեկ այլ աշխարհ<"); // no closing mark on that line
+    expect(customer?.html).toContain('lang="hy"');
   });
 
   it("sends nothing for an order that is rejected", async () => {
