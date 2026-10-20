@@ -521,6 +521,51 @@ h2 {
   opacity: 0.4;
 }
 
+/* New / Edit Thought, desktop: the ruling is re-spaced to one field height (52px) and shifted so its lines run along the
+   title field's top and bottom borders and the writing area's (seven lines tall), in the starting position. Nothing else
+   about the page moves: the fields' own sizes are pinned to whole lines (a hair from before) and the gap between blocks
+   is 26px instead of 28 so the second field starts on a line. The ruling is fixed to the screen, so it only lines up
+   until the page is scrolled. --rules-top is where the title field begins: 28px page padding + 60px top margin, then
+   the heading and the form's own 36px margin (New Thought) or the links row and a gap (Edit), plus the 26px label. */
+@media (min-width: 64rem) {
+  [data-scene="thoughts"][data-rules] .page-scene-rules {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--scene-walnut) 22%, transparent) 0,
+      color-mix(in oklab, var(--scene-walnut) 22%, transparent) 1px,
+      transparent 1px,
+      transparent 52px
+    );
+    background-position-y: var(--rules-top);
+  }
+  [data-scene="thoughts"][data-rules="new"] .page-scene-rules {
+    --rules-top: calc(150px + 1.1 * clamp(2rem, 1.5rem + 1.6vw, 2.75rem));
+  }
+  [data-scene="thoughts"][data-rules="edit"] .page-scene-rules {
+    /* the form's own 36px margin collapses into the 60px one above it here: 88 + 20 (links) + 26 (gap) + 26 (label) */
+    --rules-top: 160px;
+  }
+
+  /* each field is drawn from one line to the next: the extra 1px is its bottom border, which the next block
+     then reclaims with the negative margin so nothing below moves */
+  .thought-sheet .control {
+    box-sizing: border-box;
+    height: 53px;
+    margin-bottom: -1px;
+  }
+  .thought-sheet .control:has(textarea) {
+    height: 365px;
+  }
+  .thought-sheet .control input,
+  .thought-sheet .control textarea {
+    height: 100%;
+    min-height: 0;
+  }
+  .thought-sheet .control textarea {
+    resize: none;
+  }
+}
+
 /* Settings — the calmest room: almost flat, nothing that competes with the form. */
 [data-scene="settings"] .page-scene-wash {
   background: linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment));

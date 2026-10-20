@@ -20,6 +20,7 @@ export function AppFrame({
   user,
   scene,
   alignTop,
+  rules,
   children,
 }: {
   /** `null` only for a page's `loading.tsx`: the same shell, with a placeholder where the account menu goes. */
@@ -27,6 +28,8 @@ export function AppFrame({
   scene?: PageSceneKey;
   /** Desktop only: lifts the page's first block to the sidebar logo's top line, with the header floating over it. */
   alignTop?: boolean;
+  /** Thoughts' New / Edit pages, desktop: lines the ruling up with the form fields (see `PageScene`). */
+  rules?: "new" | "edit";
   children: ReactNode;
 }) {
   // Books is the one section still built on a full-bleed photo hero, bled up to the very top of the content
@@ -42,7 +45,7 @@ export function AppFrame({
     <div className="min-h-dvh lg:flex">
       <Sidebar />
       <div className="relative flex min-h-dvh flex-1 flex-col">
-        {scene && <PageScene scene={scene} />}
+        {scene && <PageScene scene={scene} rules={rules} />}
         <header
           className={`relative border-b border-rule px-5 py-4 sm:px-8 lg:border-b-0 lg:px-8 lg:py-6 ${floatHeader ? "lg:absolute lg:inset-x-0 lg:top-0 lg:z-20" : ""}`}
         >

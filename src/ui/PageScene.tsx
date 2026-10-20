@@ -14,10 +14,13 @@ export type PageSceneKey = "home" | "aboutMe" | "books" | "mysteryBook" | "thoug
  * rather than one. They've been retired; the soft tonal wash stays, since it's ambient atmosphere rather than a
  * competing illustration. Thoughts keeps its ruled-paper texture for the same reason: it's an abstract material
  * (the same ruled lines the auth page uses), not a figurative motif duplicating the photo.
+ *
+ * `rules` (the New / Edit Thought pages, desktop): re-spaces and shifts the ruling so the form's field borders sit on its
+ * lines in the starting position — see `[data-rules]` in globals.css.
  */
-export function PageScene({ scene }: { scene: PageSceneKey }) {
+export function PageScene({ scene, rules }: { scene: PageSceneKey; rules?: "new" | "edit" }) {
   return (
-    <div className="page-scene" data-scene={scene} aria-hidden="true">
+    <div className="page-scene" data-scene={scene} data-rules={rules} aria-hidden="true">
       <div className="page-scene-wash" />
       {scene === "thoughts" && <div className="page-scene-rules" />}
     </div>

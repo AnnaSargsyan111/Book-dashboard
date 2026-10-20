@@ -125,7 +125,7 @@ export function ThoughtEditor({ thought, books }: { thought?: ThoughtDTO; books:
   }
 
   return (
-    <div className="mt-9 flex flex-col gap-7">
+    <div className="thought-sheet mt-9 flex flex-col gap-7 lg:gap-[26px]">
       {isEdit ? (
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link href={ROUTES.thoughts} className="w-fit text-sm text-muted underline-offset-4 hover:text-ink hover:underline">

@@ -17,7 +17,7 @@ export default async function NewThoughtPage() {
   const books = await listBookOptions(user.id);
 
   return (
-    <AppFrame user={user} scene="thoughts" alignTop>
+    <AppFrame user={user} scene="thoughts" alignTop rules="new">
       <div className="animate-rise mx-auto max-w-2xl lg:mt-[3.75rem]">
         <h1 className="max-w-[20ch] text-balance font-display text-[clamp(2rem,1.5rem+1.6vw,2.75rem)] leading-[1.1] tracking-[-0.01em]">{t("title")}</h1>
         <ThoughtEditor books={books} />
