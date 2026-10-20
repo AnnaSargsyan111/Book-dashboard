@@ -31,7 +31,7 @@ export default async function ThoughtsPage() {
 
   return (
     <AppFrame user={user} scene="thoughts" alignTop>
-      <div className="-mt-6 max-w-5xl sm:-mt-14 lg:mt-0 lg:max-w-[min(64rem,calc(100%-9rem))]">
+      <div className="-mt-6 max-w-5xl sm:-mt-14 lg:ml-10 lg:mt-0 lg:max-w-[min(64rem,calc(100%-11.5rem))]">
         <div className="book-frame relative grid gap-0 lg:grid-cols-2">
           <div className="book-grain" aria-hidden="true" />
           <div className="book-spine hidden lg:block" aria-hidden="true" />

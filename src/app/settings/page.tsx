@@ -25,18 +25,18 @@ export default async function SettingsPage() {
   const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
 
   return (
-    <AppFrame user={user} scene="settings">
-      <div className="-mt-6 max-w-5xl sm:-mt-14">
+    <AppFrame user={user} scene="settings" alignTop>
+      <div className="-mt-6 max-w-5xl sm:-mt-14 lg:-mb-12 lg:ml-6 lg:mt-[3.7rem]">
         <div className="book-frame relative grid gap-0 lg:grid-cols-2">
           <div className="book-grain" aria-hidden="true" />
           <div className="book-spine hidden lg:block" aria-hidden="true" />
 
-          <div className="relative flex flex-col px-8 py-10 sm:px-12 sm:py-14">
+          <div className="relative flex flex-col px-8 py-10 sm:px-12 sm:py-14 lg:py-8">
             <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted">{t("eyebrow")}</p>
             <h1 className="mt-3 font-display text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] leading-[1.08] tracking-[-0.01em] text-ink">{t("title")}</h1>
             <p className="mt-3 max-w-[38ch] text-[0.9375rem] leading-relaxed text-muted">{t("subtitle")}</p>
 
-            <div className="mt-8 flex items-center gap-4">
+            <div className="mt-8 flex items-center gap-4 lg:mt-5">
               <span className="seal grid size-12 shrink-0 place-items-center rounded-full border border-rule-strong font-display text-base font-medium tracking-wide text-ink">{initials}</span>
               <div className="min-w-0">
                 <p className="truncate text-[1.0625rem] font-medium text-ink">
@@ -46,12 +46,12 @@ export default async function SettingsPage() {
               </div>
             </div>
 
-            <p className="mt-9 text-xs font-medium uppercase tracking-[0.14em] text-muted">{ta("eyebrow")}</p>
+            <p className="mt-9 text-xs font-medium uppercase tracking-[0.14em] text-muted lg:mt-6">{ta("eyebrow")}</p>
             <h2 className="mt-1 font-display text-xl">{ta("title")}</h2>
             <AccountForm initial={{ firstName: user.firstName, lastName: user.lastName }} email={user.email} />
           </div>
 
-          <div className="relative flex flex-col px-8 py-10 sm:px-12 sm:py-14">
+          <div className="relative flex flex-col px-8 py-10 sm:px-12 sm:py-14 lg:py-8">
             <SecuritySection />
           </div>
         </div>

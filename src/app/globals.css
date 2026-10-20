@@ -513,7 +513,11 @@ h2 {
     color-mix(in oklab, var(--scene-walnut) 22%, transparent) 42px,
     color-mix(in oklab, var(--scene-walnut) 22%, transparent) 43px
   );
-  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 70%, transparent);
+  /* The top of the Thoughts book sits at y = 28px on desktop (the page's `lg:pt-7`). The pattern's line is the last
+     pixel of each 43px period (42px in); shifting it up by 14px puts a line exactly at y = 28px, so the book's top
+     edge and the first ruled line are one line. The top fade is short so that line is actually visible. */
+  background-position-y: -14px;
+  mask-image: linear-gradient(to bottom, transparent, #000 24px, #000 70%, transparent);
   opacity: 0.4;
 }
 
@@ -1068,7 +1072,9 @@ h2 {
   position: relative;
   width: 16.5rem;
   flex-shrink: 0;
-  overflow: hidden;
+  /* `clip`, not `hidden`: same clipping, but it does not make the sidebar a scroll container — which would stop the
+     quote inside it from being able to stick to the window while the page scrolls. */
+  overflow: clip;
   background: linear-gradient(175deg, var(--scene-ivory), var(--scene-parchment) 94%);
   border-right: 1px solid var(--rule);
 }
@@ -1118,8 +1124,8 @@ h2 {
 
 /* The quote at the sidebar's foot, now its own small note card sitting on the paper rather than text laid over
  * a photo — present but quiet, a real attributed line rather than a call to action. */
+/* (Positioning comes from the component's own classes: the note is `sticky`.) */
 .sidebar-note {
-  position: relative;
   padding: 0.25rem 0.25rem 0.5rem;
 }
 

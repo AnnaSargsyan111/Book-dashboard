@@ -80,7 +80,7 @@ export function AccountForm({ initial, email }: { initial: UpdateAccountInput; e
   const buttonState: ButtonState = status === "saving" ? "loading" : status === "success" ? "success" : "idle";
 
   return (
-    <div className="mt-7 flex flex-col gap-5">
+    <div className="mt-7 flex flex-col gap-5 lg:mt-5 lg:gap-4">
       <FormAlert
         action={
           formError?.code === "NETWORK" ? (

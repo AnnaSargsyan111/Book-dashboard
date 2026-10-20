@@ -83,10 +83,10 @@ function useTypewriter(text: string, reduced: boolean): string {
  * cross-axis behavior) keeps the sidebar covering the full page for every scroll position, with the `min-h-dvh`
  * floor still guaranteeing a full-viewport sidebar on short pages.
  *
- * The quote sits right after the nav, in normal flow — deliberately not pushed down to the foot of that
- * (potentially much taller) box, which would need its own `sticky bottom-0` just to stay on screen and even then
- * only become visible once the visitor scrolls. Keeping it directly under the nav means it's always part of the
- * one glance everything else in the sidebar gets, no scrolling required.
+ * The quote starts right under the nav. It is `sticky` with its `top` set to that very spot (34.2rem from the top
+ * of the window, or 8rem above the bottom on a short window): at the top of the page it does not move at all, and as
+ * the visitor scrolls it stays at that same height in the window — so it travels down the left column with them
+ * rather than scrolling away upward with the nav and ending up stranded high on the page.
  */
 export function Sidebar() {
   const pathname = usePathname();
@@ -107,7 +107,7 @@ export function Sidebar() {
 
   return (
     <aside className="sidebar sticky top-0 hidden min-h-dvh self-stretch lg:flex" aria-label={t("label")}>
-      <div className="flex h-full w-full flex-col px-5 py-7">
+      <div className="flex w-full flex-col px-5 py-7">
         <Link href={ROUTES.home} className="shrink-0">
           <Logo className="px-2 text-ink" />
         </Link>
@@ -135,7 +135,7 @@ export function Sidebar() {
           </ul>
         </nav>
 
-        <div className="sidebar-note relative mt-7 max-w-[13.5rem]">
+        <div className="sidebar-note sticky top-[min(34.2rem,calc(100dvh-8rem))] mt-7 max-w-[13.5rem] self-start">
           <p className="sidebar-quote relative font-display text-[0.875rem] italic leading-relaxed text-ink-2">
             <span className="sr-only">{quote.text}</span>
             <span aria-hidden="true">
