@@ -59,6 +59,25 @@ describe("findWorks: the lookup is tolerant of a misspelt title", () => {
     vi.unstubAllGlobals();
   });
 
+  it("finds the book when the author's name has a typo (the search needs every typed word, so it retries on the title alone)", async () => {
+    const queries: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      const q = new URL(url).searchParams.get("q") ?? "";
+      queries.push(q);
+      // Open Library finds nothing for a word it has never seen ("Roney"), and the book as soon as only the title is asked
+      return reply(q.includes("Roney") ? [] : [doc("Normal People", "Sally Rooney", 7)]);
+    }));
+    const { findWorks, pickWork } = await import("@/server/ai/open-library");
+    const works = await findWorks("Normal People", "Sally Roney");
+    expect(queries.at(-1)).toBe("Normal People");
+    expect(pickWork(works, "Sally Roney", "Normal People")?.title).toBe("Normal People");
+
+    // a different writer is still "not found", never somebody else's book with the same title
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => reply(new URL(url).searchParams.get("q")?.includes("King") ? [] : [doc("Dune", "Frank Herbert", 9)])));
+    expect(await findWorks("Dune", "Stephen King")).toEqual([]);
+    vi.unstubAllGlobals();
+  });
+
   it("stops at the first pass that has a plausible match, and gives up with an empty list", async () => {
     const calls = vi.fn(async () => reply([doc("Animal Farm", "George Orwell", 3)]));
     vi.stubGlobal("fetch", calls);

@@ -45,13 +45,16 @@ interface SearchResponse {
 /** lower case, accents removed ("Saint-Exupéry" = "saint exupery", "Brontë" = "bronte"), punctuation turned into spaces */
 const norm = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
-/** Does one of the work's authors match what was typed? Tolerant of casing, initials and a surname-only entry. */
+/** Does one of the work's authors match what was typed? Tolerant of casing, initials, a surname-only entry and a
+ *  one-letter typo in a name ("Sally Roney" for "Sally Rooney"). */
 function authorMatches(work: OpenLibraryWork, author: string): boolean {
   const wanted = norm(author);
   if (!wanted) return false;
   return work.authors.some((a) => {
     const have = norm(a);
-    return have === wanted || have.includes(wanted) || wanted.includes(have) || wanted.split(" ").every((part) => have.includes(part));
+    if (have === wanted || have.includes(wanted) || wanted.includes(have) || wanted.split(" ").every((part) => have.includes(part))) return true;
+    const haveParts = have.split(" ");
+    return wanted.split(" ").every((part) => haveParts.some((h) => sameWord(part, h)));
   });
 }
 
@@ -126,10 +129,11 @@ export function pickWork(works: OpenLibraryWork[], author?: string, title?: stri
 }
 
 /**
- * Looks the book up in up to three passes and returns the results of the first pass that holds a plausible match
+ * Looks the book up in up to four passes and returns the results of the first pass that holds a plausible match
  * (so callers use pickWork / pickCoverId on it): 1) title + author as typed; 2) without the last word of the title,
- * which rescues a misspelt ending ("Animal firm"); 3) the author's best-known works, matched to the title tolerantly.
- * An empty list means no pass found anything that looks like the book.
+ * which rescues a misspelt ending ("Animal firm"); 3) the author's best-known works, matched to the title tolerantly;
+ * 4) the title alone, which rescues a misspelt author (the search needs every typed word to exist, so "Sally Roney"
+ * finds nothing on its own). An empty list means no pass found anything that looks like the book.
  */
 export async function findWorks(title: string, author?: string): Promise<OpenLibraryWork[]> {
   // a pass is "good" when it holds a plausible work with a cover (by the typed author, when one was typed);
@@ -154,6 +158,13 @@ export async function findWorks(title: string, author?: string): Promise<OpenLib
     const matching = (await searchWorks("", author, 40)).filter((w) => titleScore(w.title, title) >= 0.6);
     const third = matching.length ? consider(matching) : null;
     if (third) return third;
+  }
+  // Last resort: the title alone. It counts only if the work's author still resembles the typed one (a typo, not a
+  // different writer): "Dune" by "Stephen King" is "not found", never Frank Herbert's Dune.
+  if (author && !fallback.length) {
+    const titleOnly = await searchWorks(title, undefined, 12);
+    const pick = pickWork(titleOnly, author, title);
+    if (pick && authorMatches(pick, author)) return titleOnly;
   }
   return fallback;
 }
